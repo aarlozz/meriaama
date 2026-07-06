@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Stress & Wellbeing Tests{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-700 mb-6">Stress & Wellbeing Check</h1>
+
+<div class="grid sm:grid-cols-3 gap-4 mb-8">
+    {% for value, label in test_types %}
+        <a href="{% url 'psychometric-take' test_type=value %}"
+           class="block bg-white p-5 rounded-lg shadow hover:shadow-md text-center">
+            <h2 class="font-semibold text-rose-700">{{ label }}</h2>
+        </a>
+    {% endfor %}
+</div>
+
+<h2 class="text-lg font-semibold text-gray-700 mb-3">Past results</h2>
+<div class="space-y-2">
+    {% for test in history %}
+        <a href="{% url 'psychometric-result' test_id=test.id %}"
+           class="block bg-white p-3 rounded shadow-sm flex justify-between items-center hover:shadow-md">
+            <span>{{ test.get_test_type_display }} -- score {{ test.total_score }}</span>
+            <span class="text-sm
+                {% if test.risk_level == 'high' %}text-red-600
+                {% elif test.risk_level == 'moderate' %}text-amber-600
+                {% else %}text-green-600{% endif %}">
+                {{ test.get_risk_level_display }} risk
+            </span>
+        </a>
+    {% empty %}
+        <p class="text-gray-500 text-sm">No tests taken yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

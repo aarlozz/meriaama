@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Mood Check-In{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-700 mb-6">How are you feeling today?</h1>
+
+<div class="bg-white p-6 rounded-lg shadow mb-8">
+    <form method="post">
+        {% csrf_token %}
+        <div class="flex justify-between mb-6">
+            {% for radio in form.score %}
+                <label class="flex flex-col items-center text-sm cursor-pointer gap-1">
+                    {{ radio.tag }}
+                    <span class="text-2xl">
+                        {% if radio.data.value|stringformat:"s" == "1" %}😢
+                        {% elif radio.data.value|stringformat:"s" == "2" %}😕
+                        {% elif radio.data.value|stringformat:"s" == "3" %}😐
+                        {% elif radio.data.value|stringformat:"s" == "4" %}🙂
+                        {% elif radio.data.value|stringformat:"s" == "5" %}😄{% endif %}
+                    </span>
+                    <span class="text-xs text-gray-500">{{ radio.choice_label }}</span>
+                </label>
+            {% endfor %}
+        </div>
+
+        <label class="block text-sm font-medium mb-2">Anything else going on? (optional, pick any that apply)</label>
+        <div class="flex flex-wrap gap-2 mb-4">
+            {% for checkbox in form.tags %}
+                <label class="flex items-center gap-1 text-sm bg-rose-50 px-3 py-1 rounded-full cursor-pointer hover:bg-rose-100">
+                    {{ checkbox.tag }} {{ checkbox.choice_label }}
+                </label>
+            {% endfor %}
+        </div>
+
+        {{ form.note }}
+        <button type="submit" class="mt-4 bg-rose-600 text-white rounded px-4 py-2 font-medium hover:bg-rose-700">
+            Save today's mood
+        </button>
+    </form>
+</div>
+
+<div class="flex justify-between items-center mb-3">
+    <h2 class="text-lg font-semibold text-gray-700">Recent entries</h2>
+    <a href="{% url 'insights' %}" class="text-sm text-rose-600 hover:underline">View trends &rarr;</a>
+</div>
+<div class="space-y-2">
+    {% for entry in history %}
+        <div class="bg-white p-3 rounded shadow-sm">
+            <div class="flex justify-between items-center">
+                <span>{{ entry.get_score_display }}</span>
+                <span class="text-sm text-gray-500">{{ entry.logged_at|date:"M d, Y H:i" }}</span>
+            </div>
+            {% if entry.tags %}
+                <div class="flex flex-wrap gap-1 mt-2">
+                    {% for label in entry.tag_labels %}
+                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{{ label }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if entry.note %}
+                <p class="text-sm text-gray-600 mt-2 italic">{{ entry.note }}</p>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p class="text-gray-500 text-sm">No entries yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

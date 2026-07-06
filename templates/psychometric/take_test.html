@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ test_type_label }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-700 mb-2">{{ test_type_label }}</h1>
+<p class="text-gray-600 mb-6 text-sm">Answer honestly -- there are no right or wrong answers.</p>
+
+<form method="post" class="bg-white p-6 rounded-lg shadow space-y-6">
+    {% csrf_token %}
+    {% for field in form %}
+        <div>
+            <p class="font-medium mb-2">{{ forloop.counter }}. {{ field.label }}</p>
+            <div class="space-y-1">
+                {% for radio in field %}
+                    <label class="flex items-center gap-2 text-sm cursor-pointer">
+                        {{ radio.tag }} {{ radio.choice_label }}
+                    </label>
+                {% endfor %}
+            </div>
+            {% if field.errors %}
+                <p class="text-xs text-red-600 mt-1">Please answer this question.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="bg-rose-600 text-white rounded px-4 py-2 font-medium hover:bg-rose-700">
+        Submit
+    </button>
+</form>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Community Forum{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-rose-700">Community Forum</h1>
+    <a href="{% url 'forum-create' %}" class="bg-rose-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-rose-700">
+        New Post
+    </a>
+</div>
+
+<div class="flex flex-wrap gap-2 mb-6 text-sm">
+    <a href="{% url 'forum-list' %}" class="px-3 py-1 rounded-full {% if not selected_stage %}bg-rose-600 text-white{% else %}bg-white text-gray-600{% endif %}">
+        All
+    </a>
+    {% for value, label in stages %}
+        <a href="?stage={{ value }}" class="px-3 py-1 rounded-full {% if selected_stage == value %}bg-rose-600 text-white{% else %}bg-white text-gray-600{% endif %}">
+            {{ label }}
+        </a>
+    {% endfor %}
+</div>
+
+<div class="space-y-3">
+    {% for post in posts %}
+        <a href="{% url 'forum-detail' post_id=post.id %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">{{ post.get_stage_display }}</span>
+                <span class="text-xs text-gray-400">by {{ post.author.username }}</span>
+            </div>
+            <h2 class="font-semibold text-rose-700">{{ post.title }}</h2>
+            <p class="text-sm text-gray-600 mt-1 line-clamp-2">{{ post.body|truncatewords:25 }}</p>
+            <p class="text-xs text-gray-400 mt-2">{{ post.comments.count }} comment{{ post.comments.count|pluralize }}</p>
+        </a>
+    {% empty %}
+        <p class="text-gray-500 text-sm">No posts yet -- be the first to share.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Pregnancy Tracker{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-700 mb-2">Your Pregnancy Tracker</h1>
+<p class="text-gray-600 mb-6 text-sm">
+    Weekly updates from your care team appear here as they're recorded.
+</p>
+
+<div class="space-y-3">
+    {% for week in weeks %}
+        <div class="bg-white p-5 rounded-lg shadow {% if week.gestational_week == current_week %}ring-2 ring-rose-400{% endif %}">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="font-semibold text-rose-700">
+                    Week {{ week.gestational_week }}
+                    {% if week.gestational_week == current_week %}
+                        <span class="ml-2 text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">Current</span>
+                    {% endif %}
+                </h2>
+                <span class="text-xs text-gray-400">Updated {{ week.updated_at|date:"M d, Y" }}</span>
+            </div>
+
+            {% if week.fetal_development_note %}
+                <p class="text-sm text-gray-700 mb-1"><strong>Baby:</strong> {{ week.fetal_development_note }}</p>
+            {% endif %}
+            {% if week.maternal_changes_note %}
+                <p class="text-sm text-gray-700 mb-1"><strong>You:</strong> {{ week.maternal_changes_note }}</p>
+            {% endif %}
+
+            <div class="flex gap-3 mt-2 text-xs">
+                {% if week.maternal_weight_kg %}
+                    <span class="bg-gray-100 px-2 py-1 rounded">Weight: {{ week.maternal_weight_kg }} kg</span>
+                {% endif %}
+                {% if week.blood_pressure %}
+                    <span class="bg-gray-100 px-2 py-1 rounded">BP: {{ week.blood_pressure }}</span>
+                {% endif %}
+            </div>
+
+            {% if week.hospital_notes %}
+                <p class="text-sm text-gray-600 mt-2 italic">"{{ week.hospital_notes }}"</p>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p class="text-gray-500 text-sm">
+            Nothing recorded yet. Your care team's visit notes will show up here once they're entered.
+        </p>
+    {% endfor %}
+</div>
+{% endblock %}

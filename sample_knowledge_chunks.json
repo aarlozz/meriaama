@@ -1,0 +1,128 @@
+[
+  {
+    "id": "nutrition-001",
+    "text": "During pregnancy, daily energy needs increase modestly -- roughly 300 extra calories per day in the second and third trimesters compared to before pregnancy. Rather than eating for two in volume, focus on nutrient density: whole grains, lentils and beans, dairy or fortified alternatives, eggs, leafy greens, and a variety of fruits and vegetables at each meal.",
+    "source_url": "https://example.org/antenatal-nutrition-basics",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-002",
+    "text": "Iron needs roughly double during pregnancy to support increased blood volume and the growing baby. Good sources include lentils, beans, dark leafy greens, and lean meat if eaten. Pairing iron-rich foods with a source of vitamin C, such as citrus fruit or tomatoes, improves how much iron the body absorbs. Many antenatal care programs also provide iron and folic acid supplements -- take these as prescribed by a doctor.",
+    "source_url": "https://example.org/iron-in-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-003",
+    "text": "Folic acid supports the healthy development of the baby's brain and spinal cord, and is especially important in early pregnancy. Foods naturally rich in folate include leafy green vegetables, citrus fruits, and beans, but most antenatal programs also recommend a daily folic acid supplement, particularly before and during the first trimester.",
+    "source_url": "https://example.org/folic-acid-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-004",
+    "text": "Calcium supports the development of the baby's bones and teeth and helps maintain the mother's own bone health. Dairy products, fortified plant milks, sesame seeds, and dark leafy greens are good sources. If dietary calcium intake is low, a doctor may recommend a supplement.",
+    "source_url": "https://example.org/calcium-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-005",
+    "text": "Fruits that are commonly recommended during pregnancy include bananas (potassium and easy on the stomach during nausea), oranges and other citrus (vitamin C and folate), guava (vitamin C and fiber), apples (fiber and helps with constipation), and pomegranate (iron and antioxidants). Wash fruit thoroughly and avoid unpasteurized juices.",
+    "source_url": "https://example.org/fruits-in-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-006",
+    "text": "Staying well hydrated supports amniotic fluid levels, digestion, and helps reduce common complaints like constipation and swelling. A general guide is around 8 to 10 glasses of water a day, adjusted for climate and activity level, unless a doctor has advised otherwise for a specific medical reason.",
+    "source_url": "https://example.org/hydration-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-007",
+    "text": "Certain foods are generally advised against during pregnancy due to infection or contamination risk: unpasteurized dairy, raw or undercooked eggs and meat, high-mercury fish, and unwashed raw produce. Excess caffeine is usually limited to around 200mg per day (roughly one to two cups of coffee). Always follow specific guidance from a doctor or midwife, since individual circumstances vary.",
+    "source_url": "https://example.org/foods-to-limit-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "exercise-001",
+    "text": "For most low-risk pregnancies, moderate physical activity such as walking, swimming, or prenatal yoga for about 20 to 30 minutes most days is generally encouraged, and can help with mood, sleep, and reducing back pain. Any new exercise routine, or continuing high-intensity activity, should first be discussed with a doctor, especially if there are pregnancy complications.",
+    "source_url": "https://example.org/exercise-in-pregnancy",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "exercise-002",
+    "text": "Gentle daily movement in the third trimester, such as short walks or pelvic tilts, can help with common discomforts like lower back pain and swelling, and some evidence suggests it may support an easier labor. Activities involving lying flat on the back for long periods, contact sports, or high fall-risk activities are generally best avoided as pregnancy progresses.",
+    "source_url": "https://example.org/third-trimester-movement",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-001",
+    "text": "Mood changes during pregnancy are common due to hormonal shifts, physical discomfort, and life changes, and can range from mild worry to more persistent low mood or anxiety. Talking with a trusted person, keeping a simple daily routine, gentle movement, and adequate sleep can all help. If low mood, anxiety, or intrusive thoughts feel persistent, overwhelming, or include thoughts of self-harm, reaching out to a doctor or mental health professional promptly is important -- this is common and treatable, not a personal failing.",
+    "source_url": "https://example.org/mental-health-pregnancy",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-002",
+    "text": "Simple daily wellbeing habits during pregnancy can include: a few minutes of slow breathing or quiet reflection, writing down one thing that felt good that day, a short walk outdoors, staying connected with a friend or family member, and keeping sleep and meal times reasonably consistent. Small, repeatable habits tend to be more sustainable than large lifestyle overhauls during pregnancy.",
+    "source_url": "https://example.org/daily-wellbeing-habits-pregnancy",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-003",
+    "text": "Postpartum mood changes are common in the days after birth (sometimes called the 'baby blues') and usually ease within about two weeks. If low mood, anxiety, or difficulty bonding with the baby continues beyond two weeks, worsens, or is accompanied by thoughts of harming oneself or the baby, this is a medical situation that needs prompt professional support -- postpartum depression and anxiety are common and treatable with the right care.",
+    "source_url": "https://example.org/postpartum-mood-changes",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-001",
+    "text": "Mild nausea, especially in the first trimester, is common and often eases by around week 12 to 14. Eating small, frequent meals, avoiding an empty stomach, ginger tea, and resting when possible can help. Severe vomiting that prevents keeping any food or fluids down should be reported to a doctor, as it may need medical treatment.",
+    "source_url": "https://example.org/nausea-first-trimester",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-002",
+    "text": "Mild swelling in the feet and ankles, especially later in pregnancy and in warm weather, is common due to increased fluid retention. Elevating the feet when resting, staying hydrated, and gentle movement can help. Sudden or severe swelling, especially in the face and hands, combined with headache or visual changes, can be a sign of a serious condition called pre-eclampsia and needs urgent medical attention.",
+    "source_url": "https://example.org/swelling-pregnancy",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-003",
+    "text": "Backache is common as pregnancy progresses due to weight changes and posture shifts. Gentle stretching, good posture, supportive footwear, and sleeping on the side with a pillow between the knees can help. Severe or persistent back pain, especially with fever or unusual discharge, should be discussed with a doctor.",
+    "source_url": "https://example.org/backache-pregnancy",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "warningsigns-001",
+    "text": "Warning signs that need prompt medical attention during pregnancy include: severe or persistent headache, blurred vision, sudden severe swelling, vaginal bleeding, severe abdominal pain, reduced or absent fetal movement, fever, or fluid leaking from the vagina. When in doubt, it is always safer to contact a doctor or visit a health facility rather than wait.",
+    "source_url": "https://example.org/pregnancy-warning-signs",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "checkups-001",
+    "text": "Regular antenatal checkups allow a doctor to monitor the mother's blood pressure, weight, and urine, and track the baby's growth and heart rate. A common schedule is roughly monthly visits until 28 weeks, every two weeks from 28 to 36 weeks, and weekly after 36 weeks, though the exact schedule depends on individual risk factors and local guidelines.",
+    "source_url": "https://example.org/antenatal-checkup-schedule",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "sleep-001",
+    "text": "Sleeping on the side, particularly the left side, from the second trimester onward is commonly recommended, as it can improve blood flow to the baby and reduce pressure on major blood vessels. A pillow between the knees or under the belly can improve comfort. Occasionally rolling onto the back during sleep is not typically harmful -- the goal is to favor side-sleeping when settling down, not to worry constantly about sleep position.",
+    "source_url": "https://example.org/sleep-position-pregnancy",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "father-001",
+    "text": "Partners play an important role in a healthy pregnancy: attending antenatal appointments when possible, helping track warning signs and upcoming visits, sharing household and physical tasks as the pregnancy progresses, and offering emotional support during a time of significant hormonal and physical change. Partner involvement is associated with better emotional wellbeing for the mother and stronger early bonding with the baby.",
+    "source_url": "https://example.org/partner-involvement-pregnancy",
+    "source_name": "Family-Centered Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "father-002",
+    "text": "Simple ways a partner can support someone during pregnancy include: learning the due date and key milestones, joining checkups or asking for a summary afterward, helping prepare nutritious meals, watching for warning signs together, taking on more physical household tasks in the third trimester, and simply asking how the mother is feeling emotionally, not just physically.",
+    "source_url": "https://example.org/how-partners-can-help",
+    "source_name": "Family-Centered Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "postpartum-001",
+    "text": "In the weeks after birth, the mother's body continues to recover -- vaginal bleeding (lochia) typically tapers off over four to six weeks, and rest, gentle movement, and nutritious food support healing. Breastfeeding, if chosen, can take time and patience to establish; support from a lactation counselor or experienced family member can help with common early challenges like latch difficulties.",
+    "source_url": "https://example.org/postpartum-recovery-basics",
+    "source_name": "Postpartum Care Guidance (paraphrased)"
+  }
+]

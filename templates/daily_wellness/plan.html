@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Today's Wellness Plan{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-700 mb-2">Today's Wellness Plan</h1>
+<p class="text-gray-600 mb-6 text-sm">
+    Chosen for your current stage of pregnancy, and filtered to avoid anything
+    matching your recorded allergies, conditions, or dietary preference.
+</p>
+
+{% if plan.personalized_text %}
+    <div class="bg-white p-6 rounded-lg shadow mb-6 border-l-4 border-amber-400">
+        <p class="text-xs uppercase text-gray-400 mb-2">A note for you today</p>
+        <p class="text-gray-700 whitespace-pre-wrap">{{ plan.personalized_text }}</p>
+    </div>
+{% endif %}
+
+<div class="grid sm:grid-cols-2 gap-4">
+    {% if plan.nutrition_tip %}
+        <div class="bg-white p-5 rounded-lg shadow">
+            <h2 class="font-semibold text-rose-700 mb-1">Nutrition</h2>
+            <p class="text-sm text-gray-700">{{ plan.nutrition_tip.text }}</p>
+        </div>
+    {% endif %}
+    {% if plan.mental_health_tip %}
+        <div class="bg-white p-5 rounded-lg shadow">
+            <h2 class="font-semibold text-rose-700 mb-1">Mental wellbeing</h2>
+            <p class="text-sm text-gray-700">{{ plan.mental_health_tip.text }}</p>
+        </div>
+    {% endif %}
+    {% if plan.exercise_tip %}
+        <div class="bg-white p-5 rounded-lg shadow">
+            <h2 class="font-semibold text-rose-700 mb-1">Movement</h2>
+            <p class="text-sm text-gray-700">{{ plan.exercise_tip.text }}</p>
+        </div>
+    {% endif %}
+    {% if plan.precaution_tip %}
+        <div class="bg-white p-5 rounded-lg shadow border border-amber-200">
+            <h2 class="font-semibold text-amber-700 mb-1">Keep in mind</h2>
+            <p class="text-sm text-gray-700">{{ plan.precaution_tip.text }}</p>
+        </div>
+    {% endif %}
+</div>
+
+{% if not plan.nutrition_tip and not plan.mental_health_tip and not plan.exercise_tip and not plan.precaution_tip %}
+    <p class="text-gray-500 text-sm mt-4">
+        No matching tips were found for your current profile -- this can happen if your
+        allergy/condition combination excludes everything currently in the tip pool.
+        Add more tips via /admin/.
+    </p>
+{% endif %}
+{% endblock %}
