@@ -23,6 +23,8 @@
                 <a href="{% url 'wellness-chat' %}" class="hover:underline">Ask Meri Aama</a>
                 <a href="{% url 'daily-plan' %}" class="hover:underline">Today's Plan</a>
                 <a href="{% url 'insights' %}" class="hover:underline">Insights</a>
+                <a href="{% url 'trimester-analysis' %}" class="hover:underline">trimester analysis</a>
+                
                 <form method="post" action="{% url 'logout' %}" class="inline">
                     {% csrf_token %}
                     <button type="submit" class="hover:underline">Logout</button>

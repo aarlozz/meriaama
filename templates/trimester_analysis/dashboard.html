@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Trimester Analysis{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-700 mb-2">Trimester Analysis</h1>
+<p class="text-gray-600 text-sm mb-6">
+    Patterns from your checkup data, grouped by trimester. This describes trends only --
+    it isn't a diagnosis. Please discuss anything flagged with your doctor.
+</p>
+
+{% if not has_any_data %}
+    <div class="bg-white p-5 rounded-lg shadow">
+        <p class="text-gray-500 text-sm">No checkup data recorded yet -- this page will fill in after your hospital visits are logged.</p>
+    </div>
+{% else %}
+    {% for result in trimester_results %}
+        <div class="bg-white p-5 rounded-lg shadow mb-6">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="font-semibold text-gray-700">Trimester {{ result.trimester_num }}</h2>
+                <span class="text-sm text-gray-500">{{ result.visit_count }} visit{{ result.visit_count|pluralize }}</span>
+            </div>
+
+            {% if result.weight_start and result.weight_end %}
+                <p class="text-sm text-gray-700 mb-3">
+                    Weight: {{ result.weight_start }} kg &rarr; {{ result.weight_end }} kg
+                    ({% if result.weight_change > 0 %}+{% endif %}{{ result.weight_change }} kg this trimester)
+                </p>
+            {% endif %}
+
+            {% if result.flags %}
+                <div class="space-y-2">
+                    {% for flag in result.flags %}
+                        <div class="text-sm px-3 py-2 rounded
+                            {% if flag.severity == 'concern' %}bg-red-50 text-red-700 border border-red-200
+                            {% elif flag.severity == 'caution' %}bg-amber-50 text-amber-700 border border-amber-200
+                            {% else %}bg-gray-50 text-gray-600{% endif %}">
+                            {{ flag.message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-sm text-green-700">No concerns flagged from the data recorded this trimester.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

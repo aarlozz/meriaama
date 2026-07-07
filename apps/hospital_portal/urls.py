@@ -1,6 +1,9 @@
 from django.urls import path
-from .views import ClinicalRecordListCreateView
+from . import views
 
 urlpatterns = [
-    path("records/", ClinicalRecordListCreateView.as_view(), name="clinical-records"),
+    path("", views.staff_dashboard, name="hospital-dashboard"),
+    path("mother/<int:mother_id>/", views.mother_detail, name="hospital-mother-detail"),
+    path("mother/<int:mother_id>/edit-profile/", views.edit_health_profile, name="hospital-edit-profile"),
+    path("mother/<int:mother_id>/add-visit/", views.add_visit, name="hospital-add-visit"),
 ]

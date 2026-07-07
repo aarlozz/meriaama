@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ mother.username }} - Hospital Portal{% endblock %}
+{% block content %}
+<a href="{% url 'hospital-dashboard' %}" class="text-sm text-rose-600 hover:underline">&larr; Back to search</a>
+
+<h1 class="text-2xl font-bold text-rose-700 mt-2 mb-6">{{ mother.username }}</h1>
+
+<div class="bg-white p-5 rounded-lg shadow mb-6">
+    <div class="flex justify-between items-center mb-3">
+        <h2 class="font-semibold text-gray-700">Clinical Profile</h2>
+        <a href="{% url 'hospital-edit-profile' mother_id=mother.id %}" class="text-sm text-rose-600 hover:underline">Edit</a>
+    </div>
+
+    {% if profile %}
+        <div class="grid sm:grid-cols-2 gap-3 text-sm text-gray-700">
+            <p><strong>Gestational week:</strong> {{ profile.current_gestational_week|default:"Not set" }}</p>
+            <p><strong>Blood group:</strong> {{ profile.blood_group|default:"Not set" }}</p>
+            <p><strong>Gestational diabetes:</strong> {{ profile.has_gestational_diabetes|yesno:"Yes,No" }}</p>
+            <p><strong>Hypertension:</strong> {{ profile.has_hypertension|yesno:"Yes,No" }}</p>
+            <p><strong>Dietary preference:</strong> {{ profile.get_dietary_preference_display }}</p>
+            <p><strong>Allergies:</strong> {{ profile.allergies|join:", "|default:"None listed" }}</p>
+        </div>
+        {% if profile.pre_existing_conditions %}
+            <p class="text-sm text-gray-600 mt-3"><strong>Pre-existing conditions:</strong> {{ profile.pre_existing_conditions }}</p>
+        {% endif %}
+    {% else %}
+        <p class="text-sm text-gray-500">This mother hasn't created a health profile yet.</p>
+    {% endif %}
+</div>
+
+<div class="bg-white p-5 rounded-lg shadow mb-6">
+    <h2 class="font-semibold text-gray-700 mb-3">Data Completeness</h2>
+    <p class="text-xs text-gray-500 mb-3">Has each checkup measurement been recorded at least once across her visits?</p>
+    <div class="grid sm:grid-cols-2 gap-2">
+        {% for item in checklist %}
+            <div class="flex items-center gap-2 text-sm">
+                {% if item.recorded %}
+                    <span class="text-green-600">✅</span>
+                {% else %}
+                    <span class="text-amber-600">⚠️</span>
+                {% endif %}
+                <span class="{% if not item.recorded %}text-amber-700{% else %}text-gray-700{% endif %}">{{ item.label }}</span>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="flex justify-between items-center mb-3">
+    <h2 class="font-semibold text-gray-700">Visit History</h2>
+    <a href="{% url 'hospital-add-visit' mother_id=mother.id %}"
+       class="bg-rose-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-rose-700">
+        + Add Visit
+    </a>
+</div>
+
+<div class="space-y-3">
+    {% for visit in visits %}
+        <div class="bg-white p-4 rounded-lg shadow">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-medium">{{ visit.visit_date|date:"M d, Y" }} -- Week {{ visit.gestational_week|default:"?" }}</span>
+                <span class="text-xs text-gray-400">by {{ visit.entered_by.username|default:"unknown" }}</span>
+            </div>
+            <div class="text-sm text-gray-600 flex gap-4 mb-2">
+                {% if visit.maternal_weight_kg %}<span>Weight: {{ visit.maternal_weight_kg }} kg</span>{% endif %}
+                {% if visit.blood_pressure %}<span>BP: {{ visit.blood_pressure }}</span>{% endif %}
+            </div>
+            {% if visit.doctor_notes %}
+                <p class="text-sm text-gray-700">{{ visit.doctor_notes }}</p>
+            {% endif %}
+            {% if visit.next_visit_date %}
+                <p class="text-xs text-amber-700 mt-2">Next visit: {{ visit.next_visit_date|date:"M d, Y" }}</p>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p class="text-gray-500 text-sm">No visits recorded yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

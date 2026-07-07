@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import weekly_tracker_page
+from .views import tracker_page
 
 urlpatterns = [
-    path("", weekly_tracker_page, name="weekly-tracker"),
+    path("", tracker_page, name="weekly-tracker"),
 ]

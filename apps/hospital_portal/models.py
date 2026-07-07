@@ -1,50 +1,104 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
-class ClinicalRecord(models.Model):
+class PrenatalVisit(models.Model):
     """
-    Entered by doctors/nurses/data-entry staff via Django admin
-    (role-restricted, see admin.py). On save, pushes relevant fields into
-    the mother's WeeklyUpdate and HealthProfile so the mobile app reflects
-    it immediately -- this is the "real-time sync" described in the report.
+    One clinical visit, entered by hospital staff. This is the "official"
+    record -- the mother sees it read-only on her tracker page alongside
+    her own private PersonalCheckIn entries (see apps.tracker.models).
+
+    All clinical fields below are optional on any single visit (a real
+    checkup doesn't run every test every time) -- see apps.trimester_analysis
+    for the "has this ever been recorded" completeness check across her
+    full visit history, and the trend analysis built from whichever fields
+    do have data.
     """
+
+    class FetalMovement(models.TextChoices):
+        ACTIVE = "active", "Active"
+        REDUCED = "reduced", "Reduced"
+        NONE = "none", "None reported"
+
+    class UrineLevel(models.TextChoices):
+        NEGATIVE = "negative", "Negative"
+        TRACE = "trace", "Trace"
+        PLUS1 = "plus1", "+1"
+        PLUS2 = "plus2", "+2"
+        PLUS3 = "plus3", "+3"
+
+    class FetalPosition(models.TextChoices):
+        CEPHALIC = "cephalic", "Cephalic (head-down)"
+        BREECH = "breech", "Breech"
+        TRANSVERSE = "transverse", "Transverse"
+        NOT_ASSESSED = "not_assessed", "Not assessed"
+
+    class Edema(models.TextChoices):
+        NONE = "none", "None"
+        MILD_HANDS_FEET = "mild_hands_feet", "Mild -- hands/feet"
+        MILD_FACE = "mild_face", "Mild -- face"
+        SEVERE = "severe", "Severe"
+
     mother = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="clinical_records",
+        related_name="prenatal_visits",
         limit_choices_to={"role": "mother"},
     )
     entered_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
-        related_name="records_entered",
+        related_name="visits_entered",
         limit_choices_to={"role__in": ["doctor", "nurse", "data_entry"]},
     )
-    gestational_week = models.PositiveSmallIntegerField()
+    visit_date = models.DateField(default=timezone.localdate)
+    gestational_week = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    # --- The 10 core checkup data points ---
     maternal_weight_kg = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    blood_pressure = models.CharField(max_length=15, blank=True)
-    ultrasound_notes = models.TextField(blank=True)
-    appointment_notes = models.TextField(blank=True)
-    recorded_at = models.DateTimeField(auto_now_add=True)
+    blood_pressure = models.CharField(max_length=15, blank=True)  # e.g. "120/80"
+    fundal_height_cm = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    fetal_heart_rate_bpm = models.PositiveSmallIntegerField(null=True, blank=True)
+    fetal_movement = models.CharField(max_length=10, choices=FetalMovement.choices, blank=True)
+    urine_protein = models.CharField(max_length=10, choices=UrineLevel.choices, blank=True)
+    urine_glucose = models.CharField(max_length=10, choices=UrineLevel.choices, blank=True)
+    hemoglobin_g_dl = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    fetal_position = models.CharField(max_length=15, choices=FetalPosition.choices, blank=True)
+    edema = models.CharField(max_length=20, choices=Edema.choices, blank=True)
+
+    doctor_notes = models.TextField(blank=True)
+    next_visit_date = models.DateField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-recorded_at"]
-
-    def __str__(self):
-        return f"{self.mother.username} - week {self.gestational_week} (by {self.entered_by})"
+        ordering = ["-visit_date"]
 
     def save(self, *args, **kwargs):
+        if self._state.adding and self.gestational_week is None:
+            profile = getattr(self.mother, "health_profile", None)
+            if profile and profile.current_gestational_week:
+                self.gestational_week = profile.current_gestational_week
         super().save(*args, **kwargs)
-        self._sync_to_tracker()
 
-    def _sync_to_tracker(self):
-        from apps.tracker.models import WeeklyUpdate
-        update, _ = WeeklyUpdate.objects.get_or_create(
-            user=self.mother, gestational_week=self.gestational_week
-        )
-        update.maternal_weight_kg = self.maternal_weight_kg
-        update.blood_pressure = self.blood_pressure
-        update.hospital_notes = self.appointment_notes or self.ultrasound_notes
-        update.save()
+    def __str__(self):
+        return f"{self.mother.username} - {self.visit_date} (week {self.gestational_week})"
+
+
+# Field names + labels used both for the completeness checklist (staff side)
+# and for picking which fields to analyze on the Trimester Analysis page.
+TRACKED_FIELDS = [
+    ("maternal_weight_kg", "Maternal weight"),
+    ("blood_pressure", "Blood pressure"),
+    ("fundal_height_cm", "Fundal height"),
+    ("fetal_heart_rate_bpm", "Fetal heart rate"),
+    ("fetal_movement", "Fetal movement"),
+    ("urine_protein", "Urine protein"),
+    ("urine_glucose", "Urine glucose"),
+    ("hemoglobin_g_dl", "Hemoglobin"),
+    ("fetal_position", "Fetal position"),
+    ("edema", "Edema/swelling"),
+]

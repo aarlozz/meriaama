@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Hospital Staff Dashboard{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-700 mb-6">Find a Mother's Record</h1>
+
+<form method="get" class="flex gap-2 mb-6">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by username or phone number"
+           class="flex-1 border rounded px-3 py-2">
+    <button type="submit" class="bg-rose-600 text-white rounded px-4 py-2 font-medium hover:bg-rose-700">Search</button>
+</form>
+
+{% if query %}
+    <div class="space-y-2">
+        {% for mother in results %}
+            <a href="{% url 'hospital-mother-detail' mother_id=mother.id %}" class="flex justify-between items-center bg-white p-4 rounded-lg shadow hover:shadow-md">
+                <span class="font-medium text-rose-700">{{ mother.username }}</span>
+                <span class="text-sm text-gray-500">{{ mother.phone_number|default:"No phone on file" }}</span>
+            </a>
+        {% empty %}
+            <p class="text-gray-500 text-sm">No mothers found matching "{{ query }}".</p>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
