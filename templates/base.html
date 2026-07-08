@@ -1,13 +1,68 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Meri Aama{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-rose-50 min-h-screen">
 
+    <title>{% block title %}Meri Aama{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <!-- Tailwind Theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['Poppins', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#E85D75',
+                        secondary: '#FCE7F3',
+                        accent: '#E0F2FE',
+                    }
+                }
+            }
+        }
+    </script>
+
+    {% block extra_head %}{% endblock %}
+    <style>
+
+@keyframes fadeIn {
+
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.page-animation{
+
+    animation:fadeIn .5s ease;
+
+}
+
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-sky-50 font-body text-gray-800">
     {% if user.is_authenticated %}
     <nav class="bg-rose-600 text-white shadow">
         <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
@@ -34,17 +89,23 @@
     </nav>
     {% endif %}
 
-    <main class="max-w-3xl mx-auto px-4 py-8">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="mb-4 px-4 py-3 rounded bg-amber-100 text-amber-800 border border-amber-300">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+{% if request.resolver_match.url_name != "login" %}
+<main class="max-w-7xl mx-auto px-6 py-8">
+{% endif %}
 
-        {% block content %}{% endblock %}
-    </main>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-4 rounded-xl border border-amber-300 bg-amber-100 px-4 py-3 text-amber-800">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+{% if request.resolver_match.url_name != "login" %}
+</main>
+{% endif %}
 
 </body>
 </html>
