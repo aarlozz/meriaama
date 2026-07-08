@@ -1,14 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Login - Meri Aama{% endblock %}
+{% block title %}Hospital Staff Login{% endblock %}
 {% block content %}
 <div class="max-w-sm mx-auto bg-white p-6 rounded-lg shadow">
-    <h1 class="text-2xl font-bold text-rose-700 mb-6">Welcome back</h1>
-
-    {% if form.non_field_errors %}
-        <div class="mb-4 px-3 py-2 rounded bg-red-100 text-red-700 text-sm">
-            {{ form.non_field_errors|striptags }}
-        </div>
-    {% endif %}
+    <h1 class="text-2xl font-bold text-gray-700 mb-6">Hospital Staff Login</h1>
 
     <form method="post">
         {% csrf_token %}
@@ -18,16 +12,16 @@
         <label class="block text-sm font-medium mb-1">Password</label>
         <input type="password" name="password" class="w-full border rounded px-3 py-2 mb-4" required>
 
-        <button type="submit" class="w-full bg-rose-600 text-white rounded px-3 py-2 font-medium hover:bg-rose-700">
+        <button type="submit" class="w-full bg-gray-700 text-white rounded px-3 py-2 font-medium hover:bg-gray-800">
             Log in
         </button>
     </form>
 
     <p class="text-sm text-gray-600 mt-4">
-        New here? <a href="{% url 'register-page' %}" class="text-rose-600 hover:underline">Create an account</a>
+        New staff member? <a href="{% url 'staff-register' %}" class="text-rose-600 hover:underline">Register here</a>
     </p>
     <p class="text-sm text-gray-600 mt-2">
-        Hospital staff? <a href="{% url 'staff-login' %}" class="text-rose-600 hover:underline">Use the staff login</a>
+        Are you a mother? <a href="{% url 'login' %}" class="text-rose-600 hover:underline">Use the mother login</a>
     </p>
 </div>
 {% endblock %}

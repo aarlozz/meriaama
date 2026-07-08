@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Generate Staff Invite{% endblock %}
+{% block content %}
+<a href="{% url 'staff-roster' %}" class="text-sm text-rose-600 hover:underline">&larr; Back to staff</a>
+<h1 class="text-2xl font-bold text-rose-700 mt-3 mb-6">Generate Staff Invite</h1>
+
+<form method="post" class="bg-white p-6 rounded-lg shadow max-w-md">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<p class="text-xs text-red-600 mt-1">{{ field.errors|striptags }}</p>{% endif %}
+        </div>
+    {% endfor %}
+    <button type="submit" class="bg-rose-600 text-white rounded px-4 py-2 font-medium hover:bg-rose-700">Generate</button>
+</form>
+{% endblock %}
