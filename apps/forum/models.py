@@ -13,7 +13,8 @@ class ForumPost(models.Model):
     stage = models.CharField(max_length=20, choices=Stage.choices)
     title = models.CharField(max_length=150)
     body = models.TextField()
-    is_approved = models.BooleanField(default=True)  # flip to False + add a review queue later if needed
+    image = models.ImageField(upload_to="forum_images/%Y/%m/", null=True, blank=True)  # NEW
+    is_approved = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

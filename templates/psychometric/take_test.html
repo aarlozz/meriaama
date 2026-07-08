@@ -1,29 +1,104 @@
 {% extends "base.html" %}
 {% block title %}{{ test_type_label }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-bold text-rose-700 mb-2">{{ test_type_label }}</h1>
-<p class="text-gray-600 mb-6 text-sm">Answer honestly -- there are no right or wrong answers.</p>
 
-<form method="post" class="bg-white p-6 rounded-lg shadow space-y-6">
+<div class="mb-6">
+    <p class="text-xs font-semibold uppercase tracking-wide text-rose-400 mb-1">Confidential screen</p>
+    <h1 class="text-3xl font-bold text-gray-900">{{ test_type_label }}</h1>
+    <p class="text-gray-500 text-sm mt-2">Answer honestly -- there are no right or wrong answers.</p>
+</div>
+
+<div class="sticky top-0 bg-white/90 backdrop-blur z-10 pt-2 pb-4 -mx-1 px-1">
+    <div class="flex items-center justify-between mb-1.5">
+        <p id="psyProgressLabel" class="text-xs font-medium text-gray-500">0 of {{ form|length }} answered</p>
+        <p id="psyProgressPct" class="text-xs font-semibold text-rose-500">0%</p>
+    </div>
+    <div class="h-2 rounded-full bg-rose-50 overflow-hidden">
+        <div id="psyProgressFill" class="h-full rounded-full bg-gradient-to-r from-rose-400 to-rose-600 transition-all duration-300 ease-out" style="width: 0%;"></div>
+    </div>
+</div>
+
+<form method="post" id="psyForm" class="space-y-3 mt-4">
     {% csrf_token %}
     {% for field in form %}
-        <div>
-            <p class="font-medium mb-2">{{ forloop.counter }}. {{ field.label }}</p>
-            <div class="space-y-1">
+        <div class="psy-question-block bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <div class="flex items-start gap-3 mb-3">
+                <span class="shrink-0 w-6 h-6 rounded-full bg-rose-50 text-rose-600 text-xs font-semibold flex items-center justify-center mt-0.5">{{ forloop.counter }}</span>
+                <p class="font-medium text-gray-900 leading-snug">{{ field.label }}</p>
+            </div>
+            <div class="space-y-1.5 pl-9">
                 {% for radio in field %}
-                    <label class="flex items-center gap-2 text-sm cursor-pointer">
-                        {{ radio.tag }} {{ radio.choice_label }}
+                    <label class="psy-radio-option flex items-center gap-3 text-sm text-gray-600 cursor-pointer rounded-xl border border-gray-100 px-3 py-2.5 transition-colors hover:bg-gray-50">
+                        {{ radio.tag }}
+                        <span class="psy-radio-dot shrink-0"></span>
+                        <span>{{ radio.choice_label }}</span>
                     </label>
                 {% endfor %}
             </div>
             {% if field.errors %}
-                <p class="text-xs text-red-600 mt-1">Please answer this question.</p>
+                <p class="text-xs text-red-600 mt-2 pl-9">Please answer this question.</p>
             {% endif %}
         </div>
     {% endfor %}
 
-    <button type="submit" class="bg-rose-600 text-white rounded px-4 py-2 font-medium hover:bg-rose-700">
+    <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-rose-600 text-white rounded-xl px-6 py-2.5 font-medium hover:bg-rose-700 transition-colors shadow-sm mt-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
         Submit
     </button>
 </form>
+
+<style>
+    .psy-radio-option input[type="radio"] { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .psy-radio-dot {
+        width: 18px; height: 18px;
+        border-radius: 9999px;
+        border: 2px solid #e5e7eb;
+        position: relative;
+        transition: border-color 0.15s ease;
+    }
+    .psy-radio-dot::after {
+        content: "";
+        position: absolute;
+        inset: 3px;
+        border-radius: 9999px;
+        background: #e11d48;
+        transform: scale(0);
+        transition: transform 0.15s ease;
+    }
+    .psy-radio-option:has(input:checked) {
+        border-color: #fda4af;
+        background-color: #fff1f2;
+        color: #be123c;
+        font-weight: 500;
+    }
+    .psy-radio-option:has(input:checked) .psy-radio-dot { border-color: #e11d48; }
+    .psy-radio-option:has(input:checked) .psy-radio-dot::after { transform: scale(1); }
+    .psy-radio-option:has(input:focus-visible) { outline: 2px solid #fda4af; outline-offset: 2px; }
+</style>
+
+<script>
+    (function () {
+        var form = document.getElementById('psyForm');
+        if (!form) return;
+        var blocks = form.querySelectorAll('.psy-question-block');
+        var fill = document.getElementById('psyProgressFill');
+        var label = document.getElementById('psyProgressLabel');
+        var pct = document.getElementById('psyProgressPct');
+        var total = blocks.length;
+
+        function update() {
+            var answered = 0;
+            blocks.forEach(function (block) {
+                if (block.querySelector('input[type="radio"]:checked')) answered += 1;
+            });
+            var percent = total ? Math.round((answered / total) * 100) : 0;
+            fill.style.width = percent + '%';
+            label.textContent = answered + ' of ' + total + ' answered';
+            pct.textContent = percent + '%';
+        }
+
+        form.addEventListener('change', update);
+        update();
+    })();
+</script>
 {% endblock %}
