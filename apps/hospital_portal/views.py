@@ -12,26 +12,56 @@ User = get_user_model()
 
 
 def hospital_staff_required(view_func):
-    """Like @login_required, but also checks role is doctor/nurse/data_entry."""
+    """Like @login_required, but also checks role is doctor/nurse/data_entry OR admin."""
     @wraps(view_func)
     @login_required
     def wrapper(request, *args, **kwargs):
-        if not request.user.is_hospital_staff():
+        if not (request.user.is_hospital_staff() or request.user.is_hospital_admin()):
             return HttpResponseForbidden("This page is for hospital staff only.")
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+def hospital_admin_required(view_func):
+    """Stricter than hospital_staff_required -- admin only (for approvals)."""
+    @wraps(view_func)
+    @login_required
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_hospital_admin():
+            return HttpResponseForbidden("This page is for hospital admins only.")
         return view_func(request, *args, **kwargs)
     return wrapper
 
 
 @hospital_staff_required
 def staff_dashboard(request):
-    """GET /hospital/ -- search mothers by username or phone number."""
+    """
+    GET /hospital/ -- search mothers by username or phone number.
+    Admins additionally see a pending-approvals count and a full mother list
+    by default (not just search results).
+    """
     query = request.GET.get("q", "").strip()
-    results = []
     if query:
         results = User.objects.filter(role=User.Role.MOTHER).filter(
             Q(username__icontains=query) | Q(phone_number__icontains=query)
         )
-    return render(request, "hospital_portal/dashboard.html", {"query": query, "results": results})
+    elif request.user.is_hospital_admin():
+        results = User.objects.filter(role=User.Role.MOTHER)
+    else:
+        results = []
+
+    pending_count = 0
+    if request.user.is_hospital_admin():
+        pending_count = User.objects.filter(
+            role__in=[User.Role.DATA_ENTRY],
+            is_active=False,
+        ).count()
+
+    return render(request, "hospital_portal/dashboard.html", {
+        "query": query,
+        "results": results,
+        "pending_count": pending_count,
+    })
 
 
 def _completeness_checklist(visits):
@@ -99,3 +129,35 @@ def add_visit(request, mother_id):
         form = PrenatalVisitForm(initial=initial)
 
     return render(request, "hospital_portal/add_visit.html", {"form": form, "mother": mother})
+
+
+@hospital_admin_required
+def staff_approvals(request):
+    """GET /hospital/approvals/ -- list pending staff accounts for admin to approve/reject."""
+    pending = User.objects.filter(
+        role__in=[User.Role.DATA_ENTRY],
+        is_active=False,
+    )
+    return render(request, "hospital_portal/approvals.html", {"pending": pending})
+
+
+@hospital_admin_required
+def approve_staff(request, user_id):
+    """POST /hospital/approvals/<id>/approve/"""
+    staff = get_object_or_404(User, id=user_id, is_active=False)
+    if request.method == "POST":
+        staff.is_active = True
+        staff.save(update_fields=["is_active"])
+        messages.success(request, f"{staff.username} has been approved.")
+    return redirect("hospital-staff-approvals")
+
+
+@hospital_admin_required
+def reject_staff(request, user_id):
+    """POST /hospital/approvals/<id>/reject/ -- deletes the pending account."""
+    staff = get_object_or_404(User, id=user_id, is_active=False)
+    if request.method == "POST":
+        username = staff.username
+        staff.delete()
+        messages.success(request, f"{username}'s registration was rejected and removed.")
+    return redirect("hospital-staff-approvals")

@@ -1,11 +1,31 @@
 """
-IMPORTANT: The question text below is placeholder/paraphrased wording so the
-form is functional out of the box. PSS-10, EPDS, and GAD-7 are published,
-validated instruments -- for your actual academic submission, replace the
-`QUESTIONS` text with the exact licensed wording from the original published
-scales (cite them properly: Cohen et al. 1983 for PSS-10, Cox et al. 1987
-for EPDS, Spitzer et al. 2006 for GAD-7), and double check any licensing
-requirements for clinical/academic use of EPDS in particular.
+IMPORTANT: Verify this wording against your own copy of the source PDFs
+before using in an academic/clinical submission -- transcription errors
+are easy to introduce. Cite properly wherever these are displayed:
+
+  PSS-10: Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global
+          measure of perceived stress. Journal of Health and Social
+          Behavior, 24(4), 385-396.
+  EPDS:   Cox, J.L., Holden, J.M., & Sagovsky, R. (1987). Detection of
+          postnatal depression: Development of the 10-item Edinburgh
+          Postnatal Depression Scale. British Journal of Psychiatry,
+          150, 782-786.
+          (Reproducible without further permission provided authors,
+          title, and source are credited -- include this citation
+          in the UI, not just in code.)
+  GAD-7:  Spitzer, R.L., Kroenke, K., Williams, J.B., & Lowe, B. (2006).
+          A brief measure for assessing generalized anxiety disorder:
+          the GAD-7. Archives of Internal Medicine, 166(10), 1092-1097.
+          (Public domain, freely reproducible.)
+
+SCORING NOTE: PSS-10 items 4, 5, 7, 8 (0-indexed: 3, 4, 6, 7 below) are
+reverse-scored because they are positively worded. Whatever scoring
+function consumes extract_answers() output must do:
+    reverse_scored_indices = {3, 4, 6, 7}
+    score = sum(4 - v if i in reverse_scored_indices else v
+                for i, v in enumerate(answers))
+This file only fixes question text/order -- it does NOT implement that
+scoring step. Make sure it's applied downstream.
 """
 from django import forms
 from .models import PsychometricTest
@@ -17,16 +37,18 @@ QUESTIONS = {
     PsychometricTest.TestType.PSS10: {
         "scale": FREQUENCY_SCALE_0_4,
         "questions": [
+            # FIXED: was "overwhelmed by unexpected events" (not an official item) --
+            # replaced with the actual official PSS-10 item 1.
+            "In the last month, how often have you been upset because of something that happened unexpectedly?",
             "How often have you felt unable to control important things in your life?",
-            "How often have you felt nervous or stressed?",
-            "How often have you felt confident about handling personal problems?",
-            "How often have you felt things were going your way?",
-            "How often have you found you could not cope with everything you had to do?",
-            "How often have you been able to control irritations in your life?",
-            "How often have you felt on top of things?",
-            "How often have you been angered by things outside your control?",
-            "How often have you felt difficulties piling up too high to overcome?",
-            "How often have you felt overwhelmed by unexpected events?",
+            "How often have you felt nervous and stressed?",
+            "How often have you felt confident about your ability to handle your personal problems?",  # reverse-scored
+            "How often have you felt that things were going your way?",  # reverse-scored
+            "How often have you found that you could not cope with all the things that you had to do?",
+            "How often have you been able to control irritations in your life?",  # reverse-scored
+            "How often have you felt that you were on top of things?",  # reverse-scored
+            "How often have you been angered because of things that were outside of your control?",
+            "How often have you felt difficulties were piling up so high that you could not overcome them?",
         ],
     },
     PsychometricTest.TestType.EPDS: {
@@ -36,7 +58,8 @@ QUESTIONS = {
             "I have looked forward with enjoyment to things.",
             "I have blamed myself unnecessarily when things went wrong.",
             "I have been anxious or worried for no good reason.",
-            "I have felt scared or panicky for no good reason.",
+            # FIXED: was missing "very" -- original says "no very good reason".
+            "I have felt scared or panicky for no very good reason.",
             "Things have been getting on top of me.",
             "I have been so unhappy that I have had difficulty sleeping.",
             "I have felt sad or miserable.",

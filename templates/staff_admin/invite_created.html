@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Invite Created{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-rose-700 mb-6">Invite Ready</h1>
+
+<div class="bg-white p-6 rounded-lg shadow max-w-lg">
+    <p class="text-sm text-gray-600 mb-4">
+        Share this link with {{ invite.label|default:"the new staff member" }} ({{ invite.get_role_display }}).
+        It works once, and expires {{ invite.expires_at|date:"M d, Y H:i" }}.
+    </p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-3 text-sm break-all font-mono">
+        {{ registration_url }}
+    </div>
+    <a href="{% url 'staff-roster' %}" class="inline-block mt-6 text-sm text-rose-600 hover:underline">Back to staff list</a>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Manage Staff{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-rose-700">Manage Staff</h1>
+    <a href="{% url 'generate-invite' %}" class="bg-rose-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-rose-700">
+        Generate Invite
+    </a>
+</div>
+
+<h2 class="text-lg font-semibold text-gray-700 mb-3">Pending Invites</h2>
+<div class="space-y-2 mb-8">
+    {% for invite in pending_invites %}
+        <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+            <div>
+                <p class="text-sm font-medium text-rose-700">{{ invite.get_role_display }}{% if invite.label %} -- {{ invite.label }}{% endif %}</p>
+                <p class="text-xs text-gray-400">Code: {{ invite.code }} &middot; Expires {{ invite.expires_at|date:"M d, Y H:i" }}</p>
+            </div>
+            <form method="post" action="{% url 'revoke-invite' invite_id=invite.id %}">
+                {% csrf_token %}
+                <button type="submit" class="text-xs text-red-600 hover:underline">Revoke</button>
+            </form>
+        </div>
+    {% empty %}
+        <p class="text-gray-500 text-sm">No pending invites.</p>
+    {% endfor %}
+</div>
+
+<h2 class="text-lg font-semibold text-gray-700 mb-3">Staff Accounts</h2>
+<div class="space-y-2">
+    {% for staff_user in staff_users %}
+        <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+            <div>
+                <p class="text-sm font-medium text-rose-700">{{ staff_user.username }}</p>
+                <p class="text-xs text-gray-400">{{ staff_user.get_role_display }} &middot; {{ staff_user.phone_number|default:"No phone" }}</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs px-2 py-0.5 rounded-full {% if staff_user.is_active %}bg-green-100 text-green-700{% else %}bg-gray-200 text-gray-600{% endif %}">
+                    {{ staff_user.is_active|yesno:"Active,Inactive" }}
+                </span>
+                {% if staff_user != user %}
+                    <form method="post" action="{% url 'toggle-staff-active' user_id=staff_user.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="text-xs text-rose-600 hover:underline">
+                            {{ staff_user.is_active|yesno:"Deactivate,Reactivate" }}
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-gray-500 text-sm">No staff accounts yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

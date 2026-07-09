@@ -12,8 +12,6 @@ class User(AbstractUser):
 
     class Role(models.TextChoices):
         MOTHER = "mother", "Mother"
-        DOCTOR = "doctor", "Doctor"
-        NURSE = "nurse", "Nurse"
         DATA_ENTRY = "data_entry", "Data Entry Operator"
         ADMIN = "admin", "Admin"
 
@@ -26,7 +24,16 @@ class User(AbstractUser):
     )
 
     def is_hospital_staff(self):
-        return self.role in {self.Role.DOCTOR, self.Role.NURSE, self.Role.DATA_ENTRY}
+        return self.role in {self.Role.DATA_ENTRY}
+    
+    def can_manage_staff(self):
+        # Django superusers (created via createsuperuser) automatically
+        # qualify -- so your very first admin account needs zero extra setup.
+        return self.role == self.Role.ADMIN or self.is_superuser
+    
+    def is_hospital_admin(self):
+        return self.is_superuser or self.role == self.Role.ADMIN
+
 
     def __str__(self):
         return f"{self.username} ({self.role})"
