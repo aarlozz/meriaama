@@ -190,10 +190,13 @@ def trimester_analysis_page(request):
         "charts": charts,
 
         "narrative": narrative,
+        "header_title": "Trimester Analysis",
+"header_subtitle": "Review your progress across each trimester",
     }
 
     return render(
         request,
         "trimester_analysis/dashboard.html",
         context,
+        
     )
