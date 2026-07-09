@@ -50,4 +50,5 @@ def wellness_chat_page(request):
         form = WellnessQueryForm()
 
     history = Recommendation.objects.filter(user=request.user)[:10]
-    return render(request, "wellness/ask.html", {"form": form, "answer": answer, "history": history})
+    return render(request, "wellness/ask.html", {"form": form, "answer": answer, "history": history,"header_title": "Meri Aama AI",
+"header_subtitle": "Get AI-powered guidance for your pregnancy",})
