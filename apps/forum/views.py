@@ -39,6 +39,8 @@ def forum_list_page(request):
         "sort": sort,
         "has_image": has_image,
         "has_active_filters": bool(query or stage or has_image or sort != "newest"),
+        "header_title": "Community Forum",
+"header_subtitle": "Connect, ask questions, and share experiences",
     })
 
 
@@ -53,7 +55,8 @@ def forum_create_page(request):
             return redirect("forum-detail", post_id=post.id)
     else:
         form = ForumPostForm()
-    return render(request, "forum/create.html", {"form": form})
+    return render(request, "forum/create.html", {"form": form,"header_title": "Community Forum",
+"header_subtitle": "Connect, ask questions, and share experiences",})
 
 
 @login_required
@@ -69,4 +72,5 @@ def forum_detail_page(request, post_id):
             return redirect("forum-detail", post_id=post.id)
     else:
         form = ForumCommentForm()
-    return render(request, "forum/detail.html", {"post": post, "form": form})
+    return render(request, "forum/detail.html", {"post": post, "form": form,"header_title": "Community Forum",
+"header_subtitle": "Connect, ask questions, and share experiences",})
