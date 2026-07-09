@@ -125,4 +125,204 @@
     "source_url": "https://example.org/postpartum-recovery-basics",
     "source_name": "Postpartum Care Guidance (paraphrased)"
   }
+  [
+  {
+    "id": "nutrition-008",
+    "text": "Protein needs increase during pregnancy to support the growth of the baby, placenta, and the mother's own tissues, including breast and uterine growth. Good sources include lentils, beans, chickpeas, eggs, dairy, fish (low-mercury varieties), and lean meat if eaten. Spreading protein across meals rather than eating it all at once can make it easier to reach daily needs, especially if appetite is reduced by nausea.",
+    "source_url": "https://example.org/protein-in-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-009",
+    "text": "Omega-3 fatty acids, particularly DHA, support the baby's brain and eye development, especially in the second and third trimesters. Sources include oily fish (within recommended low-mercury limits), walnuts, flaxseed, and fortified foods. A doctor may recommend a supplement if dietary intake is low, particularly for mothers who don't eat fish.",
+    "source_url": "https://example.org/omega-3-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-010",
+    "text": "Vitamin D supports calcium absorption and bone development for both mother and baby. Sunlight exposure, fortified dairy or plant milk, and eggs are common sources, though many antenatal programs also recommend a supplement, particularly for mothers with limited sun exposure or darker skin tone, since dietary sources alone are often insufficient.",
+    "source_url": "https://example.org/vitamin-d-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-011",
+    "text": "Constipation is common in pregnancy due to hormonal changes and the growing uterus pressing on the intestines. Increasing fiber intake through whole grains, fruits, vegetables, and legumes, along with staying well hydrated and keeping up gentle movement, can help. If constipation is severe or accompanied by pain, a doctor should be consulted before taking any laxative.",
+    "source_url": "https://example.org/constipation-diet-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-012",
+    "text": "Iodine is important for the baby's brain development and the mother's thyroid function during pregnancy. Iodized salt, dairy, and eggs are common dietary sources. Since iodine needs increase in pregnancy, some antenatal programs include it in prenatal supplements -- a doctor can advise on whether additional iodine is needed based on local diet patterns.",
+    "source_url": "https://example.org/iodine-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-013",
+    "text": "Small, frequent, easy-to-digest snacks -- such as crackers, bananas, yogurt, or a handful of nuts -- can help manage nausea and blood sugar swings, especially in the first trimester or when main meals feel unappealing. Keeping a light snack by the bed for first thing in the morning can also ease morning nausea before getting up.",
+    "source_url": "https://example.org/snack-ideas-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "nutrition-014",
+    "text": "Weight gain guidance during pregnancy varies by pre-pregnancy body weight and is best discussed individually with a doctor rather than following a single fixed target. Steady, gradual weight gain that follows a doctor's guidance, alongside a varied and nutrient-dense diet, is generally more meaningful than any single number on a scale.",
+    "source_url": "https://example.org/weight-gain-guidance-pregnancy",
+    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+  },
+  {
+    "id": "exercise-003",
+    "text": "Pelvic floor exercises (Kegels) -- gently tightening and releasing the muscles used to stop urine flow -- can be practiced throughout pregnancy and help support the pelvic organs, may ease labor, and can reduce postpartum urinary leakage. A few sets of 10 to 15 repetitions a day is a common starting guideline, though a doctor or physiotherapist can tailor this individually.",
+    "source_url": "https://example.org/pelvic-floor-exercises-pregnancy",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "exercise-004",
+    "text": "Slow, deep breathing exercises practiced regularly during pregnancy can help build a habit that's useful for coping with contractions during labor, and can also reduce day-to-day stress and anxiety. Simple practice involves inhaling slowly through the nose for a count of four, and exhaling slowly through the mouth for a count of six.",
+    "source_url": "https://example.org/breathing-exercises-pregnancy",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "exercise-005",
+    "text": "In the first trimester, fatigue and nausea often make sustained exercise harder; shorter, gentler sessions such as a slow walk or light stretching are reasonable, and it's fine to rest more than usual. Exercise intensity can generally increase again in the second trimester as energy often improves, but should always stay within what feels comfortable.",
+    "source_url": "https://example.org/first-trimester-exercise",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "exercise-006",
+    "text": "Exercise should be paused and a doctor contacted if any of the following occur during activity: dizziness, chest pain, calf pain or swelling, regular painful contractions, vaginal bleeding, fluid leaking, or a noticeable decrease in fetal movement afterward. These are signals to stop and seek medical advice rather than push through.",
+    "source_url": "https://example.org/when-to-stop-exercise-pregnancy",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-004",
+    "text": "Anxiety specifically about labor and birth is common and has a name -- tokophobia when severe. Talking openly with a doctor or midwife about specific fears, attending a birth preparation class, and creating a simple birth plan can help make the process feel less uncertain. Persistent, intense fear that affects daily functioning is worth discussing with a mental health professional.",
+    "source_url": "https://example.org/fear-of-childbirth",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-005",
+    "text": "Body image changes during pregnancy -- adjusting to a changing shape, weight, and skin -- can bring up complicated feelings for some mothers. These feelings are common and understandable. Focusing on what the body is doing (growing and supporting a baby) rather than its appearance, and talking with someone supportive about these feelings, can help.",
+    "source_url": "https://example.org/body-image-pregnancy",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-006",
+    "text": "Sleep difficulty and low mood or anxiety often reinforce each other during pregnancy -- poor sleep can worsen mood, and anxiety can make it harder to fall asleep. Keeping a consistent bedtime, limiting screens before bed, and using relaxation techniques like slow breathing can help both sleep and mood together. Persistent insomnia is worth mentioning to a doctor.",
+    "source_url": "https://example.org/sleep-and-mood-pregnancy",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-007",
+    "text": "Having a support network -- family, friends, a partner, or a community group -- is strongly associated with better emotional wellbeing during pregnancy and postpartum. If a mother feels isolated, joining an antenatal class, a mothers' support group, or an online community of other pregnant women can help build connection.",
+    "source_url": "https://example.org/support-network-pregnancy",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-008",
+    "text": "Work-related stress during pregnancy is common, particularly around balancing job demands with fatigue, appointments, and eventual leave planning. Where possible, discussing flexible arrangements with an employer early, breaking tasks into smaller chunks, and setting realistic expectations for workload can reduce stress. A doctor can advise if work stress is affecting health.",
+    "source_url": "https://example.org/work-stress-pregnancy",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "mentalhealth-009",
+    "text": "Many antenatal care programs include a brief mental health or mood screening at routine checkups, since perinatal anxiety and depression are common and often under-reported. Answering these questions honestly helps a doctor offer the right support early -- there is no need to minimize or hide difficult feelings during a checkup.",
+    "source_url": "https://example.org/mental-health-screening-antenatal",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-004",
+    "text": "Fatigue is very common in the first trimester as the body adjusts to rising hormone levels and increased blood volume. Resting when possible, going to bed earlier, and not feeling guilty about needing more sleep than usual can help. Fatigue often improves somewhat in the second trimester before returning to some degree in the third.",
+    "source_url": "https://example.org/first-trimester-fatigue",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-005",
+    "text": "Breast tenderness and changes, including increased size and sensitivity, are common from early pregnancy as the body prepares for breastfeeding. A supportive, well-fitting bra can improve comfort. This usually eases somewhat after the first trimester as the body adjusts to hormonal changes.",
+    "source_url": "https://example.org/breast-changes-pregnancy",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-006",
+    "text": "Frequent urination is common both in early pregnancy, due to hormonal changes and increased blood flow to the kidneys, and again in the third trimester, as the growing baby presses on the bladder. This is usually normal, but burning, pain, or urgency alongside frequency can indicate a urinary tract infection and should be checked by a doctor.",
+    "source_url": "https://example.org/frequent-urination-pregnancy",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-007",
+    "text": "Heartburn and acid reflux are common in the second and third trimesters as the growing uterus puts pressure on the stomach and hormones relax the valve between the stomach and esophagus. Eating smaller meals, avoiding lying down right after eating, and staying upright for a while after meals can help. A doctor can advise on safe remedies if symptoms are frequent.",
+    "source_url": "https://example.org/heartburn-pregnancy",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-008",
+    "text": "Round ligament pain -- a sharp or pulling sensation on one or both sides of the lower abdomen -- is common in the second trimester as the ligaments supporting the uterus stretch. It's usually brief and related to movement or position changes. Persistent, severe, or one-sided pain accompanied by fever or bleeding should be checked by a doctor.",
+    "source_url": "https://example.org/round-ligament-pain",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-009",
+    "text": "Braxton Hicks contractions -- irregular, generally painless tightening of the uterus -- can start in the second trimester and become more noticeable in the third as the body prepares for labor. Unlike true labor contractions, they don't follow a regular pattern and usually ease with rest, position changes, or hydration. Regular, increasingly intense, or painful contractions should be reported to a doctor.",
+    "source_url": "https://example.org/braxton-hicks-contractions",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "symptoms-010",
+    "text": "Shortness of breath in the third trimester is common as the growing uterus presses upward on the diaphragm and lungs. Sitting or standing with good posture and resting frequently can help. Sudden, severe shortness of breath, especially with chest pain or a fast heartbeat, needs urgent medical attention.",
+    "source_url": "https://example.org/shortness-of-breath-third-trimester",
+    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
+  },
+  {
+    "id": "warningsigns-002",
+    "text": "Signs of possible preterm labor -- occurring before 37 weeks -- include regular contractions, a dull backache, pelvic pressure, cramping similar to menstrual cramps, and a change in vaginal discharge (increased, watery, or blood-tinged). Any of these signs before 37 weeks should be reported to a doctor promptly rather than waiting to see if they pass.",
+    "source_url": "https://example.org/preterm-labor-signs",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "warningsigns-003",
+    "text": "A significant decrease in the baby's usual movement pattern, especially in the third trimester, is a reason to contact a doctor promptly. Mothers are often encouraged to get familiar with their baby's normal movement pattern so a noticeable change stands out. Doctors would rather be contacted unnecessarily than have a real change go unreported.",
+    "source_url": "https://example.org/reduced-fetal-movement",
+    "source_name": "Antenatal Care Guidance (paraphrased)"
+  },
+  {
+    "id": "warningsigns-004",
+    "text": "If low mood, anxiety, or distress during pregnancy ever includes thoughts of harming oneself, this is a medical emergency and should be treated with the same urgency as a physical warning sign -- contacting a doctor, a mental health crisis line, or going to a health facility immediately is the right response. These thoughts are a sign of a treatable condition, not a personal failing, and support is available.",
+    "source_url": "https://example.org/perinatal-crisis-warning-signs",
+    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
+  },
+  {
+    "id": "postpartum-002",
+    "text": "Recovery after a cesarean birth generally takes longer than after a vaginal birth, with the incision needing several weeks to heal. Avoiding heavy lifting, supporting the abdomen when coughing or laughing, and watching the incision for signs of infection (increasing redness, warmth, discharge, or fever) are all part of safe recovery. A doctor will advise on when normal activity can resume.",
+    "source_url": "https://example.org/cesarean-recovery",
+    "source_name": "Postpartum Care Guidance (paraphrased)"
+  },
+  {
+    "id": "postpartum-003",
+    "text": "Pelvic floor recovery after birth -- whether vaginal or cesarean -- benefits from gradually resuming gentle pelvic floor exercises once cleared by a doctor, usually starting a few days after birth if there are no complications. Ongoing urinary leakage or a feeling of pelvic heaviness beyond the early weeks is common but should be discussed with a doctor, since support and treatment are available.",
+    "source_url": "https://example.org/pelvic-floor-postpartum",
+    "source_name": "Postpartum Care Guidance (paraphrased)"
+  },
+  {
+    "id": "postpartum-004",
+    "text": "Nutrition needs remain elevated after birth, particularly for mothers who are breastfeeding, who typically need extra calories and fluids to support milk production. Continuing a varied, nutrient-dense diet, staying hydrated, and continuing any doctor-recommended supplements supports both recovery and, if applicable, breastfeeding.",
+    "source_url": "https://example.org/postpartum-nutrition",
+    "source_name": "Postpartum Care Guidance (paraphrased)"
+  },
+  {
+    "id": "postpartum-005",
+    "text": "Returning to exercise after birth should be gradual and is generally guided by how the birth went and how recovery is progressing -- many doctors suggest waiting for a postpartum checkup (commonly around six weeks) before resuming more vigorous activity, though gentle walking can often start much sooner if comfortable. Any new pain, heavy bleeding, or dizziness during activity is a reason to stop and check with a doctor.",
+    "source_url": "https://example.org/postpartum-exercise-return",
+    "source_name": "Postpartum Care Guidance (paraphrased)"
+  },
+  {
+    "id": "postpartum-006",
+    "text": "Difficulty feeling an immediate emotional bond with a newborn is more common than many mothers expect, and doesn't predict how the relationship will develop over time. Skin-to-skin contact, responding to the baby's cues, and giving the relationship time can help. If a persistent sense of disconnection is distressing, sharing this with a doctor is worthwhile, since it can be a sign of postpartum depression that responds well to support.",
+    "source_url": "https://example.org/bonding-with-newborn",
+    "source_name": "Postpartum Care Guidance (paraphrased)"
+  },
+  {
+    "id": "postpartum-007",
+    "text": "Warning signs after birth that need prompt medical attention include: heavy vaginal bleeding (soaking a pad within an hour), fever, severe headache with visual changes, calf pain or swelling, chest pain or difficulty breathing, or a foul-smelling discharge. As with pregnancy, when in doubt it is safer to contact a doctor or health facility than to wait.",
+    "source_url": "https://example.org/postpartum-warning-signs",
+    "source_name": "Postpartum Care Guidance (paraphrased)"
+  }
+]
 ]
