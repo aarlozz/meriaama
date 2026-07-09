@@ -74,5 +74,27 @@
     {% empty %}
         <p class="text-gray-500 text-sm">No visits recorded yet.</p>
     {% endfor %}
+
+    <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-700">Medications</h2>
+    <a href="{% url 'hospital-prescribe-medication' mother_id=mother.id %}" class="bg-rose-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-rose-700">
+        Prescribe New
+    </a>
+</div>
+<div class="space-y-2 mb-8">
+    {% for med in medications %}
+        <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+            <div>
+                <p class="text-sm font-medium text-rose-700">{{ med.name }} -- {{ med.dosage }}, {{ med.frequency_per_day }}x/day</p>
+                <p class="text-xs text-gray-400">{{ med.start_date|date:"M d" }} to {{ med.end_date|date:"M d, Y" }}</p>
+            </div>
+            <span class="text-xs px-2 py-0.5 rounded-full {% if med.is_active %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-500{% endif %}">
+                {{ med.is_active|yesno:"Active,Completed" }}
+            </span>
+        </div>
+    {% empty %}
+        <p class="text-gray-500 text-sm">No medications prescribed yet.</p>
+    {% endfor %}
+</div>
 </div>
 {% endblock %}

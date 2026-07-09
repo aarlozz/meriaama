@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Meri Aama{% endblock %}
+{% block content %}
+
+<div class="mb-8">
+    <p class="text-sm text-gold uppercase tracking-wide font-medium mb-1">Namaste</p>
+    <h1 class="font-display text-3xl font-semibold text-berry">{{ user.username }}</h1>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-6 mb-8">
+
+    <!-- Pregnancy progress ring -->
+    <div class="bg-white rounded-2xl shadow-sm p-6 flex items-center gap-5">
+        {% if week %}
+            <div class="rounded-full w-28 h-28 flex items-center justify-center shrink-0"
+                 style="background: conic-gradient(var(--berry) {{ week_pct }}%, var(--gold-soft) 0);">
+                <div class="bg-white rounded-full w-20 h-20 flex flex-col items-center justify-center">
+                    <span class="font-mono text-xl font-semibold text-berry">{{ week }}</span>
+                    <span class="text-[10px] text-gray-400">of 40 wks</span>
+                </div>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Trimester {{ trimester }}</p>
+                {% if days_until_due %}
+                    <p class="font-display text-lg text-berry">{{ days_until_due }} days</p>
+                    <p class="text-xs text-gray-500">until your due date</p>
+                {% else %}
+                    <p class="text-sm text-gray-500">Due date not set yet</p>
+                {% endif %}
+            </div>
+        {% else %}
+            <div>
+                <p class="text-sm text-gray-500 mb-2">Your pregnancy week isn't set yet.</p>
+                <p class="text-xs text-gray-400">This fills in once your LMP date or a hospital visit is recorded.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Latest mood -->
+    <div class="bg-white rounded-2xl shadow-sm p-6">
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-2">Latest Mood</p>
+        {% if recent_moods %}
+            <p class="font-display text-2xl text-berry mb-1">{{ recent_moods.0.get_score_display }}</p>
+            <p class="text-xs text-gray-500">{{ recent_moods.0.logged_at|date:"M d, Y" }}</p>
+        {% else %}
+            <p class="text-sm text-gray-500">No check-ins yet.</p>
+        {% endif %}
+        <a href="{% url 'mood-checkin' %}" class="inline-block mt-3 text-xs text-berry hover:underline">Log today's mood &rarr;</a>
+    </div>
+
+    <!-- Latest stress test -->
+    <div class="bg-white rounded-2xl shadow-sm p-6">
+        <p class="text-xs text-gray-400 uppercase tracking-wide mb-2">Stress Level</p>
+        {% if latest_test %}
+            <p class="font-display text-2xl mb-1
+                {% if latest_test.risk_level == 'high' %}text-red-600
+                {% elif latest_test.risk_level == 'moderate' %}text-gold
+                {% else %}text-sage{% endif %}">
+                {{ latest_test.get_risk_level_display }}
+            </p>
+            <p class="text-xs text-gray-500">{{ latest_test.get_test_type_display }} -- {{ latest_test.taken_at|date:"M d, Y" }}</p>
+        {% else %}
+            <p class="text-sm text-gray-500">No tests taken yet.</p>
+        {% endif %}
+        <a href="{% url 'psychometric-select' %}" class="inline-block mt-3 text-xs text-berry hover:underline">Take a test &rarr;</a>
+    </div>
+</div>
+
+{% if next_visit_date or active_flags %}
+<div class="grid lg:grid-cols-2 gap-6 mb-8">
+    {% if next_visit_date %}
+        <div class="bg-gold-soft rounded-2xl p-5 flex items-center justify-between">
+            <div>
+                <p class="text-xs text-berry-dark uppercase tracking-wide font-medium mb-1">Next Visit</p>
+                <p class="font-display text-lg text-berry-dark">{{ next_visit_date|date:"M d, Y" }}</p>
+            </div>
+            <a href="{% url 'weekly-tracker' %}" class="text-xs text-berry-dark hover:underline">View tracker &rarr;</a>
+        </div>
+    {% endif %}
+
+    {% if active_flags %}
+        <div class="bg-white border border-red-200 rounded-2xl p-5">
+            <p class="text-xs text-red-600 uppercase tracking-wide font-medium mb-2">Worth a look</p>
+            {% for flag in active_flags %}
+                <p class="text-xs text-gray-600 mb-1 line-clamp-2">{{ flag.message }}</p>
+            {% endfor %}
+            <a href="{% url 'trimester-analysis' %}" class="inline-block mt-2 text-xs text-berry hover:underline">See full analysis &rarr;</a>
+        </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<h2 class="font-display text-lg text-berry mb-4">Quick Actions</h2>
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <a href="{% url 'mood-checkin' %}" class="block bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
+        <h3 class="font-medium text-berry mb-1">Daily Mood Check-In</h3>
+        <p class="text-xs text-gray-500">Log how you're feeling today.</p>
+    </a>
+    <a href="{% url 'psychometric-select' %}" class="block bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
+        <h3 class="font-medium text-berry mb-1">Psychometric Stress Test</h3>
+        <p class="text-xs text-gray-500">PSS-10, EPDS, or GAD-7.</p>
+    </a>
+    <a href="{% url 'weekly-tracker' %}" class="block bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
+        <h3 class="font-medium text-berry mb-1">Pregnancy Tracker</h3>
+        <p class="text-xs text-gray-500">Visits, notes, and reminders.</p>
+    </a>
+    <a href="{% url 'trimester-analysis' %}" class="block bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
+        <h3 class="font-medium text-berry mb-1">Trimester Analysis</h3>
+        <p class="text-xs text-gray-500">Patterns in your checkup data.</p>
+    </a>
+    <a href="{% url 'insights' %}" class="block bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
+        <h3 class="font-medium text-berry mb-1">Your Insights</h3>
+        <p class="text-xs text-gray-500">Mood + stress, combined.</p>
+    </a>
+</div>
+{% endblock %}

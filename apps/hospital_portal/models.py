@@ -102,3 +102,73 @@ TRACKED_FIELDS = [
     ("fetal_position", "Fetal position"),
     ("edema", "Edema/swelling"),
 ]
+
+
+class Medication(models.Model):
+    """
+    A prescribed course of medication. Staff-entered, same trust model as
+    PrenatalVisit. Adherence (whether she actually took each dose) is
+    tracked separately in apps.tracker.models.MedicationLog -- mirrors the
+    existing PrenatalVisit (staff) / PersonalCheckIn (mother) split.
+    """
+    mother = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name="medications", limit_choices_to={"role": "mother"},
+    )
+    prescribed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,
+        related_name="medications_prescribed",
+    )
+    visit = models.ForeignKey(
+        PrenatalVisit, on_delete=models.SET_NULL, null=True, blank=True, related_name="medications",
+    )
+
+    name = models.CharField(max_length=150)
+    dosage = models.CharField(max_length=50, help_text="e.g. 500mg")
+    frequency_per_day = models.PositiveSmallIntegerField(default=1)
+    duration_days = models.PositiveSmallIntegerField()
+    start_date = models.DateField(default=timezone.localdate)
+    notes = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-start_date"]
+
+    @property
+    def end_date(self):
+        from datetime import timedelta
+        return self.start_date + timedelta(days=self.duration_days - 1)
+
+    @property
+    def is_active(self):
+        today = timezone.localdate()
+        return self.start_date <= today <= self.end_date
+
+    @property
+    def day_number(self):
+        today = timezone.localdate()
+        raw = (today - self.start_date).days + 1
+        return max(min(raw, self.duration_days), 0)
+
+    @property
+    def expected_doses_so_far(self):
+        return min(max(self.day_number, 0), self.duration_days) * self.frequency_per_day
+
+    @property
+    def total_expected_doses(self):
+        return self.duration_days * self.frequency_per_day
+
+    @property
+    def taken_doses_count(self):
+        return self.logs.count()
+
+    @property
+    def adherence_percent(self):
+        expected = self.expected_doses_so_far
+        if expected <= 0:
+            return 0
+        return min(round(self.taken_doses_count / expected * 100), 100)
+
+    def __str__(self):
+        return f"{self.name} ({self.mother.username})"

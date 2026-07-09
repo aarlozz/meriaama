@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "apps.hospital_portal",
     "apps.daily_wellness",
     "apps.trimester_analysis",
+    "apps.pregnancy_dashboard",
 ]
 
 MIDDLEWARE = [

@@ -21,6 +21,7 @@ urlpatterns = [
     path("insights/", include("apps.insights.urls")),
     path("hospital/", include("apps.hospital_portal.urls")),
     path("trimester-analysis/", include("apps.trimester_analysis.urls")),
+    path("dashboard/", include("apps.pregnancy_dashboard.urls")),
 ]
 
 if settings.DEBUG:

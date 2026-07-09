@@ -5,46 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Meri Aama{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ivory: #FBF6EF;
+            --berry: #7D2748;
+            --berry-dark: #5C1B35;
+            --gold: #C9973E;
+            --gold-soft: #F2E4C4;
+            --sage: #6E8F6C;
+            --ink: #2E2320;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--ivory); color: var(--ink); }
+        .font-display { font-family: 'Fraunces', serif; }
+        .font-mono { font-family: 'IBM Plex Mono', monospace; }
+        .bg-berry { background-color: var(--berry); }
+        .bg-berry-dark { background-color: var(--berry-dark); }
+        .text-berry { color: var(--berry); }
+        .bg-gold { background-color: var(--gold); }
+        .bg-gold-soft { background-color: var(--gold-soft); }
+        .text-gold { color: var(--gold); }
+        .bg-sage { background-color: var(--sage); }
+        .text-sage { color: var(--sage); }
+        .border-gold-soft { border-color: var(--gold-soft); }
+    </style>
 </head>
-<body class="bg-rose-50 min-h-screen">
+<body class="min-h-screen">
+    <div class="flex min-h-screen">
+        {% if user.is_authenticated %}
+        <aside class="w-60 bg-berry-dark text-white flex flex-col shrink-0">
+            <div class="px-6 py-6 border-b border-white/10">
+                <a href="{% if user.role == 'mother' %}{% url 'dashboard' %}{% else %}{% url 'hospital-dashboard' %}{% endif %}"
+                   class="font-display text-2xl font-semibold">Meri Aama</a>
+            </div>
 
-    {% if user.is_authenticated %}
-    <nav class="bg-rose-600 text-white shadow">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
-            <a href="{% url 'dashboard' %}" class="font-bold text-lg">Meri Aama</a>
-            <div class="flex flex-wrap gap-3 text-sm">
-                <a href="{% url 'dashboard' %}" class="hover:underline">Dashboard</a>
-                 <a href="{% url 'health-profile' %}" class="hover:underline">Health Profile</a>
-                <a href="{% url 'mood-checkin' %}" class="hover:underline">Mood</a>
-                <a href="{% url 'psychometric-select' %}" class="hover:underline">Stress Test</a>
-                <a href="{% url 'weekly-tracker' %}" class="hover:underline">Tracker</a>
-                <a href="{% url 'forum-list' %}" class="hover:underline">Forum</a>
-                <a href="{% url 'report-list' %}" class="hover:underline">Reports</a>
-                <a href="{% url 'wellness-chat' %}" class="hover:underline">Ask Meri Aama</a>
-                <a href="{% url 'daily-plan' %}" class="hover:underline">Today's Plan</a>
-                <a href="{% url 'insights' %}" class="hover:underline">Insights</a>
-                <a href="{% url 'trimester-analysis' %}" class="hover:underline">trimester analysis</a>
-                
-                <form method="post" action="{% url 'logout' %}" class="inline">
+            <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
+                {% if user.role == 'mother' %}
+                    <a href="{% url 'dashboard' %}" class="block px-3 py-2 rounded-md hover:bg-white/10 transition">Dashboard</a>
+                    <a href="{% url 'mood-checkin' %}" class="block px-3 py-2 rounded-md hover:bg-white/10 transition">Mood Check-In</a>
+                    <a href="{% url 'psychometric-select' %}" class="block px-3 py-2 rounded-md hover:bg-white/10 transition">Stress Test</a>
+                    <a href="{% url 'tracker' %}" class="block px-3 py-2 rounded-md hover:bg-white/10 transition">Pregnancy Tracker</a>
+                    <a href="{% url 'trimester-analysis' %}" class="block px-3 py-2 rounded-md hover:bg-white/10 transition">Trimester Analysis</a>
+                    <a href="{% url 'insights' %}" class="block px-3 py-2 rounded-md hover:bg-white/10 transition">Insights</a>
+                {% elif user.is_hospital_staff or user.is_hospital_admin %}
+                    <a href="{% url 'hospital-dashboard' %}" class="block px-3 py-2 rounded-md hover:bg-white/10 transition">Patients</a>
+                    {% if user.is_hospital_admin %}
+                        <a href="{% url 'hospital-staff-approvals' %}" class="block px-3 py-2 rounded-md hover:bg-white/10 transition">Staff Approvals</a>
+                    {% endif %}
+                {% endif %}
+            </nav>
+
+            <div class="px-3 py-4 border-t border-white/10">
+                <p class="px-3 text-xs text-white/60 mb-2 truncate">{{ user.username }}</p>
+                <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="hover:underline">Logout</button>
+                    <button type="submit" class="w-full text-left px-3 py-2 rounded-md text-sm hover:bg-white/10 transition text-white/80">
+                        Log out
+                    </button>
                 </form>
             </div>
-        </div>
-    </nav>
-    {% endif %}
-
-    <main class="max-w-3xl mx-auto px-4 py-8">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="mb-4 px-4 py-3 rounded bg-amber-100 text-amber-800 border border-amber-300">
-                    {{ message }}
-                </div>
-            {% endfor %}
+        </aside>
         {% endif %}
 
-        {% block content %}{% endblock %}
-    </main>
-
+        <main class="flex-1 px-8 py-8 {% if user.is_authenticated %}max-w-5xl{% else %}max-w-3xl mx-auto{% endif %}">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 px-4 py-3 rounded-lg bg-gold-soft text-berry-dark border border-gold text-sm">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 </body>
 </html>

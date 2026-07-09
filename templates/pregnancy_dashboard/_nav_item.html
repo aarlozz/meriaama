@@ -1,0 +1,10 @@
+{% comment %}
+Usage: {% include "pregnancy_dashboard/_nav_item.html" with key="mood" icon="😊" label="Mood" url_name="mood-checkin" %}
+Compares `key` against the `active_nav` context variable each view should set,
+e.g. in the dashboard view: context["active_nav"] = "pregnancy_dashboard"
+{% endcomment %}
+<a href="{% url url_name %}"
+   class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors
+   {% if active_nav == key %} bg-rose-50 text-rose-700 font-medium {% else %} text-gray-500 hover:bg-gray-50 hover:text-gray-700 {% endif %}">
+    <span class="text-base">{{ icon }}</span> {{ label }}
+</a>
