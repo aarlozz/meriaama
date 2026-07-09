@@ -42,6 +42,9 @@ def tracker_page(request):
     return render(request, "tracker/timeline.html", {
         "form": form, "timeline": timeline, "medications": medications,
         "next_visit_date": next_visit_date, "is_overdue": is_overdue,
+        "header_title": "Pregnancy Tracker",
+"header_subtitle": "Monitor your pregnancy journey week by week",
+        
     })
 
 
