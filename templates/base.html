@@ -63,13 +63,13 @@
 </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-sky-50 font-body text-gray-800">
-    {% if user.is_authenticated %}
+    <!-- {% if user.is_authenticated %}
     <nav class="bg-rose-600 text-white shadow">
         <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
             <a href="{% url 'dashboard' %}" class="font-bold text-lg">Meri Aama</a>
             <div class="flex flex-wrap gap-3 text-sm">
                 <a href="{% url 'dashboard' %}" class="hover:underline">Dashboard</a>
-                 <a href="{% url 'health-profile' %}" class="hover:underline">Health Profile</a>
+                <a href="{% url 'health-profile' %}" class="hover:underline">Health Profile</a>
                 <a href="{% url 'mood-checkin' %}" class="hover:underline">Mood</a>
                 <a href="{% url 'psychometric-select' %}" class="hover:underline">Stress Test</a>
                 <a href="{% url 'weekly-tracker' %}" class="hover:underline">Tracker</a>
@@ -87,7 +87,7 @@
             </div>
         </div>
     </nav>
-    {% endif %}
+    {% endif %} -->
 
 {% if request.resolver_match.url_name != "login" %}
 <main class="max-w-7xl mx-auto px-6 py-8">
