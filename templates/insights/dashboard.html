@@ -1,80 +1,260 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 {% block title %}Your Insights{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-bold text-rose-700 mb-2">Your Wellbeing Insights</h1>
-<p class="text-gray-600 text-sm mb-6">Mood trend and stress check history, last 30 days.</p>
+
+<div class="relative overflow-hidden bg-gradient-to-br from-rose-50 via-white to-white rounded-2xl p-8 mb-8 border border-rose-100/60">
+    <div class="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-rose-100/60 blur-2xl"></div>
+    <div class="relative">
+        <p class="text-xs font-semibold uppercase tracking-wide text-rose-400 mb-2">Last 30 days</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-1">Your Wellbeing Insights</h1>
+        <p class="text-sm text-gray-500">Mood trend and stress check history, at a glance.</p>
+    </div>
+</div>
 
 {% if insight_text %}
-    <div class="bg-white p-5 rounded-lg shadow mb-6 border-l-4 border-rose-400">
-        <p class="text-gray-700 text-sm">{{ insight_text }}</p>
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-rose-400 mb-6 flex items-start gap-3">
+        <span class="text-lg shrink-0">✨</span>
+        <p class="text-gray-700 text-sm leading-relaxed">{{ insight_text }}</p>
     </div>
 {% endif %}
 
+{% if has_mood_data or has_stress_data %}
+<div id="quickStats" class="grid sm:grid-cols-3 gap-3 mb-8"></div>
+{% endif %}
+
+<div class="mb-3 flex items-center justify-between">
+    <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-400">Mood trend</h2>
+</div>
 {% if has_mood_data %}
-    <div class="bg-white p-5 rounded-lg shadow mb-6">
-        <h2 class="font-semibold text-gray-700 mb-3">Mood trend</h2>
-        <canvas id="moodChart" height="100"></canvas>
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mb-8">
+        <div class="flex items-center gap-4 mb-4 text-xs text-gray-400">
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-0.5 rounded-full bg-rose-500 inline-block"></span> Daily average</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-0.5 rounded-full bg-gray-300 inline-block" style="border-top: 2px dashed #d1d5db; height:0;"></span> 7-day trend</span>
+        </div>
+        <canvas id="moodChart" height="110"></canvas>
     </div>
 {% else %}
-    <div class="bg-white p-5 rounded-lg shadow mb-6">
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-dashed border-gray-200 mb-8 text-center">
         <p class="text-gray-500 text-sm">No mood entries yet in the last 30 days -- check in on the Mood page to start seeing your trend here.</p>
     </div>
 {% endif %}
 
+<div class="mb-3 flex items-center justify-between">
+    <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-400">Stress test history</h2>
+</div>
 {% if has_stress_data %}
-    <div class="bg-white p-5 rounded-lg shadow">
-        <h2 class="font-semibold text-gray-700 mb-3">Stress test history</h2>
-        <div class="space-y-2">
-            {% for point in chart_data.stress_points %}
-                <div class="flex justify-between items-center text-sm border-b last:border-0 py-2">
-                    <span class="text-gray-600">{{ point.date }} -- {{ point.test_type }}</span>
-                    <span class="px-2 py-1 rounded-full text-xs
-                        {% if point.risk_level == 'high' %}bg-red-100 text-red-700
-                        {% elif point.risk_level == 'moderate' %}bg-amber-100 text-amber-700
-                        {% else %}bg-green-100 text-green-700{% endif %}">
-                        {{ point.total_score }} pts -- {{ point.risk_level }}
-                    </span>
-                </div>
-            {% endfor %}
-        </div>
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mb-4">
+        <canvas id="stressChart" height="90"></canvas>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50 max-h-72 overflow-y-auto">
+        {% for point in chart_data.stress_points %}
+            <div class="flex justify-between items-center text-sm px-5 py-3">
+                <span class="flex items-center gap-2.5 text-gray-600">
+                    <span class="w-1.5 h-1.5 rounded-full shrink-0
+                        {% if point.risk_level == 'high' %}bg-red-500
+                        {% elif point.risk_level == 'moderate' %}bg-amber-500
+                        {% else %}bg-green-500{% endif %}"></span>
+                    <span class="text-gray-400">{{ point.date }}</span>
+                    <span class="text-gray-300">&middot;</span>
+                    <span class="text-gray-700">{{ point.test_type }}</span>
+                </span>
+                <span class="px-2.5 py-1 rounded-full text-xs font-medium
+                    {% if point.risk_level == 'high' %}bg-red-50 text-red-700
+                    {% elif point.risk_level == 'moderate' %}bg-amber-50 text-amber-700
+                    {% else %}bg-green-50 text-green-700{% endif %}">
+                    {{ point.total_score }} pts &middot; {{ point.risk_level }}
+                </span>
+            </div>
+        {% endfor %}
     </div>
 {% else %}
-    <div class="bg-white p-5 rounded-lg shadow">
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-dashed border-gray-200 text-center">
         <p class="text-gray-500 text-sm">No stress tests taken in the last 30 days -- try one from the Stress Test page.</p>
     </div>
 {% endif %}
 
 {{ chart_data|json_script:"chart-data" }}
 
-{% if has_mood_data %}
+{% if has_mood_data or has_stress_data %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    const chartData = JSON.parse(document.getElementById('chart-data').textContent);
+(function () {
+    var chartData = JSON.parse(document.getElementById('chart-data').textContent);
+    var MOOD_EMOJI = { 1: '😢', 2: '😕', 3: '😐', 4: '🙂', 5: '😄' };
 
-    new Chart(document.getElementById('moodChart'), {
-        type: 'line',
-        data: {
-            labels: chartData.labels,
-            datasets: [{
-                label: 'Average mood (1-5)',
-                data: chartData.mood_values,
-                borderColor: '#e11d48',
-                backgroundColor: 'rgba(225, 29, 72, 0.1)',
-                spanGaps: true,
-                tension: 0.3,
-                fill: true,
-            }]
-        },
-        options: {
-            scales: {
-                y: { min: 1, max: 5, ticks: { stepSize: 1 } }
-            },
-            plugins: {
-                legend: { display: false }
+    function rollingAverage(values, window) {
+        return values.map(function (_, i) {
+            var start = Math.max(0, i - window + 1);
+            var slice = values.slice(start, i + 1).filter(function (v) { return v !== null && v !== undefined; });
+            if (!slice.length) return null;
+            var sum = slice.reduce(function (a, b) { return a + b; }, 0);
+            return Math.round((sum / slice.length) * 100) / 100;
+        });
+    }
+
+    // ---- quick stats ----
+    var statsEl = document.getElementById('quickStats');
+    if (statsEl) {
+        var cards = [];
+
+        if (chartData.mood_values && chartData.mood_values.length) {
+            var moodVals = chartData.mood_values.filter(function (v) { return v !== null && v !== undefined; });
+            if (moodVals.length) {
+                var avg = moodVals.reduce(function (a, b) { return a + b; }, 0) / moodVals.length;
+                var half = Math.max(1, Math.floor(moodVals.length / 2));
+                var firstHalfAvg = moodVals.slice(0, half).reduce(function (a, b) { return a + b; }, 0) / half;
+                var secondHalfAvg = moodVals.slice(-half).reduce(function (a, b) { return a + b; }, 0) / half;
+                var delta = secondHalfAvg - firstHalfAvg;
+                var trendIcon = delta > 0.15 ? '↑' : (delta < -0.15 ? '↓' : '→');
+                var trendColor = delta > 0.15 ? 'text-green-600' : (delta < -0.15 ? 'text-red-600' : 'text-gray-500');
+                var latest = moodVals[moodVals.length - 1];
+
+                cards.push(
+                    '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">' +
+                        '<p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Average mood</p>' +
+                        '<p class="text-2xl font-bold text-gray-900">' + avg.toFixed(1) + ' <span class="text-lg">' + (MOOD_EMOJI[Math.round(avg)] || '') + '</span></p>' +
+                    '</div>'
+                );
+                cards.push(
+                    '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">' +
+                        '<p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Trend</p>' +
+                        '<p class="text-2xl font-bold ' + trendColor + '">' + trendIcon + ' <span class="text-sm font-medium text-gray-500">vs earlier</span></p>' +
+                    '</div>'
+                );
+                cards.push(
+                    '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">' +
+                        '<p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Latest check-in</p>' +
+                        '<p class="text-2xl font-bold text-gray-900">' + (MOOD_EMOJI[latest] || latest) + '</p>' +
+                    '</div>'
+                );
             }
         }
-    });
+
+        if ((!chartData.mood_values || !chartData.mood_values.length) && chartData.stress_points && chartData.stress_points.length) {
+            var latestPoint = chartData.stress_points[chartData.stress_points.length - 1];
+            cards.push(
+                '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:col-span-3">' +
+                    '<p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Latest stress check</p>' +
+                    '<p class="text-2xl font-bold text-gray-900">' + latestPoint.total_score + ' pts <span class="text-sm font-medium text-gray-500">&middot; ' + latestPoint.risk_level + ' risk</span></p>' +
+                '</div>'
+            );
+        }
+
+        statsEl.innerHTML = cards.join('');
+        if (!cards.length) { statsEl.remove(); }
+    }
+
+    // ---- mood chart ----
+    var moodCanvas = document.getElementById('moodChart');
+    if (moodCanvas) {
+        var ctx = moodCanvas.getContext('2d');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 220);
+        gradient.addColorStop(0, 'rgba(225, 29, 72, 0.22)');
+        gradient.addColorStop(1, 'rgba(225, 29, 72, 0.02)');
+
+        var trendLine = rollingAverage(chartData.mood_values, 7);
+
+        new Chart(moodCanvas, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: 'Daily average',
+                        data: chartData.mood_values,
+                        borderColor: '#e11d48',
+                        backgroundColor: gradient,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        pointBackgroundColor: '#e11d48',
+                        spanGaps: true,
+                        tension: 0.35,
+                        fill: true,
+                    },
+                    {
+                        label: '7-day trend',
+                        data: trendLine,
+                        borderColor: '#d1d5db',
+                        borderDash: [5, 4],
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        spanGaps: true,
+                        tension: 0.35,
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: {
+                        min: 1, max: 5, ticks: {
+                            stepSize: 1,
+                            callback: function (value) { return MOOD_EMOJI[value] || value; }
+                        },
+                        grid: { color: '#f3f4f6' }
+                    },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1f2937',
+                        padding: 10,
+                        callbacks: {
+                            label: function (item) {
+                                if (item.datasetIndex === 1) return '7-day trend: ' + (item.parsed.y ?? '--');
+                                var v = item.parsed.y;
+                                return (MOOD_EMOJI[Math.round(v)] || '') + '  ' + v;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // ---- stress chart ----
+    var stressCanvas = document.getElementById('stressChart');
+    if (stressCanvas && chartData.stress_points && chartData.stress_points.length) {
+        var colorMap = { high: '#ef4444', moderate: '#f59e0b', low: '#22c55e' };
+        var points = chartData.stress_points;
+
+        new Chart(stressCanvas, {
+            type: 'bar',
+            data: {
+                labels: points.map(function (p) { return p.date; }),
+                datasets: [{
+                    label: 'Score',
+                    data: points.map(function (p) { return p.total_score; }),
+                    backgroundColor: points.map(function (p) { return colorMap[p.risk_level] || '#9ca3af'; }),
+                    borderRadius: 6,
+                    maxBarThickness: 28,
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1f2937',
+                        padding: 10,
+                        callbacks: {
+                            title: function (items) { return points[items[0].dataIndex].test_type; },
+                            label: function (item) {
+                                var p = points[item.dataIndex];
+                                return p.total_score + ' pts \u00b7 ' + p.risk_level + ' risk';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+})();
 </script>
 {% endif %}
 {% endblock %}
-

@@ -1,37 +1,99 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 {% block title %}Community Forum{% endblock %}
 {% block content %}
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-rose-700">Community Forum</h1>
-    <a href="{% url 'forum-create' %}" class="bg-rose-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-rose-700">
+
+<div class="flex justify-between items-start mb-6 gap-4">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900">Community Forum</h1>
+        <p class="text-gray-500 text-sm mt-1">Ask questions, share what's helping you.</p>
+    </div>
+    <a href="{% url 'forum-create' %}" class="shrink-0 inline-flex items-center gap-1.5 bg-rose-600 text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-rose-700 shadow-sm transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         New Post
     </a>
 </div>
 
-<div class="flex flex-wrap gap-2 mb-6 text-sm">
-    <a href="{% url 'forum-list' %}" class="px-3 py-1 rounded-full {% if not selected_stage %}bg-rose-600 text-white{% else %}bg-white text-gray-600{% endif %}">
-        All
-    </a>
-    {% for value, label in stages %}
-        <a href="?stage={{ value }}" class="px-3 py-1 rounded-full {% if selected_stage == value %}bg-rose-600 text-white{% else %}bg-white text-gray-600{% endif %}">
-            {{ label }}
-        </a>
-    {% endfor %}
-</div>
+<form method="get" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-8">
+    <div class="flex flex-col sm:flex-row gap-3">
+        <div class="relative flex-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+            </svg>
+            <input type="text" name="q" value="{{ query }}" placeholder="Search title, text, or author..."
+                   class="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300">
+        </div>
+
+        <select name="stage" class="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-rose-200">
+            <option value="">All stages</option>
+            {% for value, label in stages %}
+                <option value="{{ value }}" {% if selected_stage == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="sort" class="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-rose-200">
+            <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest first</option>
+            <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest first</option>
+            <option value="most_commented" {% if sort == "most_commented" %}selected{% endif %}>Most commented</option>
+        </select>
+
+        <button type="submit" class="bg-gray-900 text-white rounded-xl px-5 py-2.5 text-sm font-medium hover:bg-gray-800 transition-colors">
+            Filter
+        </button>
+    </div>
+
+    <div class="flex items-center justify-between mt-3">
+        <label class="inline-flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+            <input type="checkbox" name="has_image" {% if has_image %}checked{% endif %}
+                   class="rounded border-gray-300 text-rose-600 focus:ring-rose-300">
+            Only posts with photos
+        </label>
+
+        {% if has_active_filters %}
+            <a href="{% url 'forum-list' %}" class="text-sm text-rose-600 hover:underline">Clear filters</a>
+        {% endif %}
+    </div>
+</form>
 
 <div class="space-y-3">
     {% for post in posts %}
-        <a href="{% url 'forum-detail' post_id=post.id %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-            <div class="flex justify-between items-center mb-1">
-                <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">{{ post.get_stage_display }}</span>
-                <span class="text-xs text-gray-400">by {{ post.author.username }}</span>
+        <a href="{% url 'forum-detail' post_id=post.id %}" class="group block bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-rose-100 transition-all">
+            <div class="flex justify-between items-center mb-2.5">
+                {% if post.stage == "first_trimester" %}
+                    <span class="text-xs font-medium bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">{{ post.get_stage_display }}</span>
+                {% elif post.stage == "second_trimester" %}
+                    <span class="text-xs font-medium bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full">{{ post.get_stage_display }}</span>
+                {% elif post.stage == "third_trimester" %}
+                    <span class="text-xs font-medium bg-violet-50 text-violet-700 px-2.5 py-1 rounded-full">{{ post.get_stage_display }}</span>
+                {% else %}
+                    <span class="text-xs font-medium bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">{{ post.get_stage_display }}</span>
+                {% endif %}
+                <span class="text-xs text-gray-400">{{ post.created_at|timesince }} ago</span>
             </div>
-            <h2 class="font-semibold text-rose-700">{{ post.title }}</h2>
-            <p class="text-sm text-gray-600 mt-1 line-clamp-2">{{ post.body|truncatewords:25 }}</p>
-            <p class="text-xs text-gray-400 mt-2">{{ post.comments.count }} comment{{ post.comments.count|pluralize }}</p>
+
+            <h2 class="font-semibold text-gray-900 group-hover:text-rose-700 transition-colors mb-1.5">{{ post.title }}</h2>
+            <p class="text-sm text-gray-500 leading-relaxed line-clamp-2">{{ post.body|truncatewords:25 }}</p>
+
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="" class="w-full h-40 object-cover rounded-xl mt-3">
+            {% endif %}
+
+            <div class="flex items-center gap-2 mt-4 pt-3 border-t border-gray-50">
+                <div class="w-6 h-6 rounded-full bg-rose-100 text-rose-600 text-[10px] font-semibold flex items-center justify-center uppercase shrink-0">
+                    {{ post.author.username|first }}
+                </div>
+                <span class="text-xs text-gray-500">{{ post.author.username }}</span>
+                <span class="text-gray-300">&middot;</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4V5Z"/></svg>
+                <span class="text-xs text-gray-400">{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</span>
+            </div>
         </a>
     {% empty %}
-        <p class="text-gray-500 text-sm">No posts yet -- be the first to share.</p>
+        <div class="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-gray-300 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <p class="text-gray-500 text-sm">
+                {% if has_active_filters %}No posts match your filters.{% else %}No posts yet — be the first to share.{% endif %}
+            </p>
+        </div>
     {% endfor %}
 </div>
 {% endblock %}

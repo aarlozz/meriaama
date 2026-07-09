@@ -1,59 +1,64 @@
-{% extends "base.html" %}
-{% block title %}Dashboard - Meri Aama{% endblock %}
+{% extends "dashboard_base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
 {% block content %}
-<h1 class="text-2xl font-bold text-rose-700 mb-2">Namaste, {{ user.username }}</h1>
 
-{% if profile and profile.current_gestational_week %}
-    <p class="text-gray-600 mb-6">You're at week {{ profile.current_gestational_week }} of your pregnancy.</p>
-{% else %}
-    <p class="text-gray-600 mb-6">Welcome to Meri Aama.</p>
-{% endif %}
+<div class="space-y-8">
 
-<div class="grid sm:grid-cols-2 gap-4">
-    
-    <a href="{% url 'health-profile' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Health Profile</h2>
-        <p class="text-sm text-gray-600 mt-1">Your pregnancy dates, blood group, and conditions.</p>
-    </a>
-    <a href="{% url 'mood-checkin' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Daily Mood Check-In</h2>
-        <p class="text-sm text-gray-600 mt-1">Log how you're feeling today.</p>
-    </a>
-     <a href="{% url 'psychometric-select' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Psychometric Stress Test</h2>
-        <p class="text-sm text-gray-600 mt-1">PSS-10, EPDS, or GAD-7.</p>
-    </a>
-     <a href="{% url 'weekly-tracker' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Pregnancy & Baby Tracker</h2>
-        <p class="text-sm text-gray-600 mt-1">Weekly updates from your care team.</p>
-    </a>
-     <a href="{% url 'forum-list' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Community Forum</h2>
-        <p class="text-sm text-gray-600 mt-1">Connect with other mothers.</p>
-    </a>
-     <a href="{% url 'report-list' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Health Report Summary</h2>
-        <p class="text-sm text-gray-600 mt-1">Upload a lab PDF, get a plain-language summary.</p>
-    </a>
-    <a href="{% url 'wellness-chat' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-    <h2 class="font-semibold text-rose-700">Ask Meri Aama</h2>
-    <p class="text-sm text-gray-600 mt-1">Get grounded guidance for your stage of pregnancy.</p>
-</a>
-<a href="{% url 'daily-plan' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-    <h2 class="font-semibold text-rose-700">Today's Wellness Plan</h2>
-    <p class="text-sm text-gray-600 mt-1">Nutrition, mental health, and movement tips for today.</p>
-</a>
-<a href="{% url 'insights' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-    <h2 class="font-semibold text-rose-700">Your Insights</h2>
-    <p class="text-sm text-gray-600 mt-1">Mood trend + stress history, combined.</p>
-</a>
-<a href="{% url 'trimester-analysis' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-    <h2 class="font-semibold text-rose-700">trimester analysis</h2>
-    <p class="text-sm text-gray-600 mt-1">Mood trend + stress history, combined.</p>
-</a>
-    <div class="block bg-white p-5 rounded-lg shadow opacity-50">
-        <h2 class="font-semibold text-gray-500">More features coming soon</h2>
-        <p class="text-sm text-gray-400 mt-1">Stress test, tracker, forum, and more -- built one at a time.</p>
-    </div>
+    <!-- ===================== -->
+    <!-- Greeting -->
+    <!-- ===================== -->
+
+    <section class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
+        <!-- Left -->
+
+        <div>
+
+            <p class="text-rose-500 font-semibold uppercase tracking-wider">
+                Dashboard
+            </p>
+
+            <h1 class="mt-2 text-5xl font-extrabold text-gray-900">
+
+                👋 Good Morning, Premal
+
+            </h1>
+
+            <p class="mt-4 max-w-2xl text-lg text-gray-500 leading-relaxed">
+
+                Welcome back! Here's your pregnancy summary for today.
+                Stay healthy, stay positive, and take care of yourself and your baby.
+
+            </p>
+
+        </div>
+
+        <!-- Right -->
+
+        <div
+            class="rounded-3xl bg-white px-8 py-6 shadow-sm border border-rose-100">
+
+            <p class="text-gray-500">
+
+                Today
+
+            </p>
+
+            <h2 class="mt-2 text-3xl font-bold text-gray-900">
+
+                Tuesday,
+                July 8
+
+            </h2>
+
+        </div>
+
+    </section>
+
 </div>
+
 {% endblock %}

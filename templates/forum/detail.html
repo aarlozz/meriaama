@@ -1,36 +1,69 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
-<a href="{% url 'forum-list' %}" class="text-sm text-rose-600 hover:underline">&larr; Back to forum</a>
 
-<div class="bg-white p-6 rounded-lg shadow mt-4 mb-6">
-    <div class="flex justify-between items-center mb-2">
-        <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">{{ post.get_stage_display }}</span>
-        <span class="text-xs text-gray-400">by {{ post.author.username }} &middot; {{ post.created_at|date:"M d, Y" }}</span>
+<a href="{% url 'forum-list' %}" class="inline-flex items-center gap-1 text-sm text-rose-600 hover:underline mb-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to forum
+</a>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+        {% if post.stage == "first_trimester" %}
+            <span class="text-xs font-medium bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">{{ post.get_stage_display }}</span>
+        {% elif post.stage == "second_trimester" %}
+            <span class="text-xs font-medium bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full">{{ post.get_stage_display }}</span>
+        {% elif post.stage == "third_trimester" %}
+            <span class="text-xs font-medium bg-violet-50 text-violet-700 px-2.5 py-1 rounded-full">{{ post.get_stage_display }}</span>
+        {% else %}
+            <span class="text-xs font-medium bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">{{ post.get_stage_display }}</span>
+        {% endif %}
+        <span class="text-xs text-gray-400">{{ post.created_at|date:"M d, Y" }}</span>
     </div>
-    <h1 class="text-xl font-bold text-rose-700 mb-3">{{ post.title }}</h1>
-    <p class="text-gray-700 whitespace-pre-wrap">{{ post.body }}</p>
+
+    <h1 class="text-2xl font-bold text-gray-900 mb-4">{{ post.title }}</h1>
+    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap mb-5">{{ post.body }}</p>
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="" class="w-full rounded-xl mb-5">
+    {% endif %}
+
+    <div class="flex items-center gap-2 pt-4 border-t border-gray-50">
+        <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 text-xs font-semibold flex items-center justify-center uppercase shrink-0">
+            {{ post.author.username|first }}
+        </div>
+        <span class="text-sm text-gray-600">{{ post.author.username }}</span>
+    </div>
 </div>
 
-<h2 class="text-lg font-semibold text-gray-700 mb-3">Comments</h2>
-<div class="space-y-2 mb-6">
+<h2 class="text-lg font-semibold text-gray-900 mb-4">
+    Comments <span class="text-gray-400 font-normal">({{ post.comments.count }})</span>
+</h2>
+
+<div class="space-y-3 mb-8">
     {% for comment in post.comments.all %}
-        <div class="bg-white p-3 rounded shadow-sm">
-            <p class="text-xs font-medium text-rose-700">{{ comment.author.username }}</p>
-            <p class="text-sm text-gray-700">{{ comment.body }}</p>
+        <div class="flex gap-3">
+            <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 text-xs font-semibold flex items-center justify-center uppercase shrink-0 mt-0.5">
+                {{ comment.author.username|first }}
+            </div>
+            <div class="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3">
+                <p class="text-xs font-medium text-gray-700 mb-0.5">{{ comment.author.username }}</p>
+                <p class="text-sm text-gray-600 leading-relaxed">{{ comment.body }}</p>
+            </div>
         </div>
     {% empty %}
-        <p class="text-gray-500 text-sm">No comments yet.</p>
+        <p class="text-gray-400 text-sm pl-11">No comments yet — be the first to reply.</p>
     {% endfor %}
 </div>
 
-<form method="post" class="bg-white p-4 rounded-lg shadow">
+<form method="post" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
     {% csrf_token %}
     {{ form.body }}
     {% if form.body.errors %}
-        <p class="text-xs text-red-600 mt-1">{{ form.body.errors|striptags }}</p>
+        <p class="text-xs text-red-600 mt-1.5">{{ form.body.errors|striptags }}</p>
     {% endif %}
-    <button type="submit" class="mt-3 bg-rose-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-rose-700">
+    <button type="submit" class="mt-3 inline-flex items-center gap-1.5 bg-rose-600 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-rose-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l17-8L4 4v6.5L15 12 4 13.5V20Z"/></svg>
         Comment
     </button>
 </form>

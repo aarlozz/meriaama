@@ -1,5 +1,6 @@
 from django import forms
 from .models import PrenatalVisit
+from . models import Medication
 
 
 class PrenatalVisitForm(forms.ModelForm):
@@ -55,3 +56,17 @@ class StaffHealthProfileForm(forms.ModelForm):
         for name, field in self.fields.items():
             if name != "allergies" and not isinstance(field.widget, (forms.CheckboxInput,)):
                 field.widget.attrs.setdefault("class", "w-full border rounded px-3 py-2")
+
+
+class MedicationForm(forms.ModelForm):
+    class Meta:
+        model = Medication
+        fields = ["name", "dosage", "frequency_per_day", "duration_days", "start_date", "notes"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "w-full border rounded px-3 py-2", "placeholder": "e.g. Iron + Folic Acid"}),
+            "dosage": forms.TextInput(attrs={"class": "w-full border rounded px-3 py-2", "placeholder": "e.g. 500mg"}),
+            "frequency_per_day": forms.NumberInput(attrs={"class": "w-full border rounded px-3 py-2", "min": 1}),
+            "duration_days": forms.NumberInput(attrs={"class": "w-full border rounded px-3 py-2", "min": 1, "placeholder": "e.g. 30"}),
+            "start_date": forms.DateInput(attrs={"type": "date", "class": "w-full border rounded px-3 py-2"}),
+            "notes": forms.Textarea(attrs={"rows": 2, "class": "w-full border rounded px-3 py-2"}),
+        }                

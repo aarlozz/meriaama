@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}Meri Aama{% endblock %}
+    </title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    
+    <!-- Lucide icon -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+    lucide.createIcons();
+</script>
+</head>
+
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-sky-50 min-h-screen">
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="fixed top-5 right-5 z-50 space-y-2">
+            {% for message in messages %}
+                <div class="rounded-xl border border-rose-200 bg-white px-5 py-3 shadow-lg">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- ========================= -->
+    <!-- Main Layout -->
+    <!-- ========================= -->
+
+    <div class="flex min-h-screen">
+
+        <!-- Sidebar -->
+        {% include "components/sidebar.html" %}
+
+        <!-- Right Side -->
+        <div class="flex flex-1 flex-col">
+
+            <!-- Top Header -->
+            {% include "components/topbar.html" %}
+
+            <!-- Main Content -->
+            <main class="flex-1 p-8">
+
+                {% block content %}
+                {% endblock %}
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        lucide.createIcons();
+    </script>
+
+    {% block extra_js %}
+    {% endblock %}
+
+</body>
+
+</html>

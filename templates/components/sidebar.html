@@ -1,0 +1,165 @@
+{% load static %}
+
+<!-- ========================================= -->
+<!-- Sidebar -->
+<!-- ========================================= -->
+
+<aside class="w-72 bg-white border-r border-rose-100 shadow-sm flex flex-col">
+  <!-- ========================================= -->
+  <!-- Logo -->
+  <!-- ========================================= -->
+
+  <div class="px-8 py-8 border-b border-rose-100">
+    <a href="{% url 'dashboard' %}" class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 text-white flex items-center justify-center text-2xl shadow-lg"
+      >
+        🌸
+      </div>
+
+      <div>
+        <h1 class="text-4xl font-extrabold text-rose-600 leading-none">
+          Meri Aama
+        </h1>
+
+        <p class="text-sm text-gray-500 mt-1">Mother Care Platform</p>
+      </div>
+    </a>
+  </div>
+
+  <!-- ========================================= -->
+  <!-- Navigation -->
+  <!-- ========================================= -->
+
+  <nav class="flex-1 px-5 py-6">
+    <p class="text-xs uppercase tracking-widest text-gray-400 mb-4 px-3">
+      Main Menu
+    </p>
+
+    <div class="space-y-2">
+      <!-- Dashboard -->
+      <a
+        href="{% url 'dashboard' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'dashboard' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="house" class="h-8 w-8"></i>
+        Dashboard
+      </a>
+
+      <!-- Health Profile -->
+      <a
+        href="{% url 'health-profile' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'health-profile' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="scan-heart"></i>
+        Health Profile
+      </a>
+
+      <!-- Mood -->
+      <a
+        href="{% url 'mood-checkin' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'mood-checkin' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="smile"></i>
+        Mood Tracker
+      </a>
+
+      <!-- Daily Wellness -->
+      <a
+        href="{% url 'daily-plan' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'daily-plan' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="activity"></i>
+        Daily Wellness
+      </a>
+
+      <a
+        href="{% url 'psychometric-select' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'psychometric-select' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="brain" class="h-8 w-8"></i>
+        Psychometric Test
+      </a>
+      <a
+        href="{% url 'tracker' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'tracker' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="baby" class="h-8 w-8"></i>
+        Pregnancy Tracker
+      </a>
+      <a
+        href="{% url 'forum-list' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'forum-list' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="rectangle-ellipsis"></i>
+        Forum
+      </a>
+      <a
+        href="#"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition"
+      >
+        <span class="text-xl">💊</span>
+        Medicines
+      </a>
+      <a
+        href="#"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition"
+      >
+        <span class="text-xl">🏥</span>
+        Hospitals
+      </a>
+      <a
+        href="{% url 'report-list' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'report-list' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="chart-column" class="h-8 w-8"></i>
+        Reports
+      </a>
+      <a
+        href="{% url 'wellness-chat' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'wellness-chat' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="bot" class="h-8 w-8"></i>
+        Ask Meri Aama
+      </a>
+      <a
+        href="{% url 'insights' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'insights' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="smile" class="h-8 w-8"></i>
+        Mental Wellbeing
+      </a>
+      <a
+        href="{% url 'trimester-analysis' %}"
+        class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'trimester-analysis' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
+      >
+        <i data-lucide="calendar" class="h-8 w-8"></i>
+        Trimester Analysis
+      </a>
+    </div>
+  </nav>
+
+  <!-- ========================================= -->
+  <!-- Bottom Section -->
+  <!-- ========================================= -->
+
+  <div class="border-t border-rose-100 p-5">
+    <a
+      href="#"
+      class="flex items-center gap-4 rounded-2xl px-4 py-3 text-gray-600 hover:bg-gray-100 transition"
+    >
+      <span>⚙️</span>
+
+      Settings
+    </a>
+
+    <a
+      href="{% url 'logout' %}"
+      class="mt-2 flex items-center gap-4 rounded-2xl px-4 py-3 text-red-500 hover:bg-red-50 transition"
+    >
+      <span>🚪</span>
+
+      Logout
+    </a>
+  </div>
+</aside>
