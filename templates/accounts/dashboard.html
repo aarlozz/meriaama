@@ -1,59 +1,1199 @@
 {% extends "base.html" %}
-{% block title %}Dashboard - Meri Aama{% endblock %}
+{% load static %}
+
+{% block title %}Dashboard | Meri Aama{% endblock %}
+
 {% block content %}
-<h1 class="text-2xl font-bold text-rose-700 mb-2">Namaste, {{ user.username }}</h1>
 
-{% if profile and profile.current_gestational_week %}
-    <p class="text-gray-600 mb-6">You're at week {{ profile.current_gestational_week }} of your pregnancy.</p>
-{% else %}
-    <p class="text-gray-600 mb-6">Welcome to Meri Aama.</p>
-{% endif %}
+<!-- ===================================================== -->
+<!-- Dashboard Wrapper -->
+<!-- ===================================================== -->
 
-<div class="grid sm:grid-cols-2 gap-4">
-    
-    <a href="{% url 'health-profile' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Health Profile</h2>
-        <p class="text-sm text-gray-600 mt-1">Your pregnancy dates, blood group, and conditions.</p>
-    </a>
-    <a href="{% url 'mood-checkin' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Daily Mood Check-In</h2>
-        <p class="text-sm text-gray-600 mt-1">Log how you're feeling today.</p>
-    </a>
-     <a href="{% url 'psychometric-select' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Psychometric Stress Test</h2>
-        <p class="text-sm text-gray-600 mt-1">PSS-10, EPDS, or GAD-7.</p>
-    </a>
-     <a href="{% url 'weekly-tracker' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Pregnancy & Baby Tracker</h2>
-        <p class="text-sm text-gray-600 mt-1">Weekly updates from your care team.</p>
-    </a>
-     <a href="{% url 'forum-list' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Community Forum</h2>
-        <p class="text-sm text-gray-600 mt-1">Connect with other mothers.</p>
-    </a>
-     <a href="{% url 'report-list' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-        <h2 class="font-semibold text-rose-700">Health Report Summary</h2>
-        <p class="text-sm text-gray-600 mt-1">Upload a lab PDF, get a plain-language summary.</p>
-    </a>
-    <a href="{% url 'wellness-chat' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-    <h2 class="font-semibold text-rose-700">Ask Meri Aama</h2>
-    <p class="text-sm text-gray-600 mt-1">Get grounded guidance for your stage of pregnancy.</p>
-</a>
-<a href="{% url 'daily-plan' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-    <h2 class="font-semibold text-rose-700">Today's Wellness Plan</h2>
-    <p class="text-sm text-gray-600 mt-1">Nutrition, mental health, and movement tips for today.</p>
-</a>
-<a href="{% url 'insights' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-    <h2 class="font-semibold text-rose-700">Your Insights</h2>
-    <p class="text-sm text-gray-600 mt-1">Mood trend + stress history, combined.</p>
-</a>
-<a href="{% url 'trimester-analysis' %}" class="block bg-white p-5 rounded-lg shadow hover:shadow-md">
-    <h2 class="font-semibold text-rose-700">trimester analysis</h2>
-    <p class="text-sm text-gray-600 mt-1">Mood trend + stress history, combined.</p>
-</a>
-    <div class="block bg-white p-5 rounded-lg shadow opacity-50">
-        <h2 class="font-semibold text-gray-500">More features coming soon</h2>
-        <p class="text-sm text-gray-400 mt-1">Stress test, tracker, forum, and more -- built one at a time.</p>
+<div class="min-h-screen bg-rose-50">
+
+    <div class="flex">
+
+        <!-- ===================================================== -->
+        <!-- Sidebar -->
+        <!-- ===================================================== -->
+
+        <aside
+            class="hidden lg:flex w-72 min-h-screen flex-col justify-between border-r border-rose-100 bg-white shadow-sm">
+
+            <div>
+
+                <!-- Logo -->
+
+                <div class="border-b border-rose-100 px-8 py-8">
+
+                    <h1 class="text-3xl font-black text-rose-600">
+
+                        🌸 Meri Aama
+
+                    </h1>
+
+                    <p class="mt-2 text-sm text-gray-500">
+
+                        Mother Care Platform
+
+                    </p>
+
+                </div>
+
+                <!-- Navigation -->
+
+                <nav class="mt-8 px-5 space-y-2">
+
+                    <a href="#"
+                        class="flex items-center gap-4 rounded-2xl bg-rose-100 px-5 py-4 font-semibold text-rose-600">
+
+                        🏠 Dashboard
+
+                    </a>
+
+                    <a href="#"
+                        class="flex items-center gap-4 rounded-2xl px-5 py-4 text-gray-600 transition hover:bg-rose-50">
+
+                        🤰 Pregnancy
+
+                    </a>
+
+                    <a href="#"
+                        class="flex items-center gap-4 rounded-2xl px-5 py-4 text-gray-600 transition hover:bg-rose-50">
+
+                        📅 Appointments
+
+                    </a>
+
+                    <a href="#"
+                        class="flex items-center gap-4 rounded-2xl px-5 py-4 text-gray-600 transition hover:bg-rose-50">
+
+                        💊 Medicines
+
+                    </a>
+
+                    <a href="#"
+                        class="flex items-center gap-4 rounded-2xl px-5 py-4 text-gray-600 transition hover:bg-rose-50">
+
+                        ❤️ Health Tracker
+
+                    </a>
+
+                    <a href="#"
+                        class="flex items-center gap-4 rounded-2xl px-5 py-4 text-gray-600 transition hover:bg-rose-50">
+
+                        🤖 AI Assistant
+
+                    </a>
+
+                    <a href="#"
+                        class="flex items-center gap-4 rounded-2xl px-5 py-4 text-gray-600 transition hover:bg-rose-50">
+
+                        🏥 Hospitals
+
+                    </a>
+
+                    <a href="#"
+                        class="flex items-center gap-4 rounded-2xl px-5 py-4 text-gray-600 transition hover:bg-rose-50">
+
+                        ⚙ Settings
+
+                    </a>
+
+                </nav>
+
+            </div>
+
+            <!-- Logout -->
+
+            <div class="border-t border-rose-100 p-5">
+
+                <a href="#"
+                    class="flex items-center gap-4 rounded-2xl px-5 py-4 text-red-500 transition hover:bg-red-50">
+
+                    🚪 Logout
+
+                </a>
+
+            </div>
+
+        </aside>
+
+        <!-- ===================================================== -->
+        <!-- Main Content -->
+        <!-- ===================================================== -->
+
+        <main class="flex-1">
+
+            <!-- ===================================================== -->
+            <!-- Top Navbar -->
+            <!-- ===================================================== -->
+
+            <header
+                class="sticky top-0 z-30 flex items-center justify-between border-b border-rose-100 bg-white px-10 py-6">
+
+                <div>
+
+                    <h2 class="text-3xl font-bold text-gray-800">
+
+                        Dashboard
+
+                    </h2>
+
+                    <p class="mt-1 text-gray-500">
+
+                        Welcome back to Meri Aama
+
+                    </p>
+
+                </div>
+
+                <div class="flex items-center gap-6">
+
+                    <!-- Notification -->
+
+                    <button
+                        class="relative rounded-2xl bg-rose-50 p-4 transition hover:bg-rose-100">
+
+                        🔔
+
+                        <span
+                            class="absolute right-3 top-3 h-2 w-2 rounded-full bg-red-500">
+
+                        </span>
+
+                    </button>
+
+                    <!-- User -->
+
+                    <div
+                        class="flex items-center gap-4 rounded-2xl border border-rose-100 bg-rose-50 px-5 py-3">
+
+                        <div
+                            class="flex h-12 w-12 items-center justify-center rounded-full bg-rose-500 text-xl font-bold text-white">
+
+                            P
+
+                        </div>
+
+                        <div>
+
+                            <p class="font-semibold text-gray-700">
+
+                                Premal
+
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+
+                                Mother Account
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+            <!-- ===================================================== -->
+            <!-- Dashboard Body -->
+            <!-- ===================================================== -->
+
+            <section class="p-10">
+
+                <!-- ===================================================== -->
+<!-- Welcome Hero -->
+<!-- ===================================================== -->
+
+<div class="mb-10 flex items-center justify-between">
+
+    <div>
+
+        <h1 class="text-4xl font-bold text-gray-800">
+
+            👋 Good Morning, Premal
+
+        </h1>
+
+        <p class="mt-3 text-lg text-gray-500">
+
+            Welcome back! Here's your pregnancy summary for today.
+
+        </p>
+
     </div>
+
+    <div class="rounded-3xl bg-white px-8 py-5 shadow-sm border border-rose-100">
+
+        <p class="text-sm text-gray-500">
+
+            Today
+
+        </p>
+
+        <h3 class="mt-1 text-xl font-bold text-gray-800">
+
+            Tuesday, July 8
+
+        </h3>
+
+    </div>
+
 </div>
+
+
+
+<!-- ===================================================== -->
+<!-- Summary Cards -->
+<!-- ===================================================== -->
+
+<div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
+
+    <!-- Pregnancy Week -->
+
+    <div
+        class="rounded-3xl bg-white border border-rose-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-gray-500">
+
+                    Pregnancy Week
+
+                </p>
+
+                <h2 class="mt-3 text-4xl font-bold text-rose-600">
+
+                    18
+
+                </h2>
+
+            </div>
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-100 text-3xl">
+
+                🤰
+
+            </div>
+
+        </div>
+
+        <p class="mt-5 text-sm text-gray-500">
+
+            Week 18 of 40
+
+        </p>
+
+    </div>
+
+
+
+    <!-- Baby Size -->
+
+    <div
+        class="rounded-3xl bg-white border border-rose-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-gray-500">
+
+                    Baby Size
+
+                </p>
+
+                <h2 class="mt-3 text-3xl font-bold text-gray-800">
+
+                    Avocado
+
+                </h2>
+
+            </div>
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100 text-3xl">
+
+                🥑
+
+            </div>
+
+        </div>
+
+        <p class="mt-5 text-sm text-gray-500">
+
+            Approximately 15 cm long
+
+        </p>
+
+    </div>
+
+
+
+    <!-- Appointment -->
+
+    <div
+        class="rounded-3xl bg-white border border-rose-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-gray-500">
+
+                    Next Appointment
+
+                </p>
+
+                <h2 class="mt-3 text-3xl font-bold text-gray-800">
+
+                    Jul 12
+
+                </h2>
+
+            </div>
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-3xl">
+
+                📅
+
+            </div>
+
+        </div>
+
+        <p class="mt-5 text-sm text-gray-500">
+
+            10:30 AM • Dr. Sharma
+
+        </p>
+
+    </div>
+
+
+
+    <!-- Health Score -->
+
+    <div
+        class="rounded-3xl bg-white border border-rose-100 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-gray-500">
+
+                    Health Score
+
+                </p>
+
+                <h2 class="mt-3 text-4xl font-bold text-emerald-600">
+
+                    92%
+
+                </h2>
+
+            </div>
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-3xl">
+
+                ❤️
+
+            </div>
+
+        </div>
+
+        <p class="mt-5 text-sm text-gray-500">
+
+            Excellent condition
+
+        </p>
+
+    </div>
+
+</div>
+<!-- ===================================================== -->
+<!-- Quick Actions -->
+<!-- ===================================================== -->
+
+<div class="mt-10">
+
+    <div class="flex items-center justify-between">
+
+        <div>
+
+            <h2 class="text-2xl font-bold text-gray-800">
+
+                Quick Actions
+
+            </h2>
+
+            <p class="mt-2 text-gray-500">
+
+                Access your most-used features with one click.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+
+        <!-- Symptoms -->
+
+        <a href="#"
+            class="group rounded-3xl border border-rose-100 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:border-rose-300 hover:shadow-xl">
+
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-100 text-3xl">
+
+                🤒
+
+            </div>
+
+            <h3 class="mt-5 text-lg font-semibold text-gray-800">
+
+                Log Symptoms
+
+            </h3>
+
+            <p class="mt-2 text-sm text-gray-500">
+
+                Record today's symptoms and health changes.
+
+            </p>
+
+        </a>
+
+        <!-- Medicine -->
+
+        <a href="#"
+            class="group rounded-3xl border border-rose-100 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:border-blue-300 hover:shadow-xl">
+
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-3xl">
+
+                💊
+
+            </div>
+
+            <h3 class="mt-5 text-lg font-semibold text-gray-800">
+
+                Medicines
+
+            </h3>
+
+            <p class="mt-2 text-sm text-gray-500">
+
+                View reminders and medication schedule.
+
+            </p>
+
+        </a>
+
+        <!-- Hospital -->
+
+        <a href="#"
+            class="group rounded-3xl border border-rose-100 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:border-emerald-300 hover:shadow-xl">
+
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-3xl">
+
+                🏥
+
+            </div>
+
+            <h3 class="mt-5 text-lg font-semibold text-gray-800">
+
+                Hospitals
+
+            </h3>
+
+            <p class="mt-2 text-sm text-gray-500">
+
+                Find nearby hospitals and clinics.
+
+            </p>
+
+        </a>
+
+        <!-- Emergency -->
+
+        <a href="#"
+            class="group rounded-3xl border border-rose-100 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:border-red-300 hover:shadow-xl">
+
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-3xl">
+
+                🚨
+
+            </div>
+
+            <h3 class="mt-5 text-lg font-semibold text-gray-800">
+
+                Emergency
+
+            </h3>
+
+            <p class="mt-2 text-sm text-gray-500">
+
+                Contact emergency support instantly.
+
+            </p>
+
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- Schedule & Pregnancy Progress -->
+<!-- ===================================================== -->
+
+<div class="mt-10 grid gap-8 lg:grid-cols-2">
+
+    <!-- Today's Schedule -->
+
+    <div class="rounded-3xl border border-rose-100 bg-white p-8 shadow-sm">
+
+        <div class="flex items-center justify-between">
+
+            <h2 class="text-2xl font-bold text-gray-800">
+
+                Today's Schedule
+
+            </h2>
+
+            <span class="rounded-full bg-rose-100 px-4 py-2 text-sm font-medium text-rose-600">
+
+                3 Tasks
+
+            </span>
+
+        </div>
+
+        <div class="mt-8 space-y-6">
+
+            <div class="flex items-start gap-5">
+
+                <div class="rounded-2xl bg-rose-100 px-4 py-3 text-rose-600 font-bold">
+
+                    09:00
+
+                </div>
+
+                <div>
+
+                    <h4 class="font-semibold text-gray-800">
+
+                        Take Prenatal Vitamins
+
+                    </h4>
+
+                    <p class="mt-1 text-sm text-gray-500">
+
+                        Daily nutrition support.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="flex items-start gap-5">
+
+                <div class="rounded-2xl bg-sky-100 px-4 py-3 text-sky-600 font-bold">
+
+                    01:00
+
+                </div>
+
+                <div>
+
+                    <h4 class="font-semibold text-gray-800">
+
+                        Drink Water
+
+                    </h4>
+
+                    <p class="mt-1 text-sm text-gray-500">
+
+                        Stay hydrated throughout the day.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="flex items-start gap-5">
+
+                <div class="rounded-2xl bg-green-100 px-4 py-3 text-green-600 font-bold">
+
+                    05:00
+
+                </div>
+
+                <div>
+
+                    <h4 class="font-semibold text-gray-800">
+
+                        Evening Walk
+
+                    </h4>
+
+                    <p class="mt-1 text-sm text-gray-500">
+
+                        20-minute light exercise.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Pregnancy Progress -->
+
+    <div class="rounded-3xl border border-rose-100 bg-white p-8 shadow-sm">
+
+        <h2 class="text-2xl font-bold text-gray-800">
+
+            Pregnancy Progress
+
+        </h2>
+
+        <p class="mt-2 text-gray-500">
+
+            You're doing great! Keep taking care of yourself.
+
+        </p>
+
+        <div class="mt-8">
+
+            <div class="flex justify-between text-sm font-medium text-gray-600">
+
+                <span>Week 18</span>
+
+                <span>45%</span>
+
+            </div>
+
+            <div class="mt-3 h-4 overflow-hidden rounded-full bg-rose-100">
+
+                <div
+                    class="h-full w-[45%] rounded-full bg-gradient-to-r from-rose-400 to-pink-500">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-8 grid grid-cols-2 gap-5">
+
+            <div class="rounded-2xl bg-rose-50 p-5">
+
+                <p class="text-sm text-gray-500">
+
+                    Baby Size
+
+                </p>
+
+                <h3 class="mt-2 text-2xl font-bold">
+
+                    🥑 Avocado
+
+                </h3>
+
+            </div>
+
+            <div class="rounded-2xl bg-blue-50 p-5">
+
+                <p class="text-sm text-gray-500">
+
+                    Due Date
+
+                </p>
+
+                <h3 class="mt-2 text-xl font-bold">
+
+                    Dec 14
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ===================================================== -->
+<!-- AI Assistant + Recent Activity -->
+<!-- ===================================================== -->
+
+<div class="mt-10 grid gap-8 lg:grid-cols-3">
+
+    <!-- ===================================== -->
+    <!-- AI Assistant -->
+    <!-- ===================================== -->
+
+    <div
+        class="lg:col-span-2 rounded-3xl bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 p-8 text-white shadow-xl">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <span
+                    class="inline-flex rounded-full bg-white/20 px-4 py-2 text-sm font-medium">
+
+                    🤖 AI Health Assistant
+
+                </span>
+
+                <h2 class="mt-6 text-3xl font-bold">
+
+                    How are you feeling today?
+
+                </h2>
+
+                <p class="mt-4 max-w-2xl text-rose-100 leading-7">
+
+                    Tell me your symptoms, ask pregnancy-related questions,
+                    understand medicines, nutrition, exercise,
+                    or receive personalized pregnancy guidance.
+
+                </p>
+
+                <div class="mt-8 flex gap-4">
+
+                    <button
+                        class="rounded-2xl bg-white px-6 py-3 font-semibold text-rose-600 transition hover:scale-105">
+                        <a href="{% url 'wellness-chat' %}">
+                        Ask AI
+                        </a>
+
+                    </button>
+
+                    <button
+                        class="rounded-2xl border border-white/40 px-6 py-3 transition hover:bg-white/10">
+
+                        Learn More
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="hidden lg:block text-8xl">
+
+                🤖
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- Health Tip -->
+    <!-- ===================================== -->
+
+    <div
+        class="rounded-3xl border border-rose-100 bg-white p-8 shadow-sm">
+
+        <span
+            class="inline-flex rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+
+            🌿 Daily Tip
+
+        </span>
+
+        <h3 class="mt-6 text-2xl font-bold text-gray-800">
+
+            Stay Hydrated
+
+        </h3>
+
+        <p class="mt-4 leading-7 text-gray-500">
+
+            Drinking enough water during pregnancy helps maintain
+            amniotic fluid levels, improves digestion,
+            and reduces fatigue.
+
+        </p>
+
+        <button
+            class="mt-8 rounded-xl bg-rose-100 px-5 py-3 font-semibold text-rose-600 transition hover:bg-rose-200">
+
+            Read More
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- Recent Activity -->
+<!-- ===================================================== -->
+
+<div class="mt-10 rounded-3xl border border-rose-100 bg-white p-8 shadow-sm">
+
+    <div class="flex items-center justify-between">
+
+        <div>
+
+            <h2 class="text-2xl font-bold text-gray-800">
+
+                Recent Activity
+
+            </h2>
+
+            <p class="mt-2 text-gray-500">
+
+                Your latest pregnancy activities.
+
+            </p>
+
+        </div>
+
+        <button
+            class="rounded-xl bg-rose-100 px-5 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-200">
+
+            View All
+
+        </button>
+
+    </div>
+
+
+
+    <div class="mt-8 space-y-6">
+
+        <div
+            class="flex items-center justify-between rounded-2xl bg-rose-50 p-5">
+
+            <div>
+
+                <h4 class="font-semibold text-gray-800">
+
+                    ✅ Prenatal Vitamins Taken
+
+                </h4>
+
+                <p class="text-sm text-gray-500">
+
+                    Today • 09:00 AM
+
+                </p>
+
+            </div>
+
+            <span class="text-green-600 font-semibold">
+
+                Completed
+
+            </span>
+
+        </div>
+
+
+
+        <div
+            class="flex items-center justify-between rounded-2xl bg-blue-50 p-5">
+
+            <div>
+
+                <h4 class="font-semibold text-gray-800">
+
+                    💧 Water Goal Updated
+
+                </h4>
+
+                <p class="text-sm text-gray-500">
+
+                    Today • 01:15 PM
+
+                </p>
+
+            </div>
+
+            <span class="text-blue-600 font-semibold">
+
+                6 / 8 Glasses
+
+            </span>
+
+        </div>
+
+
+
+        <div
+            class="flex items-center justify-between rounded-2xl bg-green-50 p-5">
+
+            <div>
+
+                <h4 class="font-semibold text-gray-800">
+
+                    📅 Appointment Confirmed
+
+                </h4>
+
+                <p class="text-sm text-gray-500">
+
+                    Tomorrow • 10:30 AM
+
+                </p>
+
+            </div>
+
+            <span class="text-green-600 font-semibold">
+
+                Upcoming
+
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ===================================================== -->
+<!-- Bottom Dashboard Cards -->
+<!-- ===================================================== -->
+
+<div class="mt-10 grid gap-8 lg:grid-cols-3">
+
+    <!-- ===================================== -->
+    <!-- Emergency Contact -->
+    <!-- ===================================== -->
+
+    <div class="rounded-3xl border border-red-100 bg-red-50 p-8 shadow-sm">
+
+        <span class="inline-flex rounded-full bg-red-100 px-4 py-2 text-sm font-medium text-red-600">
+
+            🚨 Emergency
+
+        </span>
+
+        <h2 class="mt-5 text-2xl font-bold text-gray-800">
+
+            Need Immediate Help?
+
+        </h2>
+
+        <p class="mt-4 text-gray-600 leading-7">
+
+            If you're experiencing severe pain, bleeding, or any pregnancy emergency,
+            contact your healthcare provider immediately.
+
+        </p>
+
+        <button
+            class="mt-8 w-full rounded-2xl bg-red-500 py-4 font-semibold text-white transition hover:bg-red-600">
+
+            Call Emergency
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- Upcoming Reminder -->
+    <!-- ===================================== -->
+
+    <div class="rounded-3xl border border-blue-100 bg-white p-8 shadow-sm">
+
+        <span class="inline-flex rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-600">
+
+            ⏰ Reminder
+
+        </span>
+
+        <h2 class="mt-5 text-2xl font-bold text-gray-800">
+
+            Next Medicine
+
+        </h2>
+
+        <p class="mt-6 text-5xl font-bold text-blue-600">
+
+            01:00 PM
+
+        </p>
+
+        <p class="mt-4 text-gray-500">
+
+            Iron Tablet
+
+        </p>
+
+        <button
+            class="mt-8 w-full rounded-2xl bg-blue-500 py-4 font-semibold text-white transition hover:bg-blue-600">
+
+            View Medicines
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- Dashboard Stats -->
+    <!-- ===================================== -->
+
+    <div class="rounded-3xl border border-emerald-100 bg-white p-8 shadow-sm">
+
+        <h2 class="text-2xl font-bold text-gray-800">
+
+            This Week
+
+        </h2>
+
+        <div class="mt-8 space-y-6">
+
+            <div class="flex items-center justify-between">
+
+                <span class="text-gray-500">
+
+                    Water Goal
+
+                </span>
+
+                <span class="font-bold text-emerald-600">
+
+                    92%
+
+                </span>
+
+            </div>
+
+            <div class="flex items-center justify-between">
+
+                <span class="text-gray-500">
+
+                    Medicine Taken
+
+                </span>
+
+                <span class="font-bold text-rose-600">
+
+                    18 / 20
+
+                </span>
+
+            </div>
+
+            <div class="flex items-center justify-between">
+
+                <span class="text-gray-500">
+
+                    Appointments
+
+                </span>
+
+                <span class="font-bold text-blue-600">
+
+                    2 Completed
+
+                </span>
+
+            </div>
+
+            <div class="flex items-center justify-between">
+
+                <span class="text-gray-500">
+
+                    Health Score
+
+                </span>
+
+                <span class="font-bold text-green-600">
+
+                    Excellent
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- Footer -->
+<!-- ===================================================== -->
+
+<footer class="mt-12 rounded-3xl border border-rose-100 bg-white px-8 py-6 shadow-sm">
+
+    <div class="flex flex-col items-center justify-between gap-4 text-center text-gray-500 lg:flex-row">
+
+        <p>
+
+            © 2026 <span class="font-semibold text-rose-600">Meri Aama</span>.
+            All Rights Reserved.
+
+        </p>
+
+        <div class="flex gap-8">
+
+            <a href="#" class="transition hover:text-rose-600">
+
+                Privacy Policy
+
+            </a>
+
+            <a href="#" class="transition hover:text-rose-600">
+
+                Terms
+
+            </a>
+
+            <a href="#" class="transition hover:text-rose-600">
+
+                Help Center
+
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
 {% endblock %}
