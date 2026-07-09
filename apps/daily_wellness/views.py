@@ -13,4 +13,4 @@ def daily_plan_page(request):
         return redirect("health-profile")
 
     plan = get_or_create_daily_plan(request.user)
-    return render(request, "daily_wellness/plan.html", {"plan": plan})
+    return render(request, "daily_wellness/plan.html", {"plan": plan, "header_title": "Daily Wellness", "header_subtitle": "Stay healthy with your personalized daily plan", })
