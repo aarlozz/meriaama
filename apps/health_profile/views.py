@@ -23,4 +23,5 @@ def health_profile_page(request):
     else:
         form = HealthProfileForm(instance=profile)
 
-    return render(request, "health_profile/profile.html", {"form": form, "profile": profile})
+    return render(request, "health_profile/profile.html", {"form": form, "profile": profile,"header_title": "Health Profile",
+        "header_subtitle": "Manage your pregnancy information",})
