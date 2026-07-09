@@ -34,9 +34,72 @@ def register_page(request):
 
 @login_required
 def dashboard(request):
-    """GET /dashboard/ -- mother's landing page after login."""
+    """GET /dashboard/ -- mother's informative home page: pregnancy progress,
+    recent mood/stress signals, next visit reminder, and any flags worth
+    her attention. Pulls from every app defensively so this page never
+    crashes if one of them isn't installed yet."""
     profile = getattr(request.user, "health_profile", None)
-    return render(request, "accounts/dashboard.html", {"profile": profile})
+
+    week = getattr(profile, "current_gestational_week", None)
+    week_pct = min(round((week / 40) * 100), 100) if week else 0
+    days_until_due = None
+    due_date = getattr(profile, "expected_delivery_date", None)
+    if due_date:
+        from datetime import date
+        days_until_due = (due_date - date.today()).days
+
+    trimester = None
+    if week:
+        if week <= 13:
+            trimester = 1
+        elif week <= 27:
+            trimester = 2
+        else:
+            trimester = 3
+
+    recent_moods = []
+    try:
+        from apps.mood.models import MoodEntry
+        recent_moods = list(MoodEntry.objects.filter(user=request.user)[:7])
+    except Exception:
+        pass
+
+    latest_test = None
+    try:
+        from apps.psychometric.models import PsychometricTest
+        latest_test = PsychometricTest.objects.filter(user=request.user).order_by("-taken_at").first()
+    except Exception:
+        pass
+
+    next_visit_date = None
+    active_flags = []
+    try:
+        from apps.hospital_portal.models import PrenatalVisit
+        from apps.trimester_analysis.analysis import build_full_analysis
+        from datetime import date
+
+        visits = list(PrenatalVisit.objects.filter(mother=request.user))
+        upcoming = [v.next_visit_date for v in visits if v.next_visit_date and v.next_visit_date >= date.today()]
+        next_visit_date = min(upcoming) if upcoming else None
+
+        for result in build_full_analysis(visits):
+            for flag in result["flags"]:
+                if flag["severity"] in ("concern", "caution"):
+                    active_flags.append(flag)
+    except Exception:
+        pass
+
+    return render(request, "accounts/dashboard.html", {
+        "profile": profile,
+        "week": week,
+        "week_pct": week_pct,
+        "days_until_due": days_until_due,
+        "trimester": trimester,
+        "recent_moods": recent_moods,
+        "latest_test": latest_test,
+        "next_visit_date": next_visit_date,
+        "active_flags": active_flags[:3],
+    })
 
 
 def staff_login_page(request):

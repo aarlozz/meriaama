@@ -7,6 +7,7 @@ from django.http import HttpResponseForbidden
 from django.db.models import Q
 from .models import PrenatalVisit, TRACKED_FIELDS
 from .forms import PrenatalVisitForm, StaffHealthProfileForm
+from .models import PrenatalVisit, Medication
 
 User = get_user_model()
 
@@ -79,12 +80,14 @@ def mother_detail(request, mother_id):
     mother = get_object_or_404(User, id=mother_id, role=User.Role.MOTHER)
     profile = getattr(mother, "health_profile", None)
     visits = list(PrenatalVisit.objects.filter(mother=mother))
+    medications = Medication.objects.filter(mother=mother) 
 
     return render(request, "hospital_portal/mother_detail.html", {
         "mother": mother,
         "profile": profile,
         "visits": visits,
         "checklist": _completeness_checklist(visits),
+        "medications": medications,  # NEW
     })
 
 
@@ -161,3 +164,25 @@ def reject_staff(request, user_id):
         staff.delete()
         messages.success(request, f"{username}'s registration was rejected and removed.")
     return redirect("hospital-staff-approvals")
+
+
+from .forms import PrenatalVisitForm, StaffHealthProfileForm, MedicationForm
+
+@hospital_staff_required
+def prescribe_medication(request, mother_id):
+    """GET/POST /hospital/mother/<id>/prescribe/ -- start a new medication course."""
+    mother = get_object_or_404(User, id=mother_id, role=User.Role.MOTHER)
+
+    if request.method == "POST":
+        form = MedicationForm(request.POST)
+        if form.is_valid():
+            medication = form.save(commit=False)
+            medication.mother = mother
+            medication.prescribed_by = request.user
+            medication.save()
+            messages.success(request, f"{medication.name} prescribed for {medication.duration_days} days.")
+            return redirect("hospital-mother-detail", mother_id=mother.id)
+    else:
+        form = MedicationForm()
+
+    return render(request, "hospital_portal/prescribe_medication.html", {"form": form, "mother": mother})

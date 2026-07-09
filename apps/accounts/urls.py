@@ -5,7 +5,7 @@ from .forms import MotherLoginForm
 
 urlpatterns = [
     path("", views.landing_page, name="landing"),
-    path("dashboard/", views.dashboard, name="dashboard"),
+    # dashboard/ removed -- now handled by apps.pregnancy_dashboard
 
     # Mother auth
     path("register/", views.register_page, name="register-page"),

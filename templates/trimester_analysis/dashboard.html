@@ -1,46 +1,528 @@
-{% extends "base.html" %}
-{% block title %}Trimester Analysis{% endblock %}
-{% block content %}
-<h1 class="text-2xl font-bold text-rose-700 mb-2">Trimester Analysis</h1>
-<p class="text-gray-600 text-sm mb-6">
-    Patterns from your checkup data, grouped by trimester. This describes trends only --
-    it isn't a diagnosis. Please discuss anything flagged with your doctor.
-</p>
 
-{% if not has_any_data %}
-    <div class="bg-white p-5 rounded-lg shadow">
-        <p class="text-gray-500 text-sm">No checkup data recorded yet -- this page will fill in after your hospital visits are logged.</p>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pregnancy Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto py-8">
+
+    <!-- Header -->
+
+    <div class="mb-8">
+
+        <h1 class="text-4xl font-bold text-rose-700">
+            Pregnancy Progress Dashboard
+        </h1>
+
+        <p class="text-gray-600 mt-2">
+            Track how your pregnancy has progressed across every hospital visit.
+            These charts summarize the measurements recorded by your healthcare provider.
+            They help you understand trends over time but should never replace medical advice.
+        </p>
+
     </div>
-{% else %}
-    {% for result in trimester_results %}
-        <div class="bg-white p-5 rounded-lg shadow mb-6">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="font-semibold text-gray-700">Trimester {{ result.trimester_num }}</h2>
-                <span class="text-sm text-gray-500">{{ result.visit_count }} visit{{ result.visit_count|pluralize }}</span>
+
+    {% if not has_any_data %}
+
+    <div class="bg-white rounded-xl shadow p-10 text-center">
+
+        <h2 class="text-xl font-semibold text-gray-700">
+            No Clinical Visits Yet
+        </h2>
+
+        <p class="text-gray-500 mt-3">
+            Once your hospital records your prenatal visits,
+            your pregnancy dashboard will automatically appear here.
+        </p>
+
+    </div>
+
+    {% else %}
+
+    <!-- Summary Cards -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <p class="text-sm text-gray-500">Current Week</p>
+
+            <h2 class="text-3xl font-bold text-rose-600 mt-2">
+
+                {{ summary.current_week|default:"--" }}
+
+            </h2>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <p class="text-sm text-gray-500">Hospital Visits</p>
+
+            <h2 class="text-3xl font-bold text-indigo-600 mt-2">
+
+                {{ summary.total_visits }}
+
+            </h2>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <p class="text-sm text-gray-500">Latest Weight</p>
+
+            <h2 class="text-3xl font-bold text-green-600 mt-2">
+
+                {% if summary.latest_weight %}
+                    {{ summary.latest_weight }} kg
+                {% else %}
+                    --
+                {% endif %}
+
+            </h2>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <p class="text-sm text-gray-500">Latest Blood Pressure</p>
+
+            <h2 class="text-3xl font-bold text-blue-600 mt-2">
+
+                {{ summary.latest_bp|default:"--" }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- Second Row -->
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <p class="text-sm text-gray-500">Hemoglobin</p>
+
+            <h2 class="text-2xl font-bold mt-2">
+
+                {% if summary.latest_hb %}
+                    {{ summary.latest_hb }} g/dL
+                {% else %}
+                    --
+                {% endif %}
+
+            </h2>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <p class="text-sm text-gray-500">Fetal Heart Rate</p>
+
+            <h2 class="text-2xl font-bold mt-2">
+
+                {% if summary.latest_fhr %}
+                    {{ summary.latest_fhr }} bpm
+                {% else %}
+                    --
+                {% endif %}
+
+            </h2>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <p class="text-sm text-gray-500">Fundal Height</p>
+
+            <h2 class="text-2xl font-bold mt-2">
+
+                {% if summary.latest_fundal_height %}
+                    {{ summary.latest_fundal_height }} cm
+                {% else %}
+                    --
+                {% endif %}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- AI Narrative -->
+
+    {% if narrative %}
+
+    <div class="bg-white rounded-xl shadow mb-10 border-l-4 border-amber-500">
+
+        <div class="p-8">
+
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+
+                AI Pregnancy Summary
+
+            </h2>
+
+            <div class="text-gray-700 leading-8 whitespace-pre-wrap">
+
+                {{ narrative }}
+
             </div>
 
-            {% if result.weight_start and result.weight_end %}
-                <p class="text-sm text-gray-700 mb-3">
-                    Weight: {{ result.weight_start }} kg &rarr; {{ result.weight_end }} kg
-                    ({% if result.weight_change > 0 %}+{% endif %}{{ result.weight_change }} kg this trimester)
-                </p>
-            {% endif %}
-
-            {% if result.flags %}
-                <div class="space-y-2">
-                    {% for flag in result.flags %}
-                        <div class="text-sm px-3 py-2 rounded
-                            {% if flag.severity == 'concern' %}bg-red-50 text-red-700 border border-red-200
-                            {% elif flag.severity == 'caution' %}bg-amber-50 text-amber-700 border border-amber-200
-                            {% else %}bg-gray-50 text-gray-600{% endif %}">
-                            {{ flag.message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-sm text-green-700">No concerns flagged from the data recorded this trimester.</p>
-            {% endif %}
         </div>
-    {% endfor %}
-{% endif %}
+
+    </div>
+
+    {% endif %}
+
+    <!-- Trimester Cards -->
+
+    <div class="grid lg:grid-cols-3 gap-6 mb-10">
+
+        {% for trimester in trimester_results %}
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <h2 class="text-xl font-semibold text-rose-600">
+
+                Trimester {{ trimester.trimester_num }}
+
+            </h2>
+
+            <div class="mt-4 space-y-2 text-sm">
+
+                <p>
+
+                    <strong>Visits:</strong>
+
+                    {{ trimester.visit_count }}
+
+                </p>
+
+                {% if trimester.weight_change != None %}
+
+                <p>
+
+                    <strong>Weight Change:</strong>
+
+                    {{ trimester.weight_change }} kg
+
+                </p>
+
+                {% endif %}
+
+            </div>
+
+            <div class="mt-5 space-y-3">
+
+                {% if trimester.flags %}
+
+                    {% for flag in trimester.flags %}
+
+                    <div
+                        class="rounded-lg border p-3 text-sm
+
+                        {% if flag.severity == 'concern' %}
+                        bg-red-50 text-red-700 border-red-200
+
+                        {% elif flag.severity == 'caution' %}
+                        bg-yellow-50 text-yellow-700 border-yellow-200
+
+                        {% else %}
+                        bg-green-50 text-green-700 border-green-200
+
+                        {% endif %}
+                        ">
+
+                        {{ flag.message }}
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-green-700 text-sm">
+
+                    No concerns were flagged during this trimester.
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Visit Timeline -->
+
+    <div class="bg-white rounded-xl shadow p-8 mb-10">
+
+        <h2 class="text-2xl font-semibold mb-8">
+
+            Pregnancy Visit Timeline
+
+        </h2>
+
+        <div class="space-y-6">
+
+            {% for visit in timeline %}
+
+            <div class="border-l-4 border-rose-400 pl-6">
+
+                <div class="flex justify-between">
+
+                    <h3 class="font-semibold text-lg">
+
+                        Week {{ visit.gestational_week }}
+
+                    </h3>
+
+                    <span class="text-gray-500">
+
+                        {{ visit.visit_date }}
+
+                    </span>
+
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 mt-4 text-sm">
+
+                    <div>
+
+                        <p><strong>Weight:</strong> {{ visit.maternal_weight_kg|default:"--" }} kg</p>
+
+                        <p><strong>Blood Pressure:</strong> {{ visit.blood_pressure|default:"--" }}</p>
+
+                        <p><strong>Hemoglobin:</strong> {{ visit.hemoglobin_g_dl|default:"--" }}</p>
+
+                    </div>
+
+                    <div>
+
+                        <p><strong>Fundal Height:</strong> {{ visit.fundal_height_cm|default:"--" }} cm</p>
+
+                        <p><strong>Fetal Heart Rate:</strong> {{ visit.fetal_heart_rate_bpm|default:"--" }} bpm</p>
+
+                        <p><strong>Doctor Notes:</strong> {{ visit.doctor_notes|default:"No notes" }}</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+
+    <div class="grid lg:grid-cols-2 gap-8">
+        
+        <!-- Weight Trend -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">
+                Weight Trend
+            </h2>
+
+            <canvas id="weightChart" height="150"></canvas>
+        </div>
+
+        <!-- Blood Pressure -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">
+                Blood Pressure Trend
+            </h2>
+
+            <canvas id="bpChart" height="150"></canvas>
+        </div>
+
+        <!-- Hemoglobin -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">
+                Hemoglobin Trend
+            </h2>
+
+            <canvas id="hbChart" height="150"></canvas>
+        </div>
+
+        <!-- Fetal Heart Rate -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">
+                Fetal Heart Rate Trend
+            </h2>
+
+            <canvas id="fhrChart" height="150"></canvas>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ charts.weeks|json_script:"weeks-data" }}
+{{ charts.weight|json_script:"weight-data" }}
+{{ charts.bp_sys|json_script:"bp-sys-data" }}
+{{ charts.bp_dia|json_script:"bp-dia-data" }}
+{{ charts.hb|json_script:"hb-data" }}
+{{ charts.fhr|json_script:"fhr-data" }}
+
+<script>
+
+const weeks = JSON.parse(
+    document.getElementById("weeks-data").textContent
+);
+
+new Chart(
+    document.getElementById("weightChart"),
+    {
+        type: "line",
+        data: {
+            labels: weeks,
+            datasets: [
+                {
+                    label: "Weight (kg)",
+                    data: JSON.parse(
+                        document.getElementById("weight-data").textContent
+                    ),
+                    borderWidth: 3,
+                    tension: .3
+                }
+            ]
+        },
+        options:{
+            responsive:true
+        }
+    }
+);
+
+new Chart(
+    document.getElementById("bpChart"),
+    {
+        type:"line",
+
+        data:{
+
+            labels:weeks,
+
+            datasets:[
+
+                {
+
+                    label:"Systolic",
+
+                    data:JSON.parse(
+                        document.getElementById("bp-sys-data").textContent
+                    ),
+
+                    borderWidth:3,
+
+                    tension:.3
+
+                },
+
+                {
+
+                    label:"Diastolic",
+
+                    data:JSON.parse(
+                        document.getElementById("bp-dia-data").textContent
+                    ),
+
+                    borderWidth:3,
+
+                    tension:.3
+
+                }
+
+            ]
+
+        }
+
+    }
+);
+
+new Chart(
+    document.getElementById("hbChart"),
+    {
+        type:"line",
+
+        data:{
+
+            labels:weeks,
+
+            datasets:[
+
+                {
+
+                    label:"Hemoglobin",
+
+                    data:JSON.parse(
+                        document.getElementById("hb-data").textContent
+                    ),
+
+                    borderWidth:3,
+
+                    tension:.3
+
+                }
+
+            ]
+
+        }
+
+    }
+);
+
+new Chart(
+    document.getElementById("fhrChart"),
+    {
+        type:"line",
+
+        data:{
+
+            labels:weeks,
+
+            datasets:[
+
+                {
+
+                    label:"Fetal Heart Rate",
+
+                    data:JSON.parse(
+                        document.getElementById("fhr-data").textContent
+                    ),
+
+                    borderWidth:3,
+
+                    tension:.3
+
+                }
+
+            ]
+
+        }
+
+    }
+);
+
+</script>
+
 {% endblock %}
+
+
+

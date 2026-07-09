@@ -9,4 +9,5 @@ urlpatterns = [
     path("approvals/", views.staff_approvals, name="hospital-staff-approvals"),
     path("approvals/<int:user_id>/approve/", views.approve_staff, name="hospital-approve-staff"),
     path("approvals/<int:user_id>/reject/", views.reject_staff, name="hospital-reject-staff"),
+    path("mother/<int:mother_id>/prescribe/", views.prescribe_medication, name="hospital-prescribe-medication"),
 ]

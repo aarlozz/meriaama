@@ -11,3 +11,9 @@ class PrenatalVisitAdmin(admin.ModelAdmin):
     """
     list_display = ("mother", "visit_date", "gestational_week", "entered_by")
     list_filter = ("gestational_week",)
+
+from .models import PrenatalVisit, Medication
+
+@admin.register(Medication)
+class MedicationAdmin(admin.ModelAdmin):
+    list_display = ("mother", "name", "dosage", "start_date", "duration_days", "prescribed_by")    

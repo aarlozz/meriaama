@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Pregnancy Tracker{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold text-rose-700">Your Pregnancy Tracker</h1>
+    <a href="{% url 'trimester-analysis' %}" class="text-sm text-rose-600 hover:underline">View trimester analysis &rarr;</a>
+</div>
+
+{% if next_visit_date %}
+    <div class="p-4 rounded-lg mb-6 {% if is_overdue %}bg-red-50 border border-red-200 text-red-800{% else %}bg-amber-50 border border-amber-200 text-amber-800{% endif %}">
+        {% if is_overdue %}
+            Your last recorded next-visit date was <strong>{{ next_visit_date|date:"M d, Y" }}</strong> -- if you haven't been in yet, it may be time to schedule your visit.
+        {% else %}
+            Your next visit is scheduled for <strong>{{ next_visit_date|date:"M d, Y" }}</strong>.
+        {% endif %}
+    </div>
+{% endif %}
+
+{% if medications %}
+    <div class="bg-white p-5 rounded-lg shadow mb-6">
+        <h2 class="font-semibold text-gray-700 mb-3">Current Medications</h2>
+        <div class="space-y-3">
+            {% for med in medications %}
+                <div class="border border-gray-100 rounded-lg p-3">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-sm font-medium text-rose-700">{{ med.name }} -- {{ med.dosage }}</span>
+                        {% if med.is_active %}
+                            <span class="text-xs text-gray-400">Day {{ med.day_number }} of {{ med.duration_days }}</span>
+                        {% else %}
+                            <span class="text-xs text-gray-400">Completed</span>
+                        {% endif %}
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
+                        <div class="bg-rose-500 h-2 rounded-full" style="width: {{ med.adherence_percent }}%"></div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-500">{{ med.taken_doses_count }} of {{ med.expected_doses_so_far }} doses taken</span>
+                        {% if med.is_active %}
+                            <form method="post" action="{% url 'mark-dose-taken' medication_id=med.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-xs bg-rose-600 text-white rounded-full px-3 py-1 font-medium hover:bg-rose-700">Mark dose taken</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<div class="bg-white p-5 rounded-lg shadow mb-8">
+    <h2 class="font-semibold text-gray-700 mb-2">Add a private note</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.note }}
+        {% if form.note.errors %}<p class="text-xs text-red-600 mt-1">{{ form.note.errors|striptags }}</p>{% endif %}
+        <button type="submit" class="mt-3 bg-rose-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-rose-700">Save note</button>
+    </form>
+    <p class="text-xs text-gray-400 mt-2">Private to you -- your care team never sees this.</p>
+</div>
+
+<h2 class="text-lg font-semibold text-gray-700 mb-3">Timeline</h2>
+<div class="space-y-3">
+    {% for item in timeline %}
+        {% if item.type == "visit" %}
+            <div class="bg-white p-5 rounded-lg shadow border-l-4 border-rose-400">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">Clinical visit</span>
+                    <span class="text-xs text-gray-400">{{ item.date|date:"M d, Y" }}</span>
+                </div>
+                <p class="text-sm text-gray-700">Week {{ item.obj.gestational_week|default:"–" }}</p>
+                {% if item.obj.maternal_weight_kg %}<p class="text-xs text-gray-500">Weight: {{ item.obj.maternal_weight_kg }} kg</p>{% endif %}
+                {% if item.obj.blood_pressure %}<p class="text-xs text-gray-500">BP: {{ item.obj.blood_pressure }}</p>{% endif %}
+                {% if item.obj.doctor_notes %}<p class="text-sm text-gray-600 mt-2 italic">"{{ item.obj.doctor_notes }}"</p>{% endif %}
+            </div>
+        {% else %}
+            <div class="bg-white p-5 rounded-lg shadow border-l-4 border-gray-300">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Your note</span>
+                    <span class="text-xs text-gray-400">{{ item.date|date:"M d, Y" }}</span>
+                </div>
+                <p class="text-sm text-gray-700">{{ item.obj.note }}</p>
+            </div>
+        {% endif %}
+    {% empty %}
+        <p class="text-gray-500 text-sm">Nothing recorded yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
