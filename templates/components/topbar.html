@@ -38,31 +38,117 @@
 
             </div>
 
-            <!-- Profile -->
+<!-- Profile -->
+<div class="relative inline-block">
+    <button id="profileBtn"
+        class="flex items-center gap-4 rounded-2xl border border-rose-100 bg-rose-50 px-4 py-3 hover:bg-rose-100 transition">
+
+        <div
+            class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-lg font-bold text-white">
+            {{ request.user.username|first|upper }}
+        </div>
+
+        <div class="text-left">
+            <p class="font-semibold text-gray-800">
+                {{ request.user.first_name|default:request.user.username }}
+            </p>
+
+            <p class="text-sm text-gray-500">
+                Mother Account
+            </p>
+        </div>
+
+    </button>
+
+    <!-- Dropdown -->
+<!-- Dropdown -->
+<div id="profileMenu"
+    class="hidden absolute right-0 top-full mt-3 w-72 rounded-2xl bg-white border border-gray-100 shadow-2xl overflow-hidden z-50">
+
+    <!-- User Info -->
+    <div class="px-5 py-5 bg-gradient-to-r from-rose-50 to-pink-50">
+
+        <div class="flex items-center gap-3">
+
+            <div class="h-14 w-14 rounded-full bg-gradient-to-r from-rose-500 to-pink-500
+                        flex items-center justify-center text-xl font-bold text-white">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div>
+                <h3 class="font-semibold text-gray-800">
+                    {{ request.user.first_name|default:request.user.username }}
+                </h3>
+
+                <p class="text-sm text-gray-500">
+                    {{ request.user.email }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Menu -->
+
+    <div class="py-2">
+
+        <a href="{% url 'health-profile' %}"
+           class="flex items-center gap-3 px-5 py-3 hover:bg-rose-50 transition">
+
+            👤
+            <span>My Profile</span>
+
+        </a>
+
+        <a href="#"
+           class="flex items-center gap-3 px-5 py-3 hover:bg-rose-50 transition">
+
+            📊
+            <span>Dashboard</span>
+
+        </a>
+
+        <a href="#"
+           class="flex items-center gap-3 px-5 py-3 hover:bg-rose-50 transition">
+
+            ⚙️
+            <span>Settings</span>
+
+        </a>
+
+        <a href="#"
+           class="flex items-center gap-3 px-5 py-3 hover:bg-rose-50 transition">
+
+            ❓
+            <span>Help Center</span>
+
+        </a>
+
+    </div>
+
+    <!-- Logout -->
+
+    <div class="border-t">
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
 
             <button
-                class="flex items-center gap-4 rounded-2xl border border-rose-100 bg-rose-50 px-4 py-3 hover:bg-rose-100 transition">
+                class="w-full flex items-center gap-3 px-5 py-3 text-red-600 hover:bg-red-50 transition">
 
-                <div
-                    class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-lg font-bold text-white">
-
-                    P
-
-                </div>
-
-                <div class="text-left">
-
-                    <p class="font-semibold text-gray-800">
-                        Premal
-                    </p>
-
-                    <p class="text-sm text-gray-500">
-                        Mother Account
-                    </p>
-
-                </div>
+                🚪
+                <span>Logout</span>
 
             </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</div>
 
         </div>
 
