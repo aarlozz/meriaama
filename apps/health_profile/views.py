@@ -14,10 +14,12 @@ def health_profile_page(request):
     if request.method == "POST":
         form = HealthProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            lmp_changed = "last_menstrual_period" in form.changed_data
+            dates_changed = bool(
+                {"last_menstrual_period", "edd_is_manual_override"} & set(form.changed_data)
+            )
             instance = form.save()
-            if lmp_changed:
-                instance.recalculate_gestational_week()
+            if dates_changed:
+                instance.recalculate_derived_dates()
             messages.success(request, "Health profile updated.")
             return redirect("health-profile")
     else:
