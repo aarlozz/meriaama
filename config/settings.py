@@ -16,6 +16,14 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-insecure-key-change-m
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
+# Render terminates HTTPS and forwards plain HTTP internally -- without this,
+# Django thinks every request is insecure and CSRF/redirect logic misbehaves.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = (
+    os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+    if os.environ.get("CSRF_TRUSTED_ORIGINS") else []
+)
+
 # --- Applications ---
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -83,6 +91,9 @@ AUTH_USER_MODEL = "accounts.User"
 # --- Database ---
 # Local dev: falls back to sqlite if DATABASE_URL not set.
 # Production (Render): set DATABASE_URL to the managed Postgres connection string.
+# NOTE: free Render Postgres databases expire 30 days after creation --
+# fine for this week's presentations, but re-check this before relying on
+# the DB staying up beyond that window.
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
@@ -119,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
-LOGOUT_REDIRECT_URL = "login" 
+LOGOUT_REDIRECT_URL = "login"
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Kathmandu"
@@ -136,6 +147,9 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"  # uploaded PDFs land here (see pdf_insight app)
+# ⚠️ Ephemeral on Render free tier -- wiped on every redeploy/restart.
+# Same limitation as tracker's PersonalCheckIn.image. Acceptable to disclose
+# for this week's demos; would need S3/Cloudinary for real persistence.
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -147,3 +161,5 @@ GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 VECTOR_STORE_BACKEND = os.environ.get("VECTOR_STORE_BACKEND", "chroma")
 CHROMA_PERSIST_DIR = os.environ.get("CHROMA_PERSIST_DIR", str(BASE_DIR / "chroma_store"))
 EMBEDDING_MODEL_NAME = os.environ.get("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
+# ⚠️ Also ephemeral on Render free tier -- see build.sh, which re-ingests
+# the public knowledge base on every deploy to work around this.
