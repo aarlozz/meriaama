@@ -11,10 +11,34 @@
     </div>
 </div>
 
-{% if insight_text %}
-    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-rose-400 mb-6 flex items-start gap-3">
-        <span class="text-lg shrink-0">✨</span>
-        <p class="text-gray-700 text-sm leading-relaxed">{{ insight_text }}</p>
+{% if show_crisis_banner %}
+    <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-5 mb-6">
+        <p class="text-sm font-semibold text-red-800 mb-1">You don't have to go through this alone</p>
+        <p class="text-sm text-red-700 leading-relaxed">
+            Something in your recent screening suggests you may be having thoughts of harming yourself.
+            Please reach out to your doctor as soon as you can, or talk to someone you trust today.
+            If you're in immediate danger, please contact local emergency services or a crisis helpline right away.
+        </p>
+        {# TODO: insert a verified, current Nepal-specific mental health crisis helpline number/link here before this goes live #}
+    </div>
+{% endif %}
+
+{% if suggestions %}
+    <div class="space-y-3 mb-8">
+        {% for suggestion in suggestions %}
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100
+                {% if suggestion.severity == 'caution' %}border-l-4 border-l-amber-400
+                {% elif suggestion.severity == 'positive' %}border-l-4 border-l-emerald-400
+                {% else %}border-l-4 border-l-rose-300{% endif %}">
+                <p class="text-sm font-semibold text-gray-900 mb-1">{{ suggestion.title }}</p>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">{{ suggestion.message }}</p>
+                {% if suggestion.action_target %}
+                    <a href="{% url suggestion.action_target %}" class="inline-flex items-center gap-1 text-sm font-medium text-rose-600 hover:underline">
+                        {{ suggestion.action_label }} &rarr;
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
 {% endif %}
 
@@ -92,7 +116,6 @@
         });
     }
 
-    // ---- quick stats ----
     var statsEl = document.getElementById('quickStats');
     if (statsEl) {
         var cards = [];
@@ -144,7 +167,6 @@
         if (!cards.length) { statsEl.remove(); }
     }
 
-    // ---- mood chart ----
     var moodCanvas = document.getElementById('moodChart');
     if (moodCanvas) {
         var ctx = moodCanvas.getContext('2d');
@@ -214,7 +236,6 @@
         });
     }
 
-    // ---- stress chart ----
     var stressCanvas = document.getElementById('stressChart');
     if (stressCanvas && chartData.stress_points && chartData.stress_points.length) {
         var colorMap = { high: '#ef4444', moderate: '#f59e0b', low: '#22c55e' };

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Stress Test History{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="font-display text-2xl text-berry">Your Stress Test History</h1>
+    <a href="{% url 'psychometric-select' %}" class="text-sm text-berry hover:underline">Take a new test &rarr;</a>
+</div>
+
+{% if not has_data %}
+    <div class="bg-white rounded-2xl shadow-sm p-6">
+        <p class="text-sm text-gray-500">No tests taken yet. Once you complete one, your trend will appear here.</p>
+    </div>
+{% else %}
+    {% for chart in charts %}
+        <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="font-medium text-berry">{{ chart.label }}</h2>
+                <span class="text-xs px-2 py-1 rounded-full
+                    {% if chart.latest_risk == 'high' %}bg-red-100 text-red-700
+                    {% elif chart.latest_risk == 'moderate' %}bg-gold-soft text-berry-dark
+                    {% else %}bg-sage/20 text-sage{% endif %}">
+                    Latest: {{ chart.latest_risk }} -- {{ chart.attempt_count }} attempt{{ chart.attempt_count|pluralize }}
+                </span>
+            </div>
+            <canvas id="chart-{{ chart.test_type }}" height="90"></canvas>
+        </div>
+    {% endfor %}
+
+    <div class="bg-white rounded-2xl shadow-sm p-6">
+        <h2 class="font-medium text-berry mb-3">All Attempts</h2>
+        <div class="space-y-2">
+            {% for test in all_tests %}
+                <a href="{% url 'psychometric-result' test_id=test.id %}"
+                   class="flex justify-between items-center text-sm border-b last:border-0 py-2 hover:bg-gold-soft/30 -mx-2 px-2 rounded">
+                    <span class="text-gray-600">{{ test.taken_at|date:"M d, Y" }} -- {{ test.get_test_type_display }}</span>
+                    <span class="font-mono
+                        {% if test.risk_level == 'high' %}text-red-600
+                        {% elif test.risk_level == 'moderate' %}text-gold
+                        {% else %}text-sage{% endif %}">
+                        {{ test.total_score }} pts
+                    </span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        {% for chart in charts %}
+        new Chart(document.getElementById('chart-{{ chart.test_type }}'), {
+            type: 'line',
+            data: {
+                labels: {{ chart.labels|safe }},
+                datasets: [
+                    {
+                        label: 'Score',
+                        data: {{ chart.scores|safe }},
+                        borderColor: '#7D2748',
+                        backgroundColor: 'rgba(125, 39, 72, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                    },
+                    {
+                        label: 'Moderate cutoff',
+                        data: Array({{ chart.labels|length }}).fill({{ chart.moderate_cutoff }}),
+                        borderColor: '#C9973E',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                    },
+                    {
+                        label: 'High cutoff',
+                        data: Array({{ chart.labels|length }}).fill({{ chart.high_cutoff }}),
+                        borderColor: '#DC2626',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                    },
+                ]
+            },
+            options: {
+                plugins: { legend: { display: true, labels: { boxWidth: 12, font: { size: 10 } } } },
+                scales: { y: { beginAtZero: true } },
+            }
+        });
+        {% endfor %}
+    </script>
+{% endif %}
+{% endblock %}

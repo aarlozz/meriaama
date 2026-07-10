@@ -4,13 +4,16 @@ from django.shortcuts import render
 from django.utils import timezone
 from apps.mood.models import MoodEntry
 from apps.psychometric.models import PsychometricTest
+from .models import InsightSuggestion
+from .rules import detect_conditions, check_self_harm_flag
 
 TREND_WINDOW_DAYS = 30
 
 
 @login_required
 def insights_page(request):
-    """GET /insights/ -- 30-day mood trend + stress test history, combined into one view."""
+    """GET /insights/ -- 30-day mood trend + stress test history, plus
+    condition-matched suggestions and a hardcoded self-harm safety check."""
     today = timezone.localdate()
     start_date = today - timedelta(days=TREND_WINDOW_DAYS - 1)
 
@@ -22,12 +25,21 @@ def insights_page(request):
         user=request.user, taken_at__date__gte=start_date
     ).order_by("taken_at")
 
+    # Checked against her FULL test history, not just the 30-day window --
+    # a concerning answer shouldn't stop being flagged just because the
+    # window rolled past it.
+    all_stress_tests = PsychometricTest.objects.filter(user=request.user).order_by("taken_at")
+    show_crisis_banner = check_self_harm_flag(all_stress_tests)
+
     chart_data = _build_chart_data(mood_entries, start_date, today, stress_tests)
-    insight_text = _generate_insight(mood_entries, stress_tests)
+
+    active_conditions = detect_conditions(mood_entries, stress_tests)
+    suggestions = InsightSuggestion.objects.filter(condition__in=active_conditions, is_active=True)
 
     return render(request, "insights/dashboard.html", {
         "chart_data": chart_data,
-        "insight_text": insight_text,
+        "suggestions": suggestions,
+        "show_crisis_banner": show_crisis_banner,
         "has_mood_data": mood_entries.exists(),
         "has_stress_data": stress_tests.exists(),
         "header_title": "Mental Wellbeing",
