@@ -1,33 +1,411 @@
-{% extends "base.html" %}
-{% block title %}Login - Meri Aama{% endblock %}
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block title %}Welcome Back | Meri Aama{% endblock %}
+
 {% block content %}
-<div class="max-w-sm mx-auto bg-white p-6 rounded-lg shadow">
-    <h1 class="text-2xl font-bold text-rose-700 mb-6">Welcome back</h1>
 
-    {% if form.non_field_errors %}
-        <div class="mb-4 px-3 py-2 rounded bg-red-100 text-red-700 text-sm">
-            {{ form.non_field_errors|striptags }}
-        </div>
-    {% endif %}
+<div class="relative min-h-screen overflow-hidden bg-gradient-to-br from-rose-50 via-pink-50 to-sky-50">
 
-    <form method="post">
-        {% csrf_token %}
-        <label class="block text-sm font-medium mb-1">Username</label>
-        <input type="text" name="username" class="w-full border rounded px-3 py-2 mb-4" required>
+    <!-- Background Blobs -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-rose-200 opacity-30 rounded-full blur-3xl"></div>
 
-        <label class="block text-sm font-medium mb-1">Password</label>
-        <input type="password" name="password" class="w-full border rounded px-3 py-2 mb-4" required>
+    <div class="absolute -bottom-32 -right-32 w-[420px] h-[420px] bg-sky-200 opacity-30 rounded-full blur-3xl"></div>
 
-        <button type="submit" class="w-full bg-rose-600 text-white rounded px-3 py-2 font-medium hover:bg-rose-700">
-            Log in
-        </button>
-    </form>
+    <div class="absolute top-1/2 left-1/2 w-72 h-72 bg-pink-100 opacity-30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
 
-    <p class="text-sm text-gray-600 mt-4">
-        New here? <a href="{% url 'register-page' %}" class="text-rose-600 hover:underline">Create an account</a>
-    </p>
-    <p class="text-sm text-gray-600 mt-2">
-        Hospital staff? <a href="{% url 'staff-login' %}" class="text-rose-600 hover:underline">Use the staff login</a>
-    </p>
+    <!-- Main Container -->
+        <div class="relative z-10 flex min-h-screen items-center justify-center px-6 py-4">
+        <!-- Main Card -->
+        <div class="w-full max-w-7xl overflow-hidden rounded-[40px] bg-white shadow-[0_35px_90px_rgba(0,0,0,.12)] grid lg:grid-cols-2">
+
+            <!-- ======================================= -->
+            <!-- LEFT SIDE -->
+            <!-- ======================================= -->
+
+<div class="relative flex flex-col justify-between bg-gradient-to-br from-rose-100 via-pink-50 to-sky-50 p-8">
+                <!-- Brand -->
+
+                <div>
+
+                    <h1 class="text-5xl font-black text-rose-600">
+
+                        🌸 Meri Aama
+
+                    </h1>
+
+                    <p class="mt-4 text-xl text-gray-600">
+
+                        Your trusted pregnancy companion.
+
+                    </p>
+
+                </div>
+
+                <!-- Illustration Placeholder -->
+
+<div class="flex justify-center py-5">
+                    <div
+                        class="flex h-60 w-60 flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-rose-300 bg-white shadow-lg">
+
+<div class="text-6xl">
+                            🤰
+
+                        </div>
+
+                        <p class="mt-4 text-lg font-semibold text-gray-700">
+
+                            Illustration Placeholder
+
+                        </p>
+
+                        <p class="mt-2 text-center text-sm text-gray-500">
+
+                            Pregnancy Illustration
+
+                            <br>
+
+                            Coming Soon
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- Features -->
+
+<div class="space-y-2">
+                    <div class="flex items-center rounded-xl bg-white/80 p-3 shadow-sm">
+
+                        <span class="text-emerald-500 text-2xl mr-4">
+
+                            ✓
+
+                        </span>
+
+                        <div>
+
+                            <h3 class="text-sm font-semibold text-gray-800">
+
+                                AI Pregnancy Assistant
+
+                            </h3>
+
+                            <p class="text-xs text-gray-500">
+
+                                Personalized guidance whenever you need it.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-center rounded-2xl bg-white/80 p-4 shadow-sm">
+
+                        <span class="text-emerald-500 text-2xl mr-4">
+
+                            ✓
+
+                        </span>
+
+                        <div>
+
+                            <h3 class="font-semibold text-gray-800">
+
+                                Weekly Health Tracking
+
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+
+                                Keep your pregnancy on track.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-center rounded-2xl bg-white/80 p-4 shadow-sm">
+
+                        <span class="text-emerald-500 text-2xl mr-4">
+
+                            ✓
+
+                        </span>
+
+                        <div>
+
+                            <h3 class="font-semibold text-gray-800">
+
+                                Mood & Wellness
+
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+
+                                Monitor your emotional wellbeing.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-center rounded-2xl bg-white/80 p-4 shadow-sm">
+
+                        <span class="text-emerald-500 text-2xl mr-4">
+
+                            ✓
+
+                        </span>
+
+                        <div>
+
+                            <h3 class="font-semibold text-gray-800">
+
+                                Secure Health Records
+
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+
+                                Your information is always protected.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ======================================= -->
+            <!-- RIGHT SIDE -->
+            <!-- ======================================= -->
+
+            <div class="flex items-center justify-center p-8 lg:p-10">
+
+                <div class="w-full max-w-md">
+
+                    <span class="inline-flex rounded-full bg-rose-100 px-4 py-2 text-sm font-medium text-rose-600">
+
+                        👋 Welcome Back
+
+                    </span>
+
+                    <h2 class="mt-4 text-3xl font-bold text-gray-800">
+
+                        Continue Your Journey
+
+                    </h2>
+
+                    <p class="mt-2 text-sm leading-6 text-gray-500">
+
+                        Sign in to continue tracking your pregnancy,
+                        monitor your health, and receive personalized
+                        support from Meri Aama.
+
+                    </p>
+
+                    {% if form.errors %}
+
+                    <div class="mt-8 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-red-600">
+
+                        Incorrect username or password.
+
+                    </div>
+
+                    {% endif %}
+
+                    <!-- FORM STARTS HERE -->
+
+                    <form method="post" class="mt-6 space-y-4">
+
+                        {% csrf_token %}
+                        <!-- Username -->
+<div>
+
+    <label class="mb-2 block text-sm font-medium text-gray-700">
+        Username
+    </label>
+
+    <div class="relative">
+
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl">
+            👤
+        </span>
+
+        <input
+            type="text"
+            name="username"
+            required
+            placeholder="Enter your username"
+            class="w-full rounded-2xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-gray-700 outline-none transition-all duration-300 focus:border-rose-400 focus:bg-white focus:ring-4 focus:ring-rose-100">
+
+    </div>
+
 </div>
+
+<!-- Password -->
+<div>
+
+    <label class="mb-2 block text-sm font-medium text-gray-700">
+        Password
+    </label>
+
+    <div class="relative">
+
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl">
+            🔒
+        </span>
+
+        <input
+            id="password"
+            type="password"
+            name="password"
+            required
+            placeholder="Enter your password"
+            class="w-full rounded-2xl border border-gray-200 bg-gray-50 py-4 pl-12 pr-14 text-gray-700 outline-none transition-all duration-300 focus:border-rose-400 focus:bg-white focus:ring-4 focus:ring-rose-100">
+
+        <button
+            type="button"
+            id="togglePassword"
+            class="absolute right-4 top-1/2 -translate-y-1/2 text-xl">
+
+            👁️
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Remember Me + Forgot Password -->
+
+<div class="flex items-center justify-between">
+
+    <label class="flex items-center gap-2 text-sm text-gray-600">
+
+        <input
+            type="checkbox"
+            class="h-4 w-4 rounded border-gray-300 text-rose-500 focus:ring-rose-300">
+
+        Remember Me
+
+    </label>
+
+    <a
+        href="#"
+        class="text-sm font-medium text-rose-600 hover:text-rose-700">
+
+        Forgot Password?
+
+    </a>
+
+</div>
+
+<!-- Secure Message -->
+
+<div class="rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
+
+    <div class="flex items-center gap-3">
+
+        <span class="text-xl">
+            🔒
+        </span>
+
+        <p class="text-sm text-emerald-700">
+
+            Your personal information is securely encrypted.
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Login Button -->
+
+<button
+    type="submit"
+    class="w-full rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+    Continue Journey →
+
+</button>
+</form>
+
+<!-- Divider -->
+
+<div class="my-5 flex items-center">
+
+    <div class="h-px flex-1 bg-gray-200"></div>
+
+    <span class="mx-4 text-sm text-gray-400">
+
+        New to Meri Aama?
+
+    </span>
+
+    <div class="h-px flex-1 bg-gray-200"></div>
+
+</div>
+
+<!-- Register -->
+
+<a
+    href="{% url 'register-page' %}"
+    class="flex w-full items-center justify-center rounded-2xl border border-rose-200 bg-white py-4 font-semibold text-rose-600 transition-all duration-300 hover:bg-rose-50">
+
+    Create Account
+
+</a>
+
+<!-- Footer -->
+
+<p class="mt-5 text-center text-xs text-gray-400">
+
+    Supporting every mother with technology,
+    compassion and care ❤️
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const togglePassword = document.getElementById("togglePassword");
+const password = document.getElementById("password");
+
+togglePassword.addEventListener("click", () => {
+
+    if(password.type === "password"){
+
+        password.type = "text";
+        togglePassword.innerHTML = "🙈";
+
+    }else{
+
+        password.type = "password";
+        togglePassword.innerHTML = "👁️";
+
+    }
+
+});
+
+</script>
+
 {% endblock %}

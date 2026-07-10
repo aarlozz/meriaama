@@ -103,5 +103,6 @@ def mood_checkin_page(request):
     heatmap = _build_mood_heatmap(request.user)
 
     return render(request, "mood/checkin.html", {
-        "form": form, "history": history, "heatmap": heatmap, "filter_date": filter_date,
+        "form": form, "history": history, "heatmap": heatmap, "filter_date": filter_date,"header_title": "Mood Tracker",
+"header_subtitle": "Track your emotional wellbeing every day",
     })
