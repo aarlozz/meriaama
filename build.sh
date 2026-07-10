@@ -4,6 +4,7 @@ set -o errexit
 pip install -r requirements.txt
 python manage.py collectstatic --no-input
 python manage.py migrate
+python manage.py ensure_superuser
 
 # Idempotent -- matches on `code`
 python manage.py seed_wellness_tips wellness_tips.json
