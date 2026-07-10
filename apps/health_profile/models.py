@@ -4,24 +4,12 @@ from datetime import date, timedelta
 
 
 class HealthProfile(models.Model):
-    """
-    The 'single source of truth' record for a mother. Mood, psychometric,
-    and tracker apps read from / write to fields here (via getattr, so
-    they stay safe even if this app is added after the others).
-    """
-
     ALLERGY_CHOICES = [
-        ("nuts", "Nuts"),
-        ("dairy", "Dairy"),
-        ("gluten", "Gluten"),
-        ("shellfish", "Shellfish"),
-        ("eggs", "Eggs"),
-        ("soy", "Soy"),
+        ("nuts", "Nuts"), ("dairy", "Dairy"), ("gluten", "Gluten"),
+        ("shellfish", "Shellfish"), ("eggs", "Eggs"), ("soy", "Soy"),
     ]
     DIETARY_CHOICES = [
-        ("none", "No restriction"),
-        ("vegetarian", "Vegetarian"),
-        ("vegan", "Vegan"),
+        ("none", "No restriction"), ("vegetarian", "Vegetarian"), ("vegan", "Vegan"),
     ]
     COMPLICATION_CHOICES = [
         ("miscarriage", "Miscarriage or pregnancy loss"),
@@ -32,18 +20,12 @@ class HealthProfile(models.Model):
     ]
     BLOOD_GROUP_CHOICES = [
         ("", "Select your blood group"),
-        ("A+", "A+"), ("A-", "A-"),
-        ("B+", "B+"), ("B-", "B-"),
-        ("AB+", "AB+"), ("AB-", "AB-"),
-        ("O+", "O+"), ("O-", "O-"),
+        ("A+", "A+"), ("A-", "A-"), ("B+", "B+"), ("B-", "B-"),
+        ("AB+", "AB+"), ("AB-", "AB-"), ("O+", "O+"), ("O-", "O-"),
         ("unknown", "I don't know"),
     ]
 
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="health_profile",
-    )
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="health_profile")
 
     last_menstrual_period = models.DateField(null=True, blank=True)
     expected_delivery_date = models.DateField(null=True, blank=True)
@@ -69,6 +51,10 @@ class HealthProfile(models.Model):
     previous_complications_other = models.CharField(max_length=200, blank=True)
     smokes = models.BooleanField(default=False)
     drinks_alcohol = models.BooleanField(default=False)
+
+    # NEW -- power the weight-gain tracker and postpartum mode
+    pre_pregnancy_weight_kg = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -97,3 +83,29 @@ class HealthProfile(models.Model):
     @property
     def is_first_pregnancy(self):
         return self.previous_pregnancies_count == 0
+
+    
+    @property
+    def pre_pregnancy_bmi(self):
+        if not self.height_cm or not self.pre_pregnancy_weight_kg:
+            return None
+        height_m = float(self.height_cm) / 100
+        return float(self.pre_pregnancy_weight_kg) / (height_m ** 2)
+
+    @property
+    def recommended_weight_gain_range_kg(self):
+        """
+        Standard IOM (Institute of Medicine) total pregnancy weight-gain
+        bands by pre-pregnancy BMI -- a widely published public health
+        guideline, not app-generated advice.
+        """
+        bmi = self.pre_pregnancy_bmi
+        if bmi is None:
+            return None
+        if bmi < 18.5:
+            return (12.5, 18.0)
+        if bmi < 25:
+            return (11.5, 16.0)
+        if bmi < 30:
+            return (7.0, 11.5)
+        return (5.0, 9.0)
