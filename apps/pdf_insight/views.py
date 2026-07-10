@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 @login_required
 def report_list_page(request):
     reports = MedicalReport.objects.filter(user=request.user)
-    return render(request, "pdf_insight/list.html", {"reports": reports})
+    return render(request, "pdf_insight/list.html", {"reports": reports,"header_title": "Health Reports",
+"header_subtitle": "View and manage your medical reports",})
 
 
 @login_required
@@ -53,4 +54,5 @@ def report_upload_page(request):
     else:
         form = MedicalReportUploadForm()
 
-    return render(request, "pdf_insight/upload.html", {"form": form})
+    return render(request, "pdf_insight/upload.html", {"form": form,"header_title": "Health Reports",
+"header_subtitle": "View and manage your medical reports",})

@@ -30,6 +30,8 @@ def insights_page(request):
         "insight_text": insight_text,
         "has_mood_data": mood_entries.exists(),
         "has_stress_data": stress_tests.exists(),
+        "header_title": "Mental Wellbeing",
+"header_subtitle": "Take care of your emotional health and mindfulness",
     })
 
 
@@ -59,7 +61,8 @@ def _build_chart_data(mood_entries, start_date, today, stress_tests):
         for test in stress_tests
     ]
 
-    return {"labels": labels, "mood_values": mood_values, "stress_points": stress_points}
+    return {"labels": labels, "mood_values": mood_values, "stress_points": stress_points,"header_title": "Mental Wellbeing",
+"header_subtitle": "Take care of your emotional health and mindfulness",}
 
 
 def _generate_insight(mood_entries, stress_tests):
