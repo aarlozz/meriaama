@@ -59,37 +59,18 @@
 
 
                 <!-- Illustration -->
+                 <div class="flex justify-center py-8">
 
-                <div class="flex justify-center py-8">
+    <div class="w-80 rounded-[32px] bg-white shadow-xl overflow-hidden">
 
-                    <div
-                        class="flex h-72 w-72 flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-rose-300 bg-white shadow-xl">
+        <img
+            src="{% static 'images/pregnant_user_create.jpeg' %}"
+            alt="Pregnancy Illustration"
+            class="w-full">
 
-                        <div class="text-7xl">
+    </div>
 
-                            🤰
-
-                        </div>
-
-                        <h3 class="mt-6 text-xl font-bold text-gray-700">
-
-                            Illustration
-
-                        </h3>
-
-                        <p class="mt-3 text-center text-gray-500">
-
-                            Pregnancy artwork
-                            <br>
-                            will be added here
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-
+</div>
 
                 <!-- Features -->
 
@@ -287,7 +268,7 @@
 
     <label class="mb-2 block text-sm font-semibold text-gray-700">
 
-        Username 👤
+        Username 
 
     </label>
 
@@ -295,7 +276,7 @@
 
         <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400">
 
-            
+            👤
 
         </span>
 
@@ -319,7 +300,7 @@
 
     <label class="mb-2 block text-sm font-semibold text-gray-700">
 
-        Email Address ✉️
+        Email Address 
 
     </label>
 
@@ -328,7 +309,7 @@
         <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400">
 
             
-
+            ✉️
         </span>
 
         {{ form.email }}
@@ -351,7 +332,7 @@
 
     <label class="mb-2 block text-sm font-semibold text-gray-700">
 
-        Phone Number 📱
+        Phone Number 
 
     </label>
 
@@ -360,7 +341,7 @@
         <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400">
 
             
-
+            📱
         </span>
 
         {{ form.phone_number }}
@@ -378,7 +359,7 @@
 
 
 <!-- Language -->
-
+<!-- 
 <div>
 
     <label class="mb-2 block text-sm font-semibold text-gray-700">
@@ -395,7 +376,7 @@
         </p>
     {% endif %}
 
-</div>
+</div> -->
 
 </div>
     <!-- ========================================= -->
@@ -410,11 +391,16 @@
 
             <label class="mb-2 block text-sm font-semibold text-gray-700">
 
-                Password 🔒
+                Password 
 
             </label>
 
             <div class="relative">
+                <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400">
+
+            
+            🔒
+        </span>
 
                 {{ form.password1 }}
 
@@ -481,12 +467,17 @@
 
             <label class="mb-2 block text-sm font-semibold text-gray-700">
 
-                Confirm Password 🔒
+                Confirm Password 
 
             </label>
 
             <div class="relative">
+                <div class="relative">
+                <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400">
 
+            
+            🔒
+        </span>
 
                 {{ form.password2 }}
 

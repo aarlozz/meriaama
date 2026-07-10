@@ -67,7 +67,6 @@
 
     <!-- Custom JS -->
     <script src="{% static 'js/main.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
 
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -75,6 +74,28 @@
         lucide.createIcons();
     </script>
 
+<!-- <script>
+
+const profileBtn = document.getElementById("profileBtn");
+const profileMenu = document.getElementById("profileMenu");
+
+profileBtn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    profileMenu.classList.toggle("hidden");
+});
+
+document.addEventListener("click", function(e) {
+
+    if (
+        !profileMenu.contains(e.target) &&
+        !profileBtn.contains(e.target)
+    ) {
+        profileMenu.classList.add("hidden");
+    }
+
+});
+
+</script> -->
     {% block extra_js %}
     {% endblock %}
 

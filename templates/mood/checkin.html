@@ -1,90 +1,318 @@
 {% extends "dashboard_base.html" %}
 {% block title %}Mood Check-In{% endblock %}
 {% block content %}
-<h1 class="font-display text-2xl text-berry mb-6">How are you feeling today?</h1>
 
 <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
-    <form method="post">
-        {% csrf_token %}
-        <div class="flex justify-between mb-6">
-            {% for radio in form.score %}
-                <label class="flex flex-col items-center text-sm cursor-pointer gap-1">
-                    {{ radio.tag }}
-                    <span class="text-2xl">
-                        {% if radio.data.value|stringformat:"s" == "1" %}😢
-                        {% elif radio.data.value|stringformat:"s" == "2" %}😕
-                        {% elif radio.data.value|stringformat:"s" == "3" %}😐
-                        {% elif radio.data.value|stringformat:"s" == "4" %}🙂
-                        {% elif radio.data.value|stringformat:"s" == "5" %}😄{% endif %}
-                    </span>
-                    <span class="text-xs text-gray-500">{{ radio.choice_label }}</span>
-                </label>
-            {% endfor %}
+    <form method="post" class="space-y-8">
+    {% csrf_token %}
+
+    <!-- Header -->
+    <div class="text-center">
+        <div class="text-5xl mb-3">😊</div>
+
+        <h2 class="text-2xl font-bold text-gray-800">
+            How are you feeling today?
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+            Choose the option that best describes your mood.
+        </p>
+    </div>
+
+    <!-- Mood Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
+
+{% for radio in form.score %}
+
+<label
+    for="{{ radio.id_for_label }}"
+    class="mood-card relative cursor-pointer rounded-3xl border-2 border-gray-200 bg-white p-6 transition-all duration-300 hover:border-rose-400 hover:shadow-md">
+
+    <input
+        type="radio"
+        id="{{ radio.id_for_label }}"
+        name="{{ radio.data.name }}"
+        value="{{ radio.data.value }}"
+        class="hidden mood-radio"
+        {% if radio.data.selected %}checked{% endif %}
+    >
+
+    <div class="text-center">
+
+        <div class="emoji text-5xl mb-4">
+
+            {% if radio.data.value|stringformat:"s" == "1" %}
+                😢
+            {% elif radio.data.value|stringformat:"s" == "2" %}
+                😕
+            {% elif radio.data.value|stringformat:"s" == "3" %}
+                😐
+            {% elif radio.data.value|stringformat:"s" == "4" %}
+                🙂
+            {% elif radio.data.value|stringformat:"s" == "5" %}
+                😄
+            {% endif %}
+
         </div>
 
-        <label class="block text-sm font-medium mb-2">Anything else going on? (optional, pick any that apply)</label>
-        <div class="flex flex-wrap gap-2 mb-4">
-            {% for checkbox in form.tags %}
-                <label class="flex items-center gap-1 text-sm bg-gold-soft px-3 py-1 rounded-full cursor-pointer hover:opacity-80">
-                    {{ checkbox.tag }} {{ checkbox.choice_label }}
-                </label>
-            {% endfor %}
+        <h3 class="text-lg font-semibold text-gray-800">
+            {{ radio.choice_label }}
+        </h3>
+
+    </div>
+
+    <div class="check hidden absolute top-4 right-4">
+
+        <div class="w-7 h-7 rounded-full text-white flex items-center justify-center text-sm">
+
+            
+
         </div>
 
-        {{ form.note }}
-        <button type="submit" class="mt-4 bg-berry text-white rounded-lg px-4 py-2 font-medium hover:opacity-90">
-            Save today's mood
-        </button>
-    </form>
+    </div>
+
+</label>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- Mood Tags -->
+
+<div>
+
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">
+        What are you feeling?
+    </h3>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+
+        {% for checkbox in form.tags %}
+
+            <label class="flex items-center gap-2 rounded-xl border border-gray-200 p-3 cursor-pointer hover:bg-rose-50">
+
+                {{ checkbox.tag }}
+
+                <span>{{ checkbox.choice_label }}</span>
+
+            </label>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+<!-- Notes -->
+
+<div>
+
+    <label class="block text-lg font-semibold mb-3">
+
+        Anything else?
+
+    </label>
+
+    {{ form.note }}
+
+</div>
+<!-- Save Button -->
+<div class="flex justify-center pt-2">
+
+    <button
+        type="submit"
+        class="inline-flex items-center gap-2
+               rounded-xl
+               bg-rose-500
+               px-8 py-3
+               font-semibold
+               text-white
+               shadow-md
+               transition-all
+               duration-300
+               hover:bg-rose-600
+               hover:shadow-lg
+               active:scale-95">
+
+        Save Mood
+
+    </button>
+
+</div>
+
+</form>
 </div>
 
 <!-- Heatmap -->
-<div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="font-medium text-berry">Last 18 Weeks</h2>
-        {% if filter_date %}
-            <a href="{% url 'mood-checkin' %}" class="text-xs text-berry hover:underline">Clear filter &times;</a>
-        {% endif %}
-    </div>
+<!-- Mood Activity -->
+<div class="bg-white rounded-3xl shadow-sm p-8 mb-8">
 
-    <div class="overflow-x-auto">
-        <div class="flex gap-1">
-            {% for week, month_label in heatmap %}
-                <div class="flex flex-col items-center">
-                    <div class="h-4 text-[10px] text-gray-400 mb-1">{{ month_label }}</div>
-                    <div class="flex flex-col gap-1">
-                        {% for day in week %}
-                            {% if day.is_future %}
-                                <div class="w-3.5 h-3.5 rounded-sm bg-transparent"></div>
-                            {% else %}
-                                <a href="?date={{ day.date|date:'Y-m-d' }}"
-                                   title="{{ day.date|date:'M d, Y' }}{% if day.count %} -- {{ day.count }} entr{{ day.count|pluralize:'y,ies' }}{% endif %}"
-                                   class="w-3.5 h-3.5 rounded-sm block
-                                       {% if day.bucket == 'empty' %}bg-gray-100
-                                       {% elif day.bucket == 'very-low' %}bg-red-400
-                                       {% elif day.bucket == 'low' %}bg-red-200
-                                       {% elif day.bucket == 'neutral' %}bg-gold-soft
-                                       {% elif day.bucket == 'good' %}bg-sage/50
-                                       {% elif day.bucket == 'very-good' %}bg-sage{% endif %}
-                                       {% if filter_date == day.date %}ring-2 ring-berry{% endif %}">
-                                </a>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endfor %}
+    <!-- Header -->
+    <div class="flex items-start justify-between mb-8">
+
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900">
+                Mood Activity
+            </h2>
+
+            <p class="text-gray-500 mt-1">
+                Track your emotional wellbeing over the last 18 weeks.
+            </p>
         </div>
+
+        <a href="{% url 'insights' %}"
+           class="text-sm font-semibold text-rose-500 hover:text-rose-600">
+            View Trends →
+        </a>
+
     </div>
 
-    <div class="flex items-center gap-3 mt-4 text-[10px] text-gray-400">
-        <span>Less</span>
-        <span class="w-3 h-3 rounded-sm bg-red-400"></span>
-        <span class="w-3 h-3 rounded-sm bg-red-200"></span>
-        <span class="w-3 h-3 rounded-sm bg-gold-soft"></span>
-        <span class="w-3 h-3 rounded-sm bg-sage/50"></span>
-        <span class="w-3 h-3 rounded-sm bg-sage"></span>
-        <span>Better</span>
+    <!-- Body -->
+    <div class="grid lg:grid-cols-2 gap-10 items-start">
+
+        <!-- ================= HEATMAP ================= -->
+        <div>
+
+            <div class="overflow-x-auto">
+
+                <div class="flex gap-1">
+
+                    {% for week, month_label in heatmap %}
+
+                    <div class="flex flex-col items-center">
+
+                        <div class="h-5 text-[11px] text-gray-400 mb-2">
+                            {{ month_label }}
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+
+                            {% for day in week %}
+
+                            {% if day.is_future %}
+
+                            <div class="w-4 h-4"></div>
+
+                            {% else %}
+
+                            <a href="?date={{ day.date|date:'Y-m-d' }}"
+                               class="w-4 h-4 rounded
+                                {% if day.bucket == 'empty' %}bg-gray-100
+                                {% elif day.bucket == 'very-low' %}bg-red-400
+                                {% elif day.bucket == 'low' %}bg-red-200
+                                {% elif day.bucket == 'neutral' %}bg-yellow-300
+                                {% elif day.bucket == 'good' %}bg-green-300
+                                {% elif day.bucket == 'very-good' %}bg-green-500
+                                {% endif %}
+                                {% if filter_date == day.date %}
+                                    ring-2 ring-rose-500
+                                {% endif %}">
+                            </a>
+
+                            {% endif %}
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <!-- Legend -->
+
+            <div class="flex items-center gap-2 mt-6 text-xs text-gray-500">
+
+                <span>Less</span>
+
+                <span class="w-4 h-4 rounded bg-red-400"></span>
+                <span class="w-4 h-4 rounded bg-red-200"></span>
+                <span class="w-4 h-4 rounded bg-yellow-300"></span>
+                <span class="w-4 h-4 rounded bg-green-300"></span>
+                <span class="w-4 h-4 rounded bg-green-500"></span>
+
+                <span class="ml-2">Better</span>
+
+            </div>
+
+        </div>
+
+        <!-- ================= SUMMARY ================= -->
+
+        <div class="space-y-6">
+
+            <!-- Current Streak -->
+            <div class="flex items-start gap-4">
+
+                <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-2xl">
+                    🔥
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500">
+                        Current Streak
+                    </p>
+
+                    <p class="text-2xl font-bold text-gray-900">
+                        {{ current_streak }} days
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Average Mood -->
+
+            <div class="flex items-start gap-4">
+
+                <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-2xl">
+                    😊
+                </div>
+
+                <div>
+
+                    <p class="text-sm text-gray-500">
+                        Average Mood
+                    </p>
+
+                    <p class="text-2xl font-bold text-gray-900">
+                        {{ average_mood }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Total Entries -->
+
+            <div class="flex items-start gap-4">
+
+                <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-2xl">
+                    📅
+                </div>
+
+                <div>
+
+                    <p class="text-sm text-gray-500">
+                        Total Entries
+                    </p>
+
+                    <p class="text-2xl font-bold text-gray-900">
+                        {{ total_entries }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </div>
 
 <!-- History list -->
@@ -133,4 +361,74 @@
         {% endif %}
     </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+const cards = document.querySelectorAll(".mood-card");
+const radios = document.querySelectorAll(".mood-radio");
+
+function updateMoodSelection(){
+
+    cards.forEach(card=>{
+
+        card.classList.remove(
+            "border-rose-500",
+            "bg-rose-50",
+            "shadow-xl",
+            "scale-105"
+        );
+
+        card.querySelector(".emoji").classList.remove("scale-110");
+
+        card.querySelector(".check").classList.add("hidden");
+
+    });
+
+    radios.forEach(radio=>{
+
+        if(radio.checked){
+
+            const card = radio.closest(".mood-card");
+
+            card.classList.add(
+                "border-rose-500",
+                "bg-rose-50",
+                "shadow-xl",
+                "scale-105"
+            );
+
+            card.querySelector(".emoji").classList.add("scale-110");
+
+            card.querySelector(".check").classList.remove("hidden");
+
+        }
+
+    });
+
+}
+
+radios.forEach(radio=>{
+
+    radio.addEventListener("change",updateMoodSelection);
+
+});
+const saveBtn = document.getElementById("saveMoodBtn");
+
+saveBtn.disabled = false;
+saveBtn.classList.remove(
+    "bg-rose-300",
+    "cursor-not-allowed"
+);
+
+saveBtn.classList.add(
+    "bg-rose-500",
+    "hover:bg-rose-600"
+);
+updateMoodSelection();
+
+</script>
+
 {% endblock %}

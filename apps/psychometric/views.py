@@ -10,8 +10,8 @@ def select_test_page(request):
     """GET /psychometric/ -- choose which scale to take, plus recent results."""
     history = PsychometricTest.objects.filter(user=request.user).order_by("-taken_at")[:10]
     return render(request, "psychometric/select.html", {
-        "test_types": PsychometricTest.TestType.choices,
-        "history": history,
+        "test_types": PsychometricTest.TestType.choices,"header_title": "Psychometric Test",
+"header_subtitle": "Assess your emotional and mental wellbeing",
     })
 
 
@@ -33,7 +33,8 @@ def take_test_page(request, test_type):
     return render(request, "psychometric/take_test.html", {
         "form": form,
         "test_type": test_type,
-        "test_type_label": dict(PsychometricTest.TestType.choices)[test_type],
+        "test_type_label": dict(PsychometricTest.TestType.choices)[test_type],"header_title": "Psychometric Test",
+"header_subtitle": "Assess your emotional and mental wellbeing",
     })
 
 
@@ -41,7 +42,8 @@ def take_test_page(request, test_type):
 def test_result_page(request, test_id):
     """GET /psychometric/result/<id>/ -- score + risk level after submitting."""
     test = get_object_or_404(PsychometricTest, id=test_id, user=request.user)
-    return render(request, "psychometric/result.html", {"test": test})
+    return render(request, "psychometric/result.html", {"test": test,"header_title": "Psychometric Test",
+"header_subtitle": "Assess your emotional and mental wellbeing",})
 
 
 @login_required
@@ -75,4 +77,6 @@ def test_history_page(request):
         "charts": charts,
         "all_tests": list(reversed(all_tests)),  # newest first for the table
         "has_data": all_tests.exists(),
+        "header_title": "Psychometric Test",
+"header_subtitle": "Assess your emotional and mental wellbeing",
     })

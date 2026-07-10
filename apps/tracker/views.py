@@ -63,6 +63,7 @@ def tracker_page(request):
         "next_visit_date": next_visit_date, "is_overdue": is_overdue,
         "profile": profile, "weight_data": weight_data, "baby_fact": baby_fact,
         "header_subtitle": subtitle,
+        "header_title": "Pregnancy Tracker",
     })
 
 

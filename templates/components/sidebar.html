@@ -94,20 +94,7 @@
         <i data-lucide="rectangle-ellipsis"></i>
         Forum
       </a>
-      <a
-        href="#"
-        class="flex items-center gap-4 rounded-2xl px-4 py-3 text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition"
-      >
-        <span class="text-xl">💊</span>
-        Medicines
-      </a>
-      <a
-        href="#"
-        class="flex items-center gap-4 rounded-2xl px-4 py-3 text-gray-600 hover:bg-rose-50 hover:text-rose-600 transition"
-      >
-        <span class="text-xl">🏥</span>
-        Hospitals
-      </a>
+     
       <a
         href="{% url 'report-list' %}"
         class="flex items-center gap-4 rounded-2xl px-4 py-3 transition {% if request.resolver_match.url_name == 'report-list' %} bg-rose-50 text-rose-600 font-semibold {% else %} text-gray-600 hover:bg-rose-50 hover:text-rose-600 {% endif %}"
