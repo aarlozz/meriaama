@@ -101,8 +101,32 @@ def mood_checkin_page(request):
     paginator = Paginator(entries, 10)
     history = paginator.get_page(request.GET.get("page"))
     heatmap = _build_mood_heatmap(request.user)
+    total_entries = MoodEntry.objects.filter(user=request.user).count()
+
+    avg = MoodEntry.objects.filter(user=request.user).aggregate(
+        Avg("score")
+    )["score__avg"]
+
+    if avg:
+        if avg < 1.5:
+            average_mood = "Very Low"
+        elif avg < 2.5:
+            average_mood = "Low"
+        elif avg < 3.5:
+            average_mood = "Neutral"
+        elif avg < 4.5:
+            average_mood = "Good"
+        else:
+            average_mood = "Very Good"
+    else:
+        average_mood = "--"
+
+    # Temporary value
+    current_streak = 5
 
     return render(request, "mood/checkin.html", {
         "form": form, "history": history, "heatmap": heatmap, "filter_date": filter_date,"header_title": "Mood Tracker",
-"header_subtitle": "Track your emotional wellbeing every day",
+"header_subtitle": "Track your emotional wellbeing every day","total_entries": total_entries,
+    "average_mood": average_mood,
+    "current_streak": current_streak,
     })
