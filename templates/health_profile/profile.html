@@ -115,16 +115,21 @@ Manage your pregnancy information
             <div>
                 <p class="hp-section-title">Body</p>
                 <div class="grid sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="hp-label">{{ form.height_cm.label }}</label>
-                        {{ form.height_cm }}
-                        <p class="hp-help">{{ form.height_cm.help_text }}</p>
-                    </div>
-                    <div>
-                        <label class="hp-label">{{ form.blood_group.label }}</label>
-                        {{ form.blood_group }}
-                    </div>
-                </div>
+    <div>
+        <label class="hp-label">{{ form.height_cm.label }}</label>
+        {{ form.height_cm }}
+        <p class="hp-help">{{ form.height_cm.help_text }}</p>
+    </div>
+    <div>
+        <label class="hp-label">{{ form.pre_pregnancy_weight_kg.label }}</label>
+        {{ form.pre_pregnancy_weight_kg }}
+        <p class="hp-help">{{ form.pre_pregnancy_weight_kg.help_text }}</p>
+    </div>
+</div>
+<div class="mt-4">
+    <label class="hp-label">{{ form.blood_group.label }}</label>
+    {{ form.blood_group }}
+</div>
             </div>
 
             <div>
