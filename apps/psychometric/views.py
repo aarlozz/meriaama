@@ -12,8 +12,6 @@ def select_test_page(request):
     return render(request, "psychometric/select.html", {
         "test_types": PsychometricTest.TestType.choices,
         "history": history,
-        "header_title": "Psychometric Test",
-"header_subtitle": "Assess your emotional and mental wellbeing",
     })
 
 
@@ -36,8 +34,6 @@ def take_test_page(request, test_type):
         "form": form,
         "test_type": test_type,
         "test_type_label": dict(PsychometricTest.TestType.choices)[test_type],
-        "header_title": "Psychometric Test",
-"header_subtitle": "Assess your emotional and mental wellbeing",        
     })
 
 
