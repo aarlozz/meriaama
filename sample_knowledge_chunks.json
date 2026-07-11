@@ -1,128 +1,674 @@
 [
   {
-    "id": "nutrition-001",
-    "text": "During pregnancy, daily energy needs increase modestly -- roughly 300 extra calories per day in the second and third trimesters compared to before pregnancy. Rather than eating for two in volume, focus on nutrient density: whole grains, lentils and beans, dairy or fortified alternatives, eggs, leafy greens, and a variety of fruits and vegetables at each meal.",
-    "source_url": "https://example.org/antenatal-nutrition-basics",
-    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
+    "id": "pregnancy-basics-001",
+    "category": "pregnancy-basics",
+    "text": "Pregnancy begins when a fertilized egg implants in the uterus and a woman can expect changes in her body over the next nine months. Common early signs include missed periods, tiredness, nausea, and breast tenderness. These changes are usually normal, but they should be discussed with a health worker during your first prenatal visit. Eating a balanced diet, avoiding tobacco and alcohol, and keeping up with appointments can help keep both mother and baby healthy.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/pregnancy"
   },
   {
-    "id": "nutrition-002",
-    "text": "Iron needs roughly double during pregnancy to support increased blood volume and the growing baby. Good sources include lentils, beans, dark leafy greens, and lean meat if eaten. Pairing iron-rich foods with a source of vitamin C, such as citrus fruit or tomatoes, improves how much iron the body absorbs. Many antenatal care programs also provide iron and folic acid supplements -- take these as prescribed by a doctor.",
-    "source_url": "https://example.org/iron-in-pregnancy",
-    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
-  },
-  {
-    "id": "nutrition-003",
-    "text": "Folic acid supports the healthy development of the baby's brain and spinal cord, and is especially important in early pregnancy. Foods naturally rich in folate include leafy green vegetables, citrus fruits, and beans, but most antenatal programs also recommend a daily folic acid supplement, particularly before and during the first trimester.",
-    "source_url": "https://example.org/folic-acid-pregnancy",
-    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
-  },
-  {
-    "id": "nutrition-004",
-    "text": "Calcium supports the development of the baby's bones and teeth and helps maintain the mother's own bone health. Dairy products, fortified plant milks, sesame seeds, and dark leafy greens are good sources. If dietary calcium intake is low, a doctor may recommend a supplement.",
-    "source_url": "https://example.org/calcium-pregnancy",
-    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
-  },
-  {
-    "id": "nutrition-005",
-    "text": "Fruits that are commonly recommended during pregnancy include bananas (potassium and easy on the stomach during nausea), oranges and other citrus (vitamin C and folate), guava (vitamin C and fiber), apples (fiber and helps with constipation), and pomegranate (iron and antioxidants). Wash fruit thoroughly and avoid unpasteurized juices.",
-    "source_url": "https://example.org/fruits-in-pregnancy",
-    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
-  },
-  {
-    "id": "nutrition-006",
-    "text": "Staying well hydrated supports amniotic fluid levels, digestion, and helps reduce common complaints like constipation and swelling. A general guide is around 8 to 10 glasses of water a day, adjusted for climate and activity level, unless a doctor has advised otherwise for a specific medical reason.",
-    "source_url": "https://example.org/hydration-pregnancy",
-    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
-  },
-  {
-    "id": "nutrition-007",
-    "text": "Certain foods are generally advised against during pregnancy due to infection or contamination risk: unpasteurized dairy, raw or undercooked eggs and meat, high-mercury fish, and unwashed raw produce. Excess caffeine is usually limited to around 200mg per day (roughly one to two cups of coffee). Always follow specific guidance from a doctor or midwife, since individual circumstances vary.",
-    "source_url": "https://example.org/foods-to-limit-pregnancy",
-    "source_name": "Antenatal Nutrition Guidance (paraphrased)"
-  },
-  {
-    "id": "exercise-001",
-    "text": "For most low-risk pregnancies, moderate physical activity such as walking, swimming, or prenatal yoga for about 20 to 30 minutes most days is generally encouraged, and can help with mood, sleep, and reducing back pain. Any new exercise routine, or continuing high-intensity activity, should first be discussed with a doctor, especially if there are pregnancy complications.",
-    "source_url": "https://example.org/exercise-in-pregnancy",
-    "source_name": "Antenatal Care Guidance (paraphrased)"
-  },
-  {
-    "id": "exercise-002",
-    "text": "Gentle daily movement in the third trimester, such as short walks or pelvic tilts, can help with common discomforts like lower back pain and swelling, and some evidence suggests it may support an easier labor. Activities involving lying flat on the back for long periods, contact sports, or high fall-risk activities are generally best avoided as pregnancy progresses.",
-    "source_url": "https://example.org/third-trimester-movement",
-    "source_name": "Antenatal Care Guidance (paraphrased)"
-  },
-  {
-    "id": "mentalhealth-001",
-    "text": "Mood changes during pregnancy are common due to hormonal shifts, physical discomfort, and life changes, and can range from mild worry to more persistent low mood or anxiety. Talking with a trusted person, keeping a simple daily routine, gentle movement, and adequate sleep can all help. If low mood, anxiety, or intrusive thoughts feel persistent, overwhelming, or include thoughts of self-harm, reaching out to a doctor or mental health professional promptly is important -- this is common and treatable, not a personal failing.",
-    "source_url": "https://example.org/mental-health-pregnancy",
-    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
-  },
-  {
-    "id": "mentalhealth-002",
-    "text": "Simple daily wellbeing habits during pregnancy can include: a few minutes of slow breathing or quiet reflection, writing down one thing that felt good that day, a short walk outdoors, staying connected with a friend or family member, and keeping sleep and meal times reasonably consistent. Small, repeatable habits tend to be more sustainable than large lifestyle overhauls during pregnancy.",
-    "source_url": "https://example.org/daily-wellbeing-habits-pregnancy",
-    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
-  },
-  {
-    "id": "mentalhealth-003",
-    "text": "Postpartum mood changes are common in the days after birth (sometimes called the 'baby blues') and usually ease within about two weeks. If low mood, anxiety, or difficulty bonding with the baby continues beyond two weeks, worsens, or is accompanied by thoughts of harming oneself or the baby, this is a medical situation that needs prompt professional support -- postpartum depression and anxiety are common and treatable with the right care.",
-    "source_url": "https://example.org/postpartum-mood-changes",
-    "source_name": "Perinatal Mental Health Guidance (paraphrased)"
-  },
-  {
-    "id": "symptoms-001",
-    "text": "Mild nausea, especially in the first trimester, is common and often eases by around week 12 to 14. Eating small, frequent meals, avoiding an empty stomach, ginger tea, and resting when possible can help. Severe vomiting that prevents keeping any food or fluids down should be reported to a doctor, as it may need medical treatment.",
-    "source_url": "https://example.org/nausea-first-trimester",
-    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
-  },
-  {
-    "id": "symptoms-002",
-    "text": "Mild swelling in the feet and ankles, especially later in pregnancy and in warm weather, is common due to increased fluid retention. Elevating the feet when resting, staying hydrated, and gentle movement can help. Sudden or severe swelling, especially in the face and hands, combined with headache or visual changes, can be a sign of a serious condition called pre-eclampsia and needs urgent medical attention.",
-    "source_url": "https://example.org/swelling-pregnancy",
-    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
-  },
-  {
-    "id": "symptoms-003",
-    "text": "Backache is common as pregnancy progresses due to weight changes and posture shifts. Gentle stretching, good posture, supportive footwear, and sleeping on the side with a pillow between the knees can help. Severe or persistent back pain, especially with fever or unusual discharge, should be discussed with a doctor.",
-    "source_url": "https://example.org/backache-pregnancy",
-    "source_name": "Common Pregnancy Symptoms Guidance (paraphrased)"
-  },
-  {
-    "id": "warningsigns-001",
-    "text": "Warning signs that need prompt medical attention during pregnancy include: severe or persistent headache, blurred vision, sudden severe swelling, vaginal bleeding, severe abdominal pain, reduced or absent fetal movement, fever, or fluid leaking from the vagina. When in doubt, it is always safer to contact a doctor or visit a health facility rather than wait.",
-    "source_url": "https://example.org/pregnancy-warning-signs",
-    "source_name": "Antenatal Care Guidance (paraphrased)"
+    "id": "prenatal-care-001",
+    "category": "prenatal-care",
+    "text": "Prenatal care is regular health checkups during pregnancy that help detect problems early and keep the mother and baby safe. Care usually begins in the first trimester and includes checking blood pressure, measuring growth, and giving advice on diet and daily habits. Prenatal visits also include tests for anemia, infections, and gestational diabetes. Starting care early makes it easier to treat issues before they become serious.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/antenatal-care#tab=tab_1"
   },
   {
     "id": "checkups-001",
-    "text": "Regular antenatal checkups allow a doctor to monitor the mother's blood pressure, weight, and urine, and track the baby's growth and heart rate. A common schedule is roughly monthly visits until 28 weeks, every two weeks from 28 to 36 weeks, and weekly after 36 weeks, though the exact schedule depends on individual risk factors and local guidelines.",
-    "source_url": "https://example.org/antenatal-checkup-schedule",
-    "source_name": "Antenatal Care Guidance (paraphrased)"
+    "category": "checkups",
+    "text": "Routine pregnancy checkups, often every four weeks at first, become more frequent later in pregnancy. During these visits, the provider checks the mother's weight, blood pressure, and the baby’s heartbeat. They also offer vaccines, screen for high blood pressure and diabetes, and answer questions. If you miss a visit, contact your clinic to reschedule. Regular checkups are one of the best ways to protect both mother and baby.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-pregnancy-care/"
+  },
+  {
+    "id": "fetal-development-001",
+    "category": "fetal-development",
+    "text": "The baby grows quickly during pregnancy, with different stages each trimester. In the first trimester, the major organs form. In the second trimester, the baby’s bones, muscles, and senses develop. In the third trimester, the baby gains weight and prepares for birth. Feeling the baby move is a sign the pregnancy is progressing. Regular care helps the provider monitor growth and identify any problems early.",
+    "source_name": "Mayo Clinic",
+    "source_url": "https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/fetal-development/art-20045970"
+  },
+  {
+    "id": "nutrition-001",
+    "category": "nutrition",
+    "text": "A healthy pregnancy diet includes vegetables, fruits, whole grains, beans, nuts, lean meat, and milk or fortified milk alternatives. These foods provide energy and important nutrients such as protein, iron, calcium, and folic acid. Avoid very sugary, salty, or fried foods as much as possible. Eating a variety of safe foods each day helps support the baby's growth and keeps the mother stronger.",
+    "source_name": "American College of Obstetricians and Gynecologists",
+    "source_url": "https://www.acog.org/womens-health/faqs/nutrition-during-pregnancy"
+  },
+  {
+    "id": "hydration-001",
+    "category": "hydration",
+    "text": "Drinking enough clean water is important in pregnancy because blood volume increases and the body needs fluid for the baby and placenta. Aim for plain water most of the day, and carry a cup or bottle to sip often. If you have severe nausea, take small sips of water or oral rehydration solution. Avoid too much caffeine and sugary drinks. Staying hydrated can also help reduce common problems like constipation and urinary tract infections.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+  },
+  {
+    "id": "supplements-001",
+    "category": "supplements",
+    "text": "Prenatal vitamins help fill gaps in the diet, especially folic acid and iron. Folic acid before and in early pregnancy lowers the risk of birth defects in the baby’s spine and brain. Iron supports the mother's blood and helps prevent anemia. Health workers may also recommend calcium or iodine in places where diets are low in these nutrients. Follow the local health provider's advice on which supplements to take and how much.",
+    "source_name": "CDC",
+    "source_url": "https://www.cdc.gov/folic-acid/index.html"
+  },
+  {
+    "id": "weight-gain-001",
+    "category": "weight-gain",
+    "text": "Healthy weight gain in pregnancy is gradual and depends on the woman’s body before pregnancy. Most women gain weight steadily after the first trimester. Gaining enough weight helps the baby grow, but gaining too much can make it harder to stay healthy. Your provider can give a target range based on your height and weight before pregnancy. Focus on eating balanced meals rather than eating for two.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/healthy-diet"
+  },
+  {
+    "id": "exercise-001",
+    "category": "exercise",
+    "text": "Physical activity during pregnancy is usually safe and helpful for most women. Walking, swimming, and gentle stretching can keep your muscles strong and reduce back pain. Avoid exercises with a high risk of falling or contact sports. If you have a health condition or pregnancy complication, talk to your provider before starting exercise. Stop and rest if you feel dizzy, have chest pain, or cannot catch your breath.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/exercise/"
   },
   {
     "id": "sleep-001",
-    "text": "Sleeping on the side, particularly the left side, from the second trimester onward is commonly recommended, as it can improve blood flow to the baby and reduce pressure on major blood vessels. A pillow between the knees or under the belly can improve comfort. Occasionally rolling onto the back during sleep is not typically harmful -- the goal is to favor side-sleeping when settling down, not to worry constantly about sleep position.",
-    "source_url": "https://example.org/sleep-position-pregnancy",
-    "source_name": "Antenatal Care Guidance (paraphrased)"
+    "category": "sleep",
+    "text": "Good sleep supports pregnancy health. Many women do best sleeping on their side, especially the left side, to help blood flow to the baby. Try a regular bedtime routine, use pillows for support, and rest if you feel tired. If you have trouble sleeping, avoid heavy meals and caffeine before bed. If you still cannot sleep or feel very tired during the day, tell your health worker.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/"
   },
   {
-    "id": "father-001",
-    "text": "Partners play an important role in a healthy pregnancy: attending antenatal appointments when possible, helping track warning signs and upcoming visits, sharing household and physical tasks as the pregnancy progresses, and offering emotional support during a time of significant hormonal and physical change. Partner involvement is associated with better emotional wellbeing for the mother and stronger early bonding with the baby.",
-    "source_url": "https://example.org/partner-involvement-pregnancy",
-    "source_name": "Family-Centered Antenatal Care Guidance (paraphrased)"
+    "id": "lifestyle-001",
+    "category": "lifestyle",
+    "text": "A healthy pregnancy lifestyle includes stopping smoking, not drinking alcohol, limiting caffeine, and avoiding harmful substances. It also means getting rest, reducing stress, and asking for help when needed. Keep your home clean, wash your hands often, and avoid people who are sick. These simple steps support your health and help protect your growing baby.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/pregnancy"
   },
   {
-    "id": "father-002",
-    "text": "Simple ways a partner can support someone during pregnancy include: learning the due date and key milestones, joining checkups or asking for a summary afterward, helping prepare nutritious meals, watching for warning signs together, taking on more physical household tasks in the third trimester, and simply asking how the mother is feeling emotionally, not just physically.",
-    "source_url": "https://example.org/how-partners-can-help",
-    "source_name": "Family-Centered Antenatal Care Guidance (paraphrased)"
+    "id": "common-discomforts-001",
+    "category": "common-discomforts",
+    "text": "Pregnancy can bring normal discomforts like nausea, mild back pain, heartburn, and frequent urination. These often begin in the first or second trimester. Eating small meals, using a pillow for back support, and resting when needed can ease many symptoms. If pain is severe, a fever develops, or symptoms get worse, see your health provider. Most common discomforts can be managed safely with simple home measures.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/pregnancy"
+  },
+  {
+    "id": "mentalhealth-001",
+    "category": "mentalhealth",
+    "text": "Feeling emotional, worried, or tired during pregnancy is common. Talk with a family member, friend, or health worker if you feel sad, anxious, or overwhelmed. Healthy habits like gentle exercise, rest, and talking about your feelings can help. If you have trouble sleeping, lose interest in daily life, or feel very hopeless, seek professional support. Mental health is an important part of pregnancy care.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/mental-health#tab=tab_1"
+  },
+  {
+    "id": "medication-001",
+    "category": "medication",
+    "text": "Some medicines are safe in pregnancy and others are not. Always tell your health worker about any pills, traditional herbs, or supplements you use. Do not start a new medicine without advice. Your provider can balance the benefits and risks and suggest safe options. If you are already taking medicine for a chronic condition, continue only as directed by your provider.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-pregnancy-care/"
+  },
+  {
+    "id": "vaccination-001",
+    "category": "vaccination",
+    "text": "Vaccines during pregnancy can protect both mother and baby. Influenza and Tdap vaccines are often recommended because they reduce the risk of serious illness and help the baby stay healthy after birth. Talk to your health provider about which vaccines are safe and available in your area. Vaccination is part of prenatal care in many countries.",
+    "source_name": "Centers for Disease Control and Prevention",
+    "source_url": "https://www.cdc.gov/vaccines/pregnancy/index.html"
+  },
+  {
+    "id": "gestational-diabetes-001",
+    "category": "gestational-diabetes",
+    "text": "Gestational diabetes is high blood sugar that starts during pregnancy. It is usually checked with a screening test in the second trimester. Eating a healthy diet, staying active, and following the provider’s advice help keep blood sugar under control. Most women can manage this condition with diet and monitoring, but some may need medication. Regular care reduces the risk of problems for the baby and mother.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/conditions/gestational-diabetes/"
+  },
+  {
+    "id": "hypertension-001",
+    "category": "hypertension",
+    "text": "High blood pressure in pregnancy should be monitored carefully. It can begin before pregnancy or develop after 20 weeks. Your provider will check your blood pressure at visits and may recommend tests for urine protein or blood work. If your pressure is high, follow advice on rest, healthy food, and medications if needed. Good follow-up helps lower risks for the mother and baby.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/hypertensive-disorders-in-pregnancy#tab=tab_1"
+  },
+  {
+    "id": "preeclampsia-001",
+    "category": "preeclampsia",
+    "text": "Preeclampsia is a condition of high blood pressure with signs of organ stress, often after 20 weeks of pregnancy. It may cause severe headache, vision changes, upper belly pain, or sudden swelling in the hands and face. If you have these symptoms, seek care right away. Early detection and close monitoring are important to protect both mother and baby.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/conditions/pre-eclampsia/"
+  },
+  {
+    "id": "anemia-001",
+    "category": "anemia",
+    "text": "Anemia in pregnancy often means the body does not have enough iron to make healthy blood. It can cause tiredness, weakness, and lightheadedness. Health providers usually test for anemia early in pregnancy. Eating iron-rich foods like beans, green leafy vegetables, and fortified cereals together with vitamin C helps absorption. Your provider may also give iron supplements if needed.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/anaemia"
+  },
+  {
+    "id": "infections-001",
+    "category": "infections",
+    "text": "Infections during pregnancy can affect the mother and baby, so prevention is important. Wash your hands often, avoid raw or undercooked foods, and stay away from people with colds or flu when possible. Report fever, chills, painful urination, or unusual discharge to your provider right away. Early treatment of infections helps keep pregnancy safer.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/"
+  },
+  {
+    "id": "fetal-health-001",
+    "category": "fetal-health",
+    "text": "Feeling the baby move is an important sign of fetal health, usually after 18 to 24 weeks. Movements may feel like kicks, rolls, or flutters. Pay attention to your baby’s normal pattern. If the baby moves less than usual or stops moving, contact your health provider. Your provider may monitor the baby with a test to ensure the baby is doing well.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-baby-in-pregnancy/"
+  },
+  {
+    "id": "labor-001",
+    "category": "labor",
+    "text": "Labor often begins with regular contractions, a change in vaginal discharge, or when the water around the baby breaks. Contractions become longer, stronger, and closer together over time. If you are not sure whether you are in labor, call your provider or clinic for advice. Knowing these signs helps you get to the birth location in time.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
+  },
+  {
+    "id": "delivery-001",
+    "category": "delivery",
+    "text": "Delivery is the process of the baby and placenta leaving the body. Many women have a vaginal birth, while some need a cesarean delivery for safety reasons. Your provider will discuss options based on your health and the baby’s position. Preparing for delivery includes choosing a trusted place to give birth and understanding the most likely plan for your situation.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
   },
   {
     "id": "postpartum-001",
-    "text": "In the weeks after birth, the mother's body continues to recover -- vaginal bleeding (lochia) typically tapers off over four to six weeks, and rest, gentle movement, and nutritious food support healing. Breastfeeding, if chosen, can take time and patience to establish; support from a lactation counselor or experienced family member can help with common early challenges like latch difficulties.",
-    "source_url": "https://example.org/postpartum-recovery-basics",
-    "source_name": "Postpartum Care Guidance (paraphrased)"
+    "category": "postpartum",
+    "text": "The postpartum period is the weeks after birth when the mother’s body recovers and the newborn adapts to life outside the womb. It is normal to feel tired, sore, or emotional. Rest when possible, eat nourishing food, and ask for help with baby care. Attend the postpartum visit so the provider can check healing, mood, and breastfeeding progress.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/maternal-health#tab=tab_1"
+  },
+  {
+    "id": "breastfeeding-001",
+    "category": "breastfeeding",
+    "text": "Breastfeeding soon after birth helps the baby get protective colostrum and supports a strong milk supply. Hold the baby close, and find a comfortable position with support for your back and arms. Good latch and quiet practice make feeding easier. If you have pain or concerns, ask a health worker or breastfeeding counselor for help because small changes can improve comfort and milk transfer.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/breastfeeding"
+  },
+  {
+    "id": "newborn-care-001",
+    "category": "newborn-care",
+    "text": "Newborn care includes keeping the baby warm, feeding often, and keeping the umbilical cord clean and dry. Skin-to-skin contact after birth helps the baby stay warm and calm. Feed the baby whenever they show signs of hunger, such as rooting, sucking motions, or hand movements. Take the baby to routine checkups to monitor growth and development.",
+    "source_name": "UNICEF",
+    "source_url": "https://www.unicef.org/parenting/"
+  },
+  {
+    "id": "warning-signs-001",
+    "category": "warning-signs",
+    "text": "Some symptoms in pregnancy need prompt attention. These include heavy bleeding, severe headache, sudden swelling of the face or hands, blurred vision, severe belly pain, or fast heart rate. These may be signs of conditions such as preeclampsia or complications that require medical care. Do not wait — contact your health worker right away if any warning sign appears.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/complications/"
+  },
+  {
+    "id": "emergency-001",
+    "category": "emergency",
+    "text": "Emergency care is needed if you have heavy vaginal bleeding, chest pain, trouble breathing, confusion, seizures, or if your baby stops moving. These are not normal pregnancy symptoms and can signal a serious problem. Go to the nearest health facility or call emergency services immediately. Quick care can protect both you and your baby.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/complications/"
+  },
+  {
+    "id": "nutrition-002",
+    "category": "nutrition",
+    "text": "Try to eat small meals every few hours so your body can absorb nutrients without making nausea worse. Include protein like beans, eggs, or lentils, and choose foods high in iron such as spinach, red meat, or fortified cereal. Add fruits and vegetables for vitamins and fiber. A steady pattern of healthy meals helps keep energy up and supports the baby’s development.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/healthy-diet"
+  },
+  {
+    "id": "hydration-002",
+    "category": "hydration",
+    "text": "Drink water regularly, even if you are not thirsty. Aim for several cups of plain water each day and take small sips if you feel sick. You can also drink soups or herbal tea if plain water is hard to take. Check your urine color: light yellow is a sign you are well hydrated. Dark yellow means you should drink more fluids.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/"
+  },
+  {
+    "id": "supplements-002",
+    "category": "supplements",
+    "text": "Folic acid is most important before pregnancy and during the first trimester because it helps your baby’s spine and brain form normally. Iron supplements are often started after the first visit if tests show low blood levels. Take supplements with food and a glass of water, unless your provider tells you otherwise. Always follow the amount your provider suggests.",
+    "source_name": "Centers for Disease Control and Prevention",
+    "source_url": "https://www.cdc.gov/folic-acid/"
+  },
+  {
+    "id": "exercise-002",
+    "category": "exercise",
+    "text": "Gentle moves like walking, swimming, and pelvic floor exercises are often good in pregnancy. They help with circulation, posture, and energy. Avoid heavy lifting and sudden twisting. If exercise causes pain, dizziness, or shortness of breath, stop and rest. Talk to your provider if you have questions about which activities are safe for you.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/exercise/"
+  },
+  {
+    "id": "sleep-002",
+    "category": "sleep",
+    "text": "Many women find it easier to sleep on their side with a pillow between their legs and under their belly. This position is often more comfortable and may help with blood flow. Rest during the day when you can, and keep a quiet, dark room for sleeping. If you have trouble falling asleep, try relaxing breathing, a short walk, or warm non-caffeinated drinks before bed.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/"
+  },
+  {
+    "id": "mentalhealth-002",
+    "category": "mentalhealth",
+    "text": "Pregnancy can bring worry, mood changes, or feeling tired more easily. It helps to talk with your partner, family member, or friend about how you feel. Gentle movement, good sleep, and spending time with people you trust can support your mood. If sadness or anxiety lasts more than two weeks or affects your daily life, tell your health worker.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/mental-health#tab=tab_1"
+  },
+  {
+    "id": "common-discomforts-002",
+    "category": "common-discomforts",
+    "text": "Back pain, heartburn, and swollen feet are common in pregnancy because your body is changing and the baby is growing. Use gentle stretches, wear supportive shoes, and rest with your feet raised when possible. For heartburn, eat slowly, avoid spicy foods, and do not lie flat right after eating. Most of these discomforts improve after birth.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/pregnancy"
+  },
+  {
+    "id": "warning-signs-002",
+    "category": "warning-signs",
+    "text": "A drop in fetal movement, especially after 28 weeks, can be a warning sign. If you notice the baby moves much less than usual or stops moving, contact your health provider right away. Your provider may ask you to count kicks or come in for a check to make sure the baby is healthy.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/pregnancy"
+  },
+  {
+    "id": "prenatal-care-002",
+    "category": "prenatal-care",
+    "text": "Your first prenatal visit usually includes questions about your health, a physical exam, and tests for blood type, anemia, and infections. This visit is also a good time to ask about your diet, medicines, and any worries you have. Early prenatal care helps providers find and treat problems before they affect the baby.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/antenatal-care#tab=tab_1"
+  },
+  {
+    "id": "checkups-002",
+    "category": "checkups",
+    "text": "At prenatal checkups, the provider may measure your belly, check the baby’s heartbeat, and test your urine for protein and sugar. These routine checks help spot high blood pressure, diabetes, or infection early. If something is unclear, the provider may suggest extra tests or more frequent visits.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-pregnancy-care/"
+  },
+  {
+    "id": "fetal-development-002",
+    "category": "fetal-development",
+    "text": "During the second trimester, the baby’s bones grow stronger and the senses begin to develop. The mother may feel the baby move and notice the baby’s shape changing as the belly grows. Keeping regular appointments lets providers check the baby’s size and development and gives you a chance to ask questions.",
+    "source_name": "Mayo Clinic",
+    "source_url": "https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/fetal-development/art-20045970"
+  },
+  {
+    "id": "labor-002",
+    "category": "labor",
+    "text": "If your contractions are regular, last more than 30 seconds, and come closer together, it may be labor. Another sign is a change in vaginal discharge or water breaking. If you are unsure, call your provider or birth facility and explain your symptoms. They can tell you when to come in and what to expect next.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
+  },
+  {
+    "id": "delivery-002",
+    "category": "delivery",
+    "text": "Planning for delivery includes choosing a safe place to give birth and knowing who will support you. Talk with your provider about what happens in labor and what choices are available. A birth plan can help you share your preferences for pain relief, who is with you, and how the baby is cared for after birth.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
+  },
+  {
+    "id": "postpartum-002",
+    "category": "postpartum",
+    "text": "After birth, it is normal to have vaginal bleeding and cramps for a few weeks. Rest when you can and ask for help with baby care and household tasks. Eating well and drinking fluids supports healing. If bleeding becomes heavy, you pass clots larger than an egg, or you have a fever, contact your provider quickly.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/maternal-health#tab=tab_1"
+  },
+  {
+    "id": "breastfeeding-002",
+    "category": "breastfeeding",
+    "text": "Skin-to-skin contact with the newborn soon after birth helps the baby learn to feed and stay warm. Offer the breast when the baby shows signs of hunger, such as rooting or moving their hands to their mouth. If feeding feels painful or the baby is not latching well, ask a skilled helper for support as soon as possible.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/breastfeeding"
+  },
+  {
+    "id": "newborn-care-002",
+    "category": "newborn-care",
+    "text": "Newborns need warm, dry skin and frequent feeds. Keep the baby close, change wet diapers often, and let the baby sleep on their back in a safe place. If the baby is very sleepy, has trouble breathing, or has a fever, seek care right away. Routine checks can help find any problems early.",
+    "source_name": "UNICEF",
+    "source_url": "https://www.unicef.org/parenting/"
+  },
+  {
+    "id": "medication-002",
+    "category": "medication",
+    "text": "Some over-the-counter medicines may be used in pregnancy, but not all. Always ask your provider before taking pain relievers, cold medicines, or herbal remedies. Your provider can recommend the safest option for your symptoms and help avoid anything that could harm the baby.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-pregnancy-care/"
+  },
+  {
+    "id": "vaccination-002",
+    "category": "vaccination",
+    "text": "Getting recommended vaccines during pregnancy can protect the mother and the baby after birth. Influenza vaccine is usually safe and can lower the chance of serious flu illness. Tdap vaccine protects the baby from whooping cough after birth. Talk with your provider about what vaccines are available and appropriate for you.",
+    "source_name": "Centers for Disease Control and Prevention",
+    "source_url": "https://www.cdc.gov/vaccines-pregnancy/"
+  },
+  {
+    "id": "lifestyle-002",
+    "category": "lifestyle",
+    "text": "A father or partner can support pregnancy by helping with meals, reminding the mother about appointments, and listening to her concerns. Sharing chores, staying calm, and attending visits together can make pregnancy safer and less stressful. Healthy pregnancy is easier when family members work as a team.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/maternal-health#tab=tab_1"
+  },
+  {
+    "id": "gestational-diabetes-002",
+    "category": "gestational-diabetes",
+    "text": "If a screening test shows high blood sugar, the provider may ask you to check your levels at home and follow a meal plan. Eating lower-sugar foods, choosing whole grains, and spreading carbohydrate intake through the day can help. Regular checks and support from your care team can keep blood sugar in a safe range for you and your baby.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/conditions/gestational-diabetes/"
+  },
+  {
+    "id": "hypertension-002",
+    "category": "hypertension",
+    "text": "If your blood pressure is high in pregnancy, your provider may ask you to rest often, eat a balanced diet, and return for more frequent checks. Keep a record if you measure your pressure at home. Report symptoms such as severe headache, vision changes, or swelling right away. Good monitoring helps prevent serious problems.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/hypertensive-disorders-in-pregnancy#tab=tab_1"
+  },
+  {
+    "id": "anemia-002",
+    "category": "anemia",
+    "text": "Iron-deficiency anemia can make you feel weak and tired. In addition to iron-rich foods, include vitamin C from citrus fruits or tomatoes to help your body absorb iron. Your provider may suggest iron tablets if diet alone is not enough. Follow the schedule and dose your provider gives you to help keep your blood healthy.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/anaemia"
+  },
+  {
+    "id": "nutrition-003",
+    "category": "nutrition",
+    "text": "Eating a mix of whole grains, vegetables, fruits, lean protein, and dairy or fortified alternatives gives you steady energy and key nutrients. Choose foods that are easy to digest, such as bananas, rice, or cooked vegetables, especially if nausea is strong. Try to include a source of protein at each meal to help support your baby’s growth and keep you feeling fuller longer.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/healthy-diet"
+  },
+  {
+    "id": "hydration-003",
+    "category": "hydration",
+    "text": "Water helps make the amniotic fluid and supports the extra blood your body makes in pregnancy. Keep a water bottle nearby and sip often, even if you are not thirsty. If plain water is hard to drink, add a slice of lemon or a small amount of juice for flavor. Staying hydrated can help with swelling, headaches, and constipation.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/healthy-diet"
+  },
+  {
+    "id": "supplements-003",
+    "category": "supplements",
+    "text": "Calcium and vitamin D support the baby’s bones and teeth as they grow. If your diet has little dairy, fortified plant milk, or green leafy vegetables, your provider may suggest supplements. Taking these with meals may help your body absorb them better and keep your bones strong during pregnancy.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+  },
+  {
+    "id": "exercise-003",
+    "category": "exercise",
+    "text": "Simple activities like walking, water exercise, and gentle stretching are often safe and helpful in pregnancy. They can ease back pain, improve sleep, and keep your legs strong. Avoid high-impact sports and activities where you could fall. If you feel pain, dizziness, or shortness of breath, stop and rest, then talk with your provider.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/exercise/"
+  },
+  {
+    "id": "sleep-003",
+    "category": "sleep",
+    "text": "Sleeping well during pregnancy can be harder, but rest is still important. Try going to bed at the same time each night, keep your room dark and quiet, and use a pillow between your legs for comfort. If you wake up with heartburn, sit up for a while and avoid eating large meals before bed.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/"
+  },
+  {
+    "id": "mentalhealth-003",
+    "category": "mentalhealth",
+    "text": "Talking about your feelings with someone you trust can make pregnancy less stressful. If you feel overwhelmed, tired, or anxious, share your worries with a friend, partner, or health worker. Many women find that small steps like breathing exercises, taking short walks, or writing down their thoughts can help calm the mind.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/mental-health#tab=tab_1"
+  },
+  {
+    "id": "common-discomforts-003",
+    "category": "symptoms",
+    "text": "Heartburn and indigestion are common during pregnancy because the growing uterus can press on the stomach. Eating smaller meals, avoiding spicy or fried foods, and sitting upright after eating can help. If you need relief, ask your provider which safe medicines are available for pregnancy.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/pregnancy"
+  },
+  {
+    "id": "common-discomforts-004",
+    "category": "symptoms",
+    "text": "Leg cramps may happen at night during pregnancy, especially in the second and third trimesters. Stretch your calf muscles before bed, keep your feet warm, and walk gently if a cramp starts. If cramps are severe or come with swelling, talk to your provider to rule out other causes.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/"
+  },
+  {
+    "id": "warning-signs-003",
+    "category": "warning-signs",
+    "text": "A severe headache that does not go away with rest, especially if it is different from usual headaches, can be a warning sign in pregnancy. If it happens with blurred vision, swelling, or belly pain, seek medical help quickly. These symptoms may need prompt assessment to protect you and your baby.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/complications/"
+  },
+  {
+    "id": "prenatal-care-003",
+    "category": "prenatal-care",
+    "text": "Good prenatal care means going to checkups, following advice on healthy eating, and asking questions about any worries. It also means taking tests for blood pressure, urine, and blood sugar when your provider recommends them. These steps help catch problems early, before they become more serious.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/antenatal-care#tab=tab_1"
+  },
+  {
+    "id": "checkups-003",
+    "category": "checkups",
+    "text": "Some prenatal visits include an ultrasound scan to check the baby’s growth and position. Other visits may include blood tests, weight checks, and listening to the baby’s heartbeat. Each checkup is a good time to talk about any symptoms or questions you have.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-pregnancy-care/"
+  },
+  {
+    "id": "fetal-development-003",
+    "category": "fetal-development",
+    "text": "In the third trimester, the baby grows larger and gains weight rapidly. This growth helps the baby get ready for birth. Your provider will check your belly size and may use scans or tests to make sure the baby is growing well.",
+    "source_name": "Mayo Clinic",
+    "source_url": "https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/fetal-development/art-20045970"
+  },
+  {
+    "id": "labor-003",
+    "category": "labor",
+    "text": "If your water breaks before contractions begin, contact your provider or birth facility. Also call if your contractions are strong, regular, and five minutes apart for an hour. These signs may mean labor is starting and you should prepare to go to your chosen place of birth.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
+  },
+  {
+    "id": "delivery-003",
+    "category": "delivery",
+    "text": "A cesarean birth may be planned if the baby is not in a head-down position, if there are health concerns, or if labor is not progressing. Your provider will explain the reasons and help you understand how the surgery is done and what to expect after birth.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
+  },
+  {
+    "id": "postpartum-003",
+    "category": "postpartum",
+    "text": "After birth, the body needs time to heal. It is normal to have vaginal bleeding for a few weeks, and your breasts may feel full as milk comes in. Rest when you can, eat nourishing food, and ask for help. If you feel very low, anxious, or if your bleeding is heavy, contact your provider.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/maternal-health#tab=tab_1"
+  },
+  {
+    "id": "breastfeeding-003",
+    "category": "breastfeeding",
+    "text": "A good latch is key to comfortable breastfeeding. Make sure the baby takes a large part of the areola, not just the nipple, and that you feel gentle tugging but not pain. Frequent feeding helps your milk come in and keeps the baby hydrated and satisfied.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/breastfeeding"
+  },
+  {
+    "id": "newborn-care-003",
+    "category": "newborn-care",
+    "text": "Keep the newborn warm and dry, and feed them often. Skin-to-skin contact after birth helps the baby stay warm and feel secure. If the baby is not feeding well, or if the baby is too sleepy, speak to a health worker so the baby can be checked.",
+    "source_name": "UNICEF",
+    "source_url": "https://www.unicef.org/parenting/"
+  },
+  {
+    "id": "medication-003",
+    "category": "medication",
+    "text": "Mild pain in pregnancy may be eased with paracetamol if your provider agrees. Do not take stronger pain medicines without asking your provider. Always check before using herbal remedies or over-the-counter products during pregnancy.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-pregnancy-care/"
+  },
+  {
+    "id": "warning-signs-004",
+    "category": "warning-signs",
+    "text": "Fever, chills, painful urination, or vaginal discharge with a bad smell are warning signs of infection in pregnancy. These symptoms need a health worker’s evaluation and treatment. Do not wait, because infections can affect both you and your baby.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/"
+  },
+  {
+    "id": "emergency-002",
+    "category": "emergency",
+    "text": "If you have severe belly pain, a fast heartbeat, difficulty breathing, or sudden chest discomfort, get emergency care immediately. These symptoms can be serious and need prompt evaluation at a health facility.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/complications/"
+  },
+  {
+    "id": "gestational-diabetes-003",
+    "category": "gestational-diabetes",
+    "text": "A healthy meal plan for gestational diabetes includes vegetables, lean protein, whole grains, and small portions of starchy foods. Eat at regular times and avoid large meals that raise blood sugar quickly. Your provider may also ask you to check your blood sugar at home so you can see how foods affect your levels.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/conditions/gestational-diabetes/"
+  },
+  {
+    "id": "hypertension-003",
+    "category": "hypertension",
+    "text": "High blood pressure in pregnancy can be new or pre-existing. Your provider may ask you to rest more, eat a healthy diet, and come back for more frequent visits. Keep track of your blood pressure and tell your provider if you have headaches, vision changes, or sudden swelling.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/hypertensive-disorders-in-pregnancy#tab=tab_1"
+  },
+  {
+    "id": "anemia-003",
+    "category": "anemia",
+    "text": "In pregnancy, the body makes more blood to support the baby, so iron needs increase. Your provider may test your blood and recommend iron-rich foods, such as lean meat, beans, and fortified grains. If you feel breathless, tired, or dizzy, ask your provider whether you need iron supplements.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/anaemia"
+  },
+  {
+    "id": "nutrition-004",
+    "category": "nutrition",
+    "text": "If you have a small appetite, choose nutrient-dense foods such as yogurt, eggs, beans, and fruit. A small bowl of oatmeal with sliced banana or a simple chickpea curry with vegetables can give the baby important vitamins without feeling heavy. Try to eat a variety of colors on your plate because different foods carry different nutrients.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/healthy-diet"
+  },
+  {
+    "id": "hydration-004",
+    "category": "hydration",
+    "text": "Your body needs more fluid in late pregnancy to support the growing baby and placenta. If you feel light headed, it may be a sign to drink more water. Carry a clean bottle and take sips often rather than waiting until you are very thirsty.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/healthy-diet"
+  },
+  {
+    "id": "supplements-004",
+    "category": "supplements",
+    "text": "If your diet does not include enough dairy or fortified foods, your provider may recommend a calcium and vitamin D supplement. These nutrients help your baby build strong bones and help your own body maintain healthy calcium levels during pregnancy.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+  },
+  {
+    "id": "exercise-004",
+    "category": "exercise",
+    "text": "Pelvic floor exercises, also called Kegels, can help support the bladder and pelvic organs during pregnancy and after birth. Tighten the muscles you use to stop urine flow, hold for a few seconds, then relax. Repeat several times a day, especially after the first trimester.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/exercise/"
+  },
+  {
+    "id": "sleep-004",
+    "category": "sleep",
+    "text": "If you wake at night, try getting up for a short walk or some gentle stretching rather than lying awake and worrying. Keeping a regular sleep schedule and avoiding screens before bed can make it easier to fall back asleep.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/keeping-well/"
+  },
+  {
+    "id": "mentalhealth-004",
+    "category": "mentalhealth",
+    "text": "It is common to feel more emotional during pregnancy, but if you feel very low, cry often, or have no interest in things you used to enjoy, tell your health worker. These changes can be signs of depression, which is treatable and should not be ignored.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/mental-health#tab=tab_1"
+  },
+  {
+    "id": "symptoms-003",
+    "category": "symptoms",
+    "text": "Mild swelling in the hands, feet, or ankles is common later in pregnancy. If the swelling is sudden, severe, or only on one side, or if you have headaches or vision problems with swelling, contact your provider. This may need further assessment.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/pregnancy"
+  },
+  {
+    "id": "warning-signs-005",
+    "category": "warning-signs",
+    "text": "If you feel a sudden gush of fluid from the vagina, it may mean your water has broken. Call your provider or birth facility right away so they can tell you what to do next. Do not wait to see if it happens again.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
+  },
+  {
+    "id": "prenatal-care-004",
+    "category": "prenatal-care",
+    "text": "Blood pressure checks, urine tests, and blood tests in prenatal care help your provider find conditions like high blood pressure and anemia early. These routine measures help keep both the mother and baby safer during pregnancy.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/antenatal-care#tab=tab_1"
+  },
+  {
+    "id": "checkups-004",
+    "category": "checkups",
+    "text": "Good prenatal checkups include listening to the baby’s heartbeat and measuring the mother’s belly size. These simple steps help the provider track growth and spot concerns early.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-pregnancy-care/"
+  },
+  {
+    "id": "fetal-development-004",
+    "category": "fetal-development",
+    "text": "As the due date gets closer, the baby gains more fat and grows stronger lungs. This last stage helps the baby stay warm and breathe well after birth. Your provider watches these changes through discussion and sometimes scans or tests.",
+    "source_name": "Mayo Clinic",
+    "source_url": "https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/fetal-development/art-20045970"
+  },
+  {
+    "id": "labor-004",
+    "category": "labor",
+    "text": "Your bag for the birth place can include clothes, important papers, and items that help you feel comfortable. Having a plan for transport and knowing who will accompany you can ease stress when labor begins.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
+  },
+  {
+    "id": "delivery-004",
+    "category": "delivery",
+    "text": "During vaginal birth, the baby moves through the birth canal, and the placenta follows after the baby is born. Providers look for steady progress and may offer support for breathing and pushing. A healthy delivery depends on good care and a calm birth environment.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/labour-and-birth/"
+  },
+  {
+    "id": "postpartum-004",
+    "category": "postpartum",
+    "text": "Your body will still be changing after birth, and it is normal to need time to rest. Use this period to recover, accept help from family, and watch for any heavy bleeding, fever, or pain that does not get better.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/maternal-health#tab=tab_1"
+  },
+  {
+    "id": "breastfeeding-004",
+    "category": "breastfeeding",
+    "text": "Breastfeeding can be easier if you keep the baby close and feed on demand. Look for signals like hand-to-mouth movement, rooting, or lip smacking. Being patient and offering the breast when the baby is calm can help both of you settle into feeding.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/breastfeeding"
+  },
+  {
+    "id": "newborn-care-004",
+    "category": "newborn-care",
+    "text": "Keep the umbilical cord stump clean and dry until it falls off. Do not cover it with tight clothing or wet diapers. Check the area for redness or pus, and tell a health worker if you notice any signs of infection.",
+    "source_name": "UNICEF",
+    "source_url": "https://www.unicef.org/parenting/"
+  },
+  {
+    "id": "medication-004",
+    "category": "medication",
+    "text": "If you feel mild pain or a headache, your provider may recommend paracetamol. Do not take ibuprofen or other nonsteroidal anti-inflammatory drugs in pregnancy unless your provider says they are safe. Always check before taking any medicine.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/your-pregnancy-care/"
+  },
+  {
+    "id": "vaccination-003",
+    "category": "vaccination",
+    "text": "Whooping cough can be serious for newborns, so the Tdap vaccine in pregnancy helps protect the baby after birth. It is usually given in the third trimester. Ask your provider about timing so the vaccine gives the baby the best protection.",
+    "source_name": "Centers for Disease Control and Prevention",
+    "source_url": "https://www.cdc.gov/vaccines/pregnancy/pregnant-women/index.html"
+  },
+  {
+    "id": "lifestyle-003",
+    "category": "lifestyle",
+    "text": "Partners can support pregnancy by attending visits, helping with household tasks, and encouraging healthy habits. A supportive home helps reduce stress and makes it easier for the mother to rest, eat well, and follow provider advice.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/maternal-health#tab=tab_1"
+  },
+  {
+    "id": "emergency-003",
+    "category": "emergency",
+    "text": "Heavy bleeding after birth, a very fast heartbeat, confusion, or fainting are emergency signs that need immediate care. If any of these happen, go to the nearest health facility or call emergency services right away.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/pregnancy/complications/"
+  },
+  {
+    "id": "gestational-diabetes-004",
+    "category": "gestational-diabetes",
+    "text": "Managing gestational diabetes often includes checking your blood sugar and choosing vegetables, lean protein, and whole grains. Avoid large portions of sugary foods and drinks. Your provider may work with you to find a safe meal plan and support you with regular follow-up.",
+    "source_name": "NHS",
+    "source_url": "https://www.nhs.uk/conditions/gestational-diabetes/"
+  },
+  {
+    "id": "hypertension-004",
+    "category": "hypertension",
+    "text": "Chronic high blood pressure is present before pregnancy or diagnosed early, while pregnancy hypertension starts after 20 weeks. Both need careful monitoring. Your provider may suggest measuring your blood pressure regularly and may prescribe medicine if needed.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/hypertensive-disorders-in-pregnancy#tab=tab_1"
+  },
+  {
+    "id": "anemia-004",
+    "category": "anemia",
+    "text": "If your provider finds anemia in pregnancy, eating iron-rich foods and taking supplements as directed often helps. Try pairing iron-rich meals with vitamin C–rich fruits like oranges or guava, because vitamin C helps your body absorb iron better.",
+    "source_name": "World Health Organization",
+    "source_url": "https://www.who.int/health-topics/anaemia"
   }
 ]
