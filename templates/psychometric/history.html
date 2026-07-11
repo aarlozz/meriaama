@@ -1,89 +1,853 @@
 {% extends "dashboard_base.html" %}
 {% block title %}Stress Test History{% endblock %}
 {% block content %}
-<div class="flex justify-between items-center mb-6">
-    <h1 class="font-display text-2xl text-berry">Your Stress Test History</h1>
-    <a href="{% url 'psychometric-select' %}" class="text-sm text-berry hover:underline">Take a new test &rarr;</a>
-</div>
+<div class="space-y-8">
 
-{% if not has_data %}
-    <div class="bg-white rounded-2xl shadow-sm p-6">
-        <p class="text-sm text-gray-500">No tests taken yet. Once you complete one, your trend will appear here.</p>
-    </div>
-{% else %}
-    {% for chart in charts %}
-        <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="font-medium text-berry">{{ chart.label }}</h2>
-                <span class="text-xs px-2 py-1 rounded-full
-                    {% if chart.latest_risk == 'high' %}bg-red-100 text-red-700
-                    {% elif chart.latest_risk == 'moderate' %}bg-gold-soft text-berry-dark
-                    {% else %}bg-sage/20 text-sage{% endif %}">
-                    Latest: {{ chart.latest_risk }} -- {{ chart.attempt_count }} attempt{{ chart.attempt_count|pluralize }}
-                </span>
-            </div>
-            <canvas id="chart-{{ chart.test_type }}" height="90"></canvas>
-        </div>
-    {% endfor %}
+    <!-- ================= HEADER ================= -->
+    <div class="flex flex-col lg:flex-row justify-between lg:items-center gap-5">
 
-    <div class="bg-white rounded-2xl shadow-sm p-6">
-        <h2 class="font-medium text-berry mb-3">All Attempts</h2>
-        <div class="space-y-2">
-            {% for test in all_tests %}
-                <a href="{% url 'psychometric-result' test_id=test.id %}"
-                   class="flex justify-between items-center text-sm border-b last:border-0 py-2 hover:bg-gold-soft/30 -mx-2 px-2 rounded">
-                    <span class="text-gray-600">{{ test.taken_at|date:"M d, Y" }} -- {{ test.get_test_type_display }}</span>
-                    <span class="font-mono
-                        {% if test.risk_level == 'high' %}text-red-600
-                        {% elif test.risk_level == 'moderate' %}text-gold
-                        {% else %}text-sage{% endif %}">
-                        {{ test.total_score }} pts
-                    </span>
-                </a>
-            {% endfor %}
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">
+                Psychometric Test History
+            </h1>
+
+            <p class="text-gray-500 mt-1">
+                Monitor your emotional wellbeing and track improvements over time.
+            </p>
         </div>
+
+        <a href="{% url 'psychometric-select' %}"
+           class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-5 py-3 rounded-xl shadow transition">
+
+            Take New Test
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-5 h-5"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"/>
+
+            </svg>
+
+        </a>
+
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script>
+
+
+    <!-- ================= SUMMARY ================= -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+        <!-- Total Tests -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border">
+
+            <p class="text-gray-500 text-sm">
+                Total Tests
+            </p>
+
+            <h2 class="text-3xl font-bold mt-2">
+                {{ all_tests|length }}
+            </h2>
+
+        </div>
+
+
+
+        <!-- Latest Score -->
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border">
+
+            <p class="text-gray-500 text-sm">
+                Latest Test
+            </p>
+
+            <h2 class="text-lg font-semibold mt-2">
+                {% if all_tests %}
+                    {{ all_tests.0.taken_at|date:"M d, Y" }}
+                {% else %}
+                    --
+                {% endif %}
+            </h2>
+
+        </div>
+
+
+
+        <!-- Risk -->
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border">
+
+            <p class="text-gray-500 text-sm">
+                Current Risk
+            </p>
+
+            {% if all_tests %}
+
+            <span class="mt-3 inline-flex px-4 py-2 rounded-full
+            {% if all_tests.0.risk_level == 'low' %}
+                bg-green-100 text-green-700
+
+            {% elif all_tests.0.risk_level == 'moderate' %}
+                bg-yellow-100 text-yellow-700
+
+            {% else %}
+                bg-red-100 text-red-700
+
+            {% endif %}
+            ">
+
+                {{ all_tests.0.risk_level|title }}
+
+            </span>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- Average -->
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border">
+
+            <p class="text-gray-500 text-sm">
+                Completed Assessments
+            </p>
+
+            <h2 class="text-3xl font-bold mt-2">
+
+                {{ charts|length }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= TEST CARDS ================= -->
+
+    <div class="grid lg:grid-cols-2 gap-6">
+
         {% for chart in charts %}
-        new Chart(document.getElementById('chart-{{ chart.test_type }}'), {
-            type: 'line',
-            data: {
-                labels: {{ chart.labels|safe }},
-                datasets: [
-                    {
-                        label: 'Score',
-                        data: {{ chart.scores|safe }},
-                        borderColor: '#7D2748',
-                        backgroundColor: 'rgba(125, 39, 72, 0.1)',
-                        tension: 0.3,
-                        fill: true,
-                    },
-                    {
-                        label: 'Moderate cutoff',
-                        data: Array({{ chart.labels|length }}).fill({{ chart.moderate_cutoff }}),
-                        borderColor: '#C9973E',
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        fill: false,
-                    },
-                    {
-                        label: 'High cutoff',
-                        data: Array({{ chart.labels|length }}).fill({{ chart.high_cutoff }}),
-                        borderColor: '#DC2626',
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        fill: false,
-                    },
-                ]
-            },
-            options: {
-                plugins: { legend: { display: true, labels: { boxWidth: 12, font: { size: 10 } } } },
-                scales: { y: { beginAtZero: true } },
-            }
-        });
+
+        <div class="bg-white rounded-2xl shadow-sm border p-6">
+
+            <div class="flex justify-between items-start">
+
+                <div>
+
+                    <h2 class="font-semibold text-lg">
+
+                        {{ chart.label }}
+
+                    </h2>
+
+                    <p class="text-gray-500 text-sm mt-1">
+
+                        {{ chart.attempt_count }} Attempt{{ chart.attempt_count|pluralize }}
+
+                    </p>
+
+                </div>
+
+                <span class="px-3 py-1 rounded-full text-sm
+
+                    {% if chart.latest_risk == 'high' %}
+                        bg-red-100 text-red-700
+
+                    {% elif chart.latest_risk == 'moderate' %}
+                        bg-yellow-100 text-yellow-700
+
+                    {% else %}
+                        bg-green-100 text-green-700
+
+                    {% endif %}
+
+                ">
+
+                    {{ chart.latest_risk|title }}
+
+                </span>
+
+            </div>
+
+
+
+            
+
+                <div class="mt-5 h-56">
+    <canvas id="chart-{{ chart.test_type }}"></canvas>
+
+            </div>
+
+        </div>
+
         {% endfor %}
-    </script>
-{% endif %}
+
+    </div>
+<!-- ================= ASSESSMENT REPORT ================= -->
+<div class="mt-10 bg-white rounded-2xl shadow-sm border">
+
+    <!-- Header -->
+    <div class="border-b px-8 py-6">
+
+        <h2 class="text-2xl font-bold text-gray-900">
+            Latest Assessment Report
+        </h2>
+
+        <p class="text-gray-500 mt-1">
+            Perceived Stress Scale • {{ all_tests.0.taken_at|date:"F d, Y" }}
+        </p>
+
+    </div>
+
+    <div class="p-8 space-y-8">
+
+        <!-- Score + Interpretation -->
+        <div class="grid lg:grid-cols-2 gap-8">
+
+            <!-- Score Card -->
+            <div class="bg-rose-50 rounded-xl p-6 border">
+
+                <p class="text-sm text-gray-500">
+                    Overall Score
+                </p>
+
+                <h2 class="text-5xl font-bold mt-2">
+                    {{ all_tests.0.total_score }}
+                </h2>
+
+                <p class="text-lg text-gray-600">
+                    / 40
+                </p>
+
+                <span class="inline-flex mt-5 px-4 py-2 rounded-full
+                    {% if all_tests.0.risk_level == 'high' %}
+                        bg-red-100 text-red-700
+                    {% elif all_tests.0.risk_level == 'moderate' %}
+                        bg-yellow-100 text-yellow-700
+                    {% else %}
+                        bg-green-100 text-green-700
+                    {% endif %}
+                ">
+                    {{ all_tests.0.risk_level|title }} Risk
+                </span>
+
+            </div>
+
+            <!-- Interpretation -->
+            <div>
+
+                <h3 class="text-lg font-semibold mb-3">
+                    Interpretation
+                </h3>
+
+                <div class="bg-gray-50 rounded-xl p-6 border">
+
+                    <p class="leading-7 text-gray-600">
+
+                        {{ all_tests.0.interpretation }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Recommendations -->
+        <div>
+
+            <h3 class="text-lg font-semibold mb-4">
+                Recommendations
+            </h3>
+
+            <div class="grid md:grid-cols-2 gap-4">
+
+                <div class="flex items-center gap-3 p-4 bg-green-50 rounded-xl">
+                    ✅ Sleep at least 8 hours
+                </div>
+
+                <div class="flex items-center gap-3 p-4 bg-blue-50 rounded-xl">
+                    🚶 Walk for 30 minutes daily
+                </div>
+
+                <div class="flex items-center gap-3 p-4 bg-purple-50 rounded-xl">
+                    🧘 Practice deep breathing
+                </div>
+
+                <div class="flex items-center gap-3 p-4 bg-yellow-50 rounded-xl">
+                    💧 Stay hydrated
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Question Breakdown -->
+        <div>
+
+            <h3 class="text-lg font-semibold mb-4">
+                Question Breakdown
+            </h3>
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full">
+
+                    <thead class="bg-gray-50">
+
+                        <tr>
+
+                            <th class="text-left px-5 py-3">
+                                Question
+                            </th>
+
+                            <th class="text-center px-5 py-3 w-32">
+                                Score
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="divide-y">
+
+                        {% for answer in latest_answers %}
+
+                        <tr>
+
+                            <td class="px-5 py-4">
+
+                                {{ answer.question.text }}
+
+                            </td>
+
+                            <td class="text-center font-semibold">
+
+                                {{ answer.score }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="border-t pt-6 flex flex-wrap gap-4">
+
+            <a href="#"
+               class="px-5 py-3 rounded-xl bg-rose-600 text-white hover:bg-rose-700">
+
+                Download PDF
+
+            </a>
+
+            <button
+                onclick="window.print()"
+                class="px-5 py-3 rounded-xl border hover:bg-gray-50">
+
+                Print Report
+
+            </button>
+
+            <a href="{% url 'psychometric-select' %}"
+               class="px-5 py-3 rounded-xl border hover:bg-gray-50">
+
+                Take Again
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ===================================================== -->
+<!-- Mental Health Insights -->
+<!-- ===================================================== -->
+
+<div class="mt-10">
+
+    <div class="flex items-center justify-between mb-6">
+
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900">
+                Mental Health Insights
+            </h2>
+
+            <p class="text-gray-500 mt-1">
+                A quick overview of your recent psychometric assessments.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+        <!-- Overall Status -->
+        <div class="bg-white rounded-2xl shadow-sm border p-6 hover:shadow-lg transition">
+
+            <div class="flex justify-between items-start">
+
+                <div>
+
+                    <p class="text-sm text-gray-500">
+                        Overall Status
+                    </p>
+
+                    <h3 class="text-xl font-bold mt-2">
+                        Stable
+                    </h3>
+
+                    <span class="inline-flex mt-4 px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm">
+                        🟢 Low Risk
+                    </span>
+
+                </div>
+
+                <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-2xl">
+                    😊
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Trend -->
+
+        <div class="bg-white rounded-2xl shadow-sm border p-6 hover:shadow-lg transition">
+
+            <div class="flex justify-between">
+
+                <div>
+
+                    <p class="text-sm text-gray-500">
+                        Trend
+                    </p>
+
+                    <h3 class="text-xl font-bold mt-2">
+                        Improving
+                    </h3>
+
+                    <p class="text-green-600 mt-4 font-medium">
+                        ↓ 17 Points
+                    </p>
+
+                </div>
+
+                <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-2xl">
+                    📈
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Most Taken -->
+
+        <div class="bg-white rounded-2xl shadow-sm border p-6 hover:shadow-lg transition">
+
+            <div class="flex justify-between">
+
+                <div>
+
+                    <p class="text-sm text-gray-500">
+                        Most Taken
+                    </p>
+
+                    <h3 class="text-lg font-semibold mt-2">
+                        Stress Scale
+                    </h3>
+
+                    <p class="text-gray-500 mt-4">
+                        2 Assessments
+                    </p>
+
+                </div>
+
+                <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-2xl">
+                    🧠
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Last Assessment -->
+
+        <div class="bg-white rounded-2xl shadow-sm border p-6 hover:shadow-lg transition">
+
+            <div class="flex justify-between">
+
+                <div>
+
+                    <p class="text-sm text-gray-500">
+                        Last Assessment
+                    </p>
+
+                    <h3 class="text-lg font-semibold mt-2">
+                        {{ all_tests.0.taken_at|date:"M d, Y" }}
+                    </h3>
+
+                    <p class="text-gray-500 mt-4">
+                        Completed
+                    </p>
+
+                </div>
+
+                <div class="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center text-2xl">
+                    📅
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="grid lg:grid-cols-2 gap-6 mt-8">
+
+    <!-- Risk Distribution -->
+
+    <div class="bg-white rounded-2xl shadow-sm border p-6">
+
+        <h3 class="text-lg font-semibold mb-5">
+            Risk Distribution
+        </h3>
+
+        <div class="h-72">
+
+            <canvas id="riskChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Monthly Activity -->
+
+    <div class="bg-white rounded-2xl shadow-sm border p-6">
+
+        <h3 class="text-lg font-semibold mb-5">
+            Monthly Assessments
+        </h3>
+
+        <div class="h-72">
+
+            <canvas id="monthlyChart"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+new Chart(document.getElementById("riskChart"),{
+
+    type:"doughnut",
+
+    data:{
+
+        labels:["Low","Moderate","High"],
+
+        datasets:[{
+
+            data:[5,2,1],
+
+            backgroundColor:[
+                "#22C55E",
+                "#F59E0B",
+                "#EF4444"
+            ]
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        plugins:{
+            legend:{
+                position:"bottom"
+            }
+        }
+
+    }
+
+});
+
+
+
+new Chart(document.getElementById("monthlyChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels:["Jan","Feb","Mar","Apr","May","Jun"],
+
+        datasets:[{
+
+            label:"Assessments",
+
+            data:[2,4,3,5,2,6],
+
+            backgroundColor:"#E11D48",
+
+            borderRadius:10
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        plugins:{
+            legend:{
+                display:false
+            }
+        },
+
+        scales:{
+
+            y:{
+                beginAtZero:true
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+<script>
+
+{% for chart in charts %}
+
+const ctx{{ forloop.counter }} =
+document.getElementById("chart-{{ chart.test_type }}");
+
+new Chart(ctx{{ forloop.counter }}, {
+
+    type: "line",
+
+    data: {
+
+        labels: {{ chart.labels|safe }},
+
+        datasets: [
+
+        {
+            label: "Score",
+
+            data: {{ chart.scores|safe }},
+
+            borderColor: "#BE185D",
+
+            backgroundColor: function(context){
+
+                const chart = context.chart;
+                const {ctx, chartArea} = chart;
+
+                if(!chartArea){
+                    return null;
+                }
+
+                const gradient =
+                    ctx.createLinearGradient(
+                        0,
+                        chartArea.top,
+                        0,
+                        chartArea.bottom
+                    );
+
+                gradient.addColorStop(0,"rgba(190,24,93,.25)");
+                gradient.addColorStop(1,"rgba(190,24,93,0)");
+
+                return gradient;
+            },
+
+            fill:true,
+
+            borderWidth:3,
+
+            tension:.45,
+
+            pointRadius:5,
+
+            pointHoverRadius:8,
+
+            pointBackgroundColor:"#BE185D",
+
+            pointBorderColor:"#ffffff",
+
+            pointBorderWidth:2
+
+        },
+
+        {
+            label:"Moderate",
+
+            data:Array({{ chart.labels|length }}).fill({{ chart.moderate_cutoff }}),
+
+            borderColor:"#F59E0B",
+
+            borderDash:[8,6],
+
+            borderWidth:2,
+
+            pointRadius:0,
+
+            fill:false
+
+        },
+
+        {
+            label:"High",
+
+            data:Array({{ chart.labels|length }}).fill({{ chart.high_cutoff }}),
+
+            borderColor:"#EF4444",
+
+            borderDash:[8,6],
+
+            borderWidth:2,
+
+            pointRadius:0,
+
+            fill:false
+
+        }
+
+        ]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        maintainAspectRatio:false,
+
+        animation:{
+            duration:1200
+        },
+
+        interaction:{
+            intersect:false,
+            mode:"index"
+        },
+
+        plugins:{
+
+            legend:{
+                display:false
+            },
+
+            tooltip:{
+
+                backgroundColor:"#111827",
+
+                padding:12,
+
+                cornerRadius:10,
+
+                displayColors:false,
+
+                titleFont:{
+                    size:14
+                },
+
+                bodyFont:{
+                    size:13
+                }
+
+            }
+
+        },
+
+        layout:{
+            padding:{
+                top:10
+            }
+        },
+
+        scales:{
+
+            x:{
+
+                grid:{
+                    display:false
+                },
+
+                ticks:{
+                    color:"#6B7280",
+                    font:{
+                        size:11
+                    }
+                }
+
+            },
+
+            y:{
+
+                beginAtZero:true,
+
+                ticks:{
+                    color:"#6B7280",
+                    font:{
+                        size:11
+                    }
+                },
+
+                grid:{
+                    color:"rgba(229,231,235,.6)"
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+{% endfor %}
+
+</script>
+
 {% endblock %}
