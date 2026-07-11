@@ -1,16 +1,16 @@
 {% extends "dashboard_base.html" %}
 {% block title %}Ask Meri Aama{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-bold text-rose-700 mb-2">Ask Meri Aama</h1>
-<p class="text-gray-600 mb-6 text-sm">
-    Ask about nutrition, symptoms, or self-care. Answers draw on trusted
-    sources and, when relevant, your own uploaded medical reports.
-</p>
+
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">Ask Meri Aama</h1>
+    <p class="text-sm text-gray-500 mt-1">Ask about nutrition, symptoms, or self-care. Answers draw on trusted sources and, when relevant, your own uploaded medical reports.</p>
+</div>
 
 <form method="post" class="flex gap-2 mb-2">
     {% csrf_token %}
     {{ form.query }}
-    <button type="submit" class="bg-rose-600 text-white rounded px-5 py-2 font-medium hover:bg-rose-700 whitespace-nowrap">
+    <button type="submit" class="bg-rose-600 text-white rounded-xl px-5 py-2.5 font-medium hover:bg-rose-700 whitespace-nowrap transition-colors">
         Ask
     </button>
 </form>
@@ -19,19 +19,71 @@
 {% endif %}
 
 {% if answer %}
-    <div class="bg-white p-5 rounded-lg shadow my-6 border-l-4 border-amber-400">
-        <p class="text-xs uppercase text-gray-400 mb-2">Just now</p>
-        <p class="text-gray-700 whitespace-pre-wrap">{{ answer }}</p>
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 my-6">
+        <p class="text-xs font-semibold uppercase tracking-wide text-rose-400 mb-3">Just now</p>
+
+        {% if answer_flags %}
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+                <p class="text-sm font-semibold text-red-800 mb-1">Please double check before following this</p>
+                <p class="text-sm text-red-700">
+                    This answer mentions something related to your recorded allerg{{ answer_flags|length|pluralize:"y,ies" }}
+                    ({% for flag in answer_flags %}{{ flag.allergen }}{% if not forloop.last %}, {% endif %}{% endfor %}).
+                    Please check with your doctor or pharmacist before trying anything suggested here.
+                </p>
+            </div>
+        {% endif %}
+
+        <p class="text-gray-800 leading-relaxed mb-4">{{ answer.summary }}</p>
+
+        {% if answer.key_points %}
+            <ul class="space-y-2 mb-4">
+                {% for point in answer.key_points %}
+                    <li class="flex items-start gap-2.5 text-sm text-gray-600">
+                        <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0"></span>
+                        <span>{{ point }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if answer.sources_used %}
+            <div class="flex flex-wrap gap-1.5 pt-3 border-t border-gray-50">
+                {% for source in answer.sources_used %}
+                    <span class="text-xs bg-gray-50 text-gray-500 px-2.5 py-1 rounded-full border border-gray-100">{{ source }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endif %}
 
-<h2 class="text-lg font-semibold text-gray-700 mb-3 mt-8">Past questions</h2>
+<h2 class="text-sm font-bold text-gray-900 mb-3 mt-8">Past questions</h2>
 <div class="space-y-3">
     {% for rec in history %}
-        <div class="bg-white p-5 rounded-lg shadow">
-            <p class="text-xs text-gray-400 mb-1">{{ rec.created_at|date:"M d, Y H:i" }}</p>
-            <p class="text-sm font-medium text-rose-700 mb-2">"{{ rec.query }}"</p>
-            <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ rec.response_text }}</p>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <div class="flex justify-between items-start mb-2 gap-3">
+                <p class="text-sm font-medium text-rose-700">"{{ rec.query }}"</p>
+                <span class="text-xs text-gray-400 whitespace-nowrap">{{ rec.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+
+            {% if rec.safety_flags %}
+                <p class="text-xs text-red-600 mb-2">⚠ Mentions something related to your recorded allergies -- double check before following.</p>
+            {% endif %}
+
+            {% if rec.structured_response %}
+                <p class="text-sm text-gray-700 mb-2">{{ rec.structured_response.summary }}</p>
+                {% if rec.structured_response.key_points %}
+                    <ul class="space-y-1">
+                        {% for point in rec.structured_response.key_points %}
+                            <li class="text-sm text-gray-600 flex items-start gap-2">
+                                <span class="mt-1.5 w-1 h-1 rounded-full bg-gray-300 shrink-0"></span>
+                                <span>{{ point }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% else %}
+                <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ rec.response_text }}</p>
+            {% endif %}
         </div>
     {% empty %}
         <p class="text-gray-500 text-sm">No questions asked yet.</p>

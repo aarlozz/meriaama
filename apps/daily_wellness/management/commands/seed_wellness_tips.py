@@ -35,6 +35,9 @@ class Command(BaseCommand):
                     "avoid_if_condition": tip.get("avoid_if_condition", []),
                     "avoid_if_diet": tip.get("avoid_if_diet", []),
                     "is_active": tip.get("is_active", True),
+                    "only_if_condition": tip.get("only_if_condition", []),
+                    "source_name": tip.get("source_name", ""),
+                    "source_url": tip.get("source_url", ""),
                 },
             )
             created += was_created
