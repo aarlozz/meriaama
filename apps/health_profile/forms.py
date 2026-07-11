@@ -28,13 +28,14 @@ class HealthProfileForm(forms.ModelForm):
             "pre_existing_conditions", "allergies", "allergy_other",
             "has_gestational_diabetes", "has_hypertension", "dietary_preference",
             "smokes", "drinks_alcohol",
+            "height_cm", "pre_pregnancy_weight_kg", "blood_group",
         ]
         labels = {
             "last_menstrual_period": "First day of your last period",
             "expected_delivery_date": "Your due date",
             "edd_is_manual_override": "My doctor gave me a different due date",
             "previous_pregnancies_count": "How many times have you been pregnant before this one?",
-            "live_births_count": "How many of those pregnancies ended in a live birth?",
+            "live_births_count": "How many of those pregnancies were normal?",
             "previous_complications_other": "Anything else about a past pregnancy worth mentioning?",
             "height_cm": "Your height",
             "blood_group": "Blood group",
@@ -45,6 +46,7 @@ class HealthProfileForm(forms.ModelForm):
             "dietary_preference": "Do you follow any special diet?",
             "smokes": "Do you smoke?",
             "drinks_alcohol": "Do you drink alcohol?",
+            "pre_pregnancy_weight_kg": "Your weight before this pregnancy",
         }
         help_texts = {
             "last_menstrual_period": "This helps us work out your due date and how many weeks along you are.",
@@ -53,6 +55,7 @@ class HealthProfileForm(forms.ModelForm):
             "live_births_count": "A baby born alive, at any stage. Enter 0 if this is your first pregnancy.",
             "height_cm": "In centimeters -- used along with your weight to give you more personal suggestions.",
             "pre_existing_conditions": "For example: thyroid problems, asthma, or anything else your doctor should know about.",
+            "pre_pregnancy_weight_kg": "If you know it -- used to show you a healthy weight-gain range for your pregnancy.",
         }
         widgets = {
             "last_menstrual_period": forms.DateInput(attrs={"type": "date", "class": "hp-input"}),
@@ -70,4 +73,5 @@ class HealthProfileForm(forms.ModelForm):
             "has_hypertension": forms.CheckboxInput(attrs={"class": "hp-checkbox"}),
             "smokes": forms.CheckboxInput(attrs={"class": "hp-checkbox"}),
             "drinks_alcohol": forms.CheckboxInput(attrs={"class": "hp-checkbox"}),
+            "pre_pregnancy_weight_kg": forms.NumberInput(attrs={"step": "0.1", "placeholder": "e.g. 52", "class": "hp-input"}),
         }

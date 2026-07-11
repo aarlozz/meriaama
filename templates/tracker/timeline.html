@@ -1,13 +1,11 @@
 {% extends "dashboard_base.html" %}
 {% block title %}Pregnancy Tracker{% endblock %}
 {% block content %}
-<div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold text-rose-700">Your Pregnancy Tracker</h1>
-    <a href="{% url 'trimester-analysis' %}" class="text-sm text-rose-600 hover:underline">View trimester analysis &rarr;</a>
-</div>
+
+
 
 {% if next_visit_date %}
-    <div class="p-4 rounded-lg mb-6 {% if is_overdue %}bg-red-50 border border-red-200 text-red-800{% else %}bg-amber-50 border border-amber-200 text-amber-800{% endif %}">
+    <div class="rounded-2xl p-4 mb-6 {% if is_overdue %}bg-red-50 border border-red-200 text-red-800{% else %}bg-amber-50 border border-amber-200 text-amber-800{% endif %}">
         {% if is_overdue %}
             Your last recorded next-visit date was <strong>{{ next_visit_date|date:"M d, Y" }}</strong> -- if you haven't been in yet, it may be time to schedule your visit.
         {% else %}
@@ -16,19 +14,69 @@
     </div>
 {% endif %}
 
+{% if baby_fact %}
+    <div class="bg-gradient-to-br from-rose-50 to-white rounded-2xl border border-rose-100 p-6 mb-6">
+        <p class="text-xs font-semibold uppercase tracking-wide text-rose-400 mb-1">Weeks {{ baby_fact.start_week }}-{{ baby_fact.end_week }}</p>
+        {% if baby_fact.size_comparison %}
+            <p class="text-lg font-bold text-gray-900 mb-2">Baby is {{ baby_fact.size_comparison }}</p>
+        {% endif %}
+        <p class="text-sm text-gray-600 leading-relaxed">{{ baby_fact.fact_text }}</p>
+    </div>
+{% endif %}
+
+{% if weight_data %}
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-sm font-bold text-gray-900">Weight gain so far</h2>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium
+                {% if weight_data.status == 'on_track' %}bg-emerald-50 text-emerald-700
+                {% else %}bg-amber-50 text-amber-700{% endif %}">
+                {{ weight_data.latest_gain }} kg gained
+            </span>
+        </div>
+        <p class="text-xs text-gray-400 mb-3">Recommended range for you: {{ weight_data.min_recommended_gain }}–{{ weight_data.max_recommended_gain }} kg total</p>
+        <canvas id="weightChart" height="90"></canvas>
+    </div>
+{% endif %}
+
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
+    <h2 class="text-sm font-bold text-gray-900 mb-3">Questions for your doctor</h2>
+    <form method="post" action="{% url 'add-question' %}" class="flex gap-2 mb-4">
+        {% csrf_token %}
+        <input type="text" name="question" class="hp-input" placeholder="e.g. Is it safe to travel this trimester?" required>
+        <button type="submit" class="bg-rose-600 text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-rose-700 whitespace-nowrap">Add</button>
+    </form>
+    <div class="space-y-2">
+        {% for q in questions %}
+            <div class="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+                <form method="post" action="{% url 'toggle-question' question_id=q.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0
+                        {% if q.is_answered %}bg-rose-500 border-rose-500{% else %}border-gray-300{% endif %}">
+                        {% if q.is_answered %}<span class="text-white text-xs">✓</span>{% endif %}
+                    </button>
+                </form>
+                <span class="flex-1 text-sm {% if q.is_answered %}text-gray-400 line-through{% else %}text-gray-700{% endif %}">{{ q.question }}</span>
+                <form method="post" action="{% url 'delete-question' question_id=q.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-xs text-gray-300 hover:text-red-500">✕</button>
+                </form>
+            </div>
+        {% empty %}
+            <p class="text-sm text-gray-400">No questions saved yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
 {% if medications %}
-    <div class="bg-white p-5 rounded-lg shadow mb-6">
-        <h2 class="font-semibold text-gray-700 mb-3">Current Medications</h2>
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
+        <h2 class="text-sm font-bold text-gray-900 mb-3">Current Medications</h2>
         <div class="space-y-3">
             {% for med in medications %}
-                <div class="border border-gray-100 rounded-lg p-3">
+                <div class="border border-gray-100 rounded-xl p-3">
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-sm font-medium text-rose-700">{{ med.name }} -- {{ med.dosage }}</span>
-                        {% if med.is_active %}
-                            <span class="text-xs text-gray-400">Day {{ med.day_number }} of {{ med.duration_days }}</span>
-                        {% else %}
-                            <span class="text-xs text-gray-400">Completed</span>
-                        {% endif %}
+                        <span class="text-xs text-gray-400">{% if med.is_active %}Day {{ med.day_number }} of {{ med.duration_days }}{% else %}Completed{% endif %}</span>
                     </div>
                     <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
                         <div class="bg-rose-500 h-2 rounded-full" style="width: {{ med.adherence_percent }}%"></div>
@@ -48,42 +96,104 @@
     </div>
 {% endif %}
 
-<div class="bg-white p-5 rounded-lg shadow mb-8">
-    <h2 class="font-semibold text-gray-700 mb-2">Add a private note</h2>
-    <form method="post">
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
+    <h2 class="text-sm font-bold text-gray-900 mb-3">Add a private note</h2>
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.note }}
-        {% if form.note.errors %}<p class="text-xs text-red-600 mt-1">{{ form.note.errors|striptags }}</p>{% endif %}
-        <button type="submit" class="mt-3 bg-rose-600 text-white rounded px-4 py-2 text-sm font-medium hover:bg-rose-700">Save note</button>
+        {% if form.note.errors %}<p class="hp-error">{{ form.note.errors|striptags }}</p>{% endif %}
+        <div class="mt-2">{{ form.image }}</div>
+        {% if form.image.errors %}<p class="hp-error">{{ form.image.errors|striptags }}</p>{% endif %}
+        <button type="submit" class="mt-3 bg-rose-600 text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-rose-700">Save note</button>
     </form>
     <p class="text-xs text-gray-400 mt-2">Private to you -- your care team never sees this.</p>
 </div>
 
-<h2 class="text-lg font-semibold text-gray-700 mb-3">Timeline</h2>
-<div class="space-y-3">
+<div class="flex items-center justify-between mb-3">
+    <h2 class="text-sm font-bold text-gray-900">Timeline</h2>
+    <div class="flex gap-2">
+        <a href="?type=all" class="text-xs px-3 py-1.5 rounded-full {% if type_filter == 'all' %}bg-rose-600 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">All</a>
+        <a href="?type=visit" class="text-xs px-3 py-1.5 rounded-full {% if type_filter == 'visit' %}bg-rose-600 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">Visits</a>
+        <a href="?type=checkin" class="text-xs px-3 py-1.5 rounded-full {% if type_filter == 'checkin' %}bg-rose-600 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">My notes</a>
+    </div>
+</div>
+
+<!-- Compact collapsed rows -- each ~40px until expanded, so 100+ items stay manageable -->
+<div class="divide-y divide-gray-100 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
     {% for item in timeline %}
-        {% if item.type == "visit" %}
-            <div class="bg-white p-5 rounded-lg shadow border-l-4 border-rose-400">
-                <div class="flex justify-between items-center mb-1">
-                    <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">Clinical visit</span>
-                    <span class="text-xs text-gray-400">{{ item.date|date:"M d, Y" }}</span>
-                </div>
-                <p class="text-sm text-gray-700">Week {{ item.obj.gestational_week|default:"–" }}</p>
-                {% if item.obj.maternal_weight_kg %}<p class="text-xs text-gray-500">Weight: {{ item.obj.maternal_weight_kg }} kg</p>{% endif %}
-                {% if item.obj.blood_pressure %}<p class="text-xs text-gray-500">BP: {{ item.obj.blood_pressure }}</p>{% endif %}
-                {% if item.obj.doctor_notes %}<p class="text-sm text-gray-600 mt-2 italic">"{{ item.obj.doctor_notes }}"</p>{% endif %}
+        <details class="group">
+            <summary class="flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-gray-50 list-none marker:hidden">
+                <span class="text-[10px] shrink-0 px-2 py-0.5 rounded-full font-medium
+                    {% if item.type == 'visit' %}bg-rose-50 text-rose-700{% else %}bg-gray-100 text-gray-600{% endif %}">
+                    {% if item.type == 'visit' %}Visit{% else %}Note{% endif %}
+                </span>
+                <span class="text-xs text-gray-400 shrink-0 w-20">{{ item.date|date:"M d, Y" }}</span>
+                <span class="text-sm text-gray-700 truncate flex-1">
+                    {% if item.type == "visit" %}
+                        Week {{ item.obj.gestational_week|default:"–" }}{% if item.obj.doctor_notes %} -- {{ item.obj.doctor_notes|truncatechars:50 }}{% endif %}
+                    {% else %}
+                        {{ item.obj.note|truncatechars:60 }}
+                    {% endif %}
+                </span>
+                <svg class="w-4 h-4 text-gray-300 group-open:rotate-180 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </summary>
+
+            <div class="px-4 pb-3 pt-1 bg-gray-50/50 text-sm text-gray-600">
+                {% if item.type == "visit" %}
+                    {% if item.obj.maternal_weight_kg %}<p>Weight: {{ item.obj.maternal_weight_kg }} kg</p>{% endif %}
+                    {% if item.obj.blood_pressure %}<p>Blood pressure: {{ item.obj.blood_pressure }}</p>{% endif %}
+                    {% if item.obj.doctor_notes %}<p class="mt-1 italic">"{{ item.obj.doctor_notes }}"</p>{% endif %}
+                    {% if not item.obj.maternal_weight_kg and not item.obj.blood_pressure and not item.obj.doctor_notes %}
+                        <p class="text-gray-400">No additional details recorded for this visit.</p>
+                    {% endif %}
+                {% else %}
+                    <p>{{ item.obj.note }}</p>
+                    {% if item.obj.image %}<img src="{{ item.obj.image.url }}" alt="" class="w-full max-w-xs rounded-xl mt-2">{% endif %}
+                    <div class="flex gap-3 mt-2">
+                        <a href="{% url 'edit-checkin' checkin_id=item.obj.id %}" class="text-xs text-rose-600 hover:underline">Edit</a>
+                        <form method="post" action="{% url 'delete-checkin' checkin_id=item.obj.id %}" onsubmit="return confirm('Delete this note?');">
+                            {% csrf_token %}
+                            <button type="submit" class="text-xs text-gray-400 hover:text-red-500">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}
             </div>
-        {% else %}
-            <div class="bg-white p-5 rounded-lg shadow border-l-4 border-gray-300">
-                <div class="flex justify-between items-center mb-1">
-                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Your note</span>
-                    <span class="text-xs text-gray-400">{{ item.date|date:"M d, Y" }}</span>
-                </div>
-                <p class="text-sm text-gray-700">{{ item.obj.note }}</p>
-            </div>
-        {% endif %}
+        </details>
     {% empty %}
-        <p class="text-gray-500 text-sm">Nothing recorded yet.</p>
+        <p class="text-gray-500 text-sm p-5">Nothing recorded yet.</p>
     {% endfor %}
 </div>
+
+{% if timeline.paginator.num_pages > 1 %}
+    <div class="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
+        <div>{% if timeline.has_previous %}<a href="?page={{ timeline.previous_page_number }}&type={{ type_filter }}" class="text-sm text-gray-600 hover:text-rose-600">&larr; Newer</a>{% endif %}</div>
+        <span class="text-xs text-gray-400">Page {{ timeline.number }} of {{ timeline.paginator.num_pages }}</span>
+        <div>{% if timeline.has_next %}<a href="?page={{ timeline.next_page_number }}&type={{ type_filter }}" class="text-sm text-gray-600 hover:text-rose-600">Older &rarr;</a>{% endif %}</div>
+    </div>
+{% endif %}
+
+<style>
+    .hp-input { width: 100%; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 0.625rem 0.875rem; font-size: 0.875rem; }
+    .hp-input:focus { outline: none; border-color: #fda4af; box-shadow: 0 0 0 3px rgba(251,113,133,0.15); }
+    .hp-error { font-size: 0.75rem; color: #dc2626; margin-top: 0.375rem; }
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+</style>
+
+{% if weight_data %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    var data = {{ weight_data.weights|safe }};
+    var labels = {{ weight_data.labels|safe }};
+    new Chart(document.getElementById("weightChart"), {
+        type: "line",
+        data: { labels: labels, datasets: [{ label: "Weight (kg)", data: data, borderColor: "#e11d48", backgroundColor: "rgba(225,29,72,0.08)", fill: true, tension: 0.3 }] },
+        options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: "#f3f4f6" } }, x: { grid: { display: false } } } },
+    });
+})();
+</script>
+{% endif %}
 {% endblock %}
