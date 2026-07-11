@@ -42,20 +42,50 @@ class DoctorQuestion(models.Model):
     def __str__(self):
         return self.question
 
+from django.db import models
+
+from django.db import models
+
+
+from django.db import models
+
+
 class WeeklyBabyFact(models.Model):
     """
-    Curated, pre-written development content covering a WEEK RANGE (not a
-    single exact week) so every week of pregnancy has matching content --
-    no gaps, unlike the earlier single-week version.
+    Educational pregnancy development content shown on the Pregnancy Tracker.
     """
-    start_week = models.PositiveSmallIntegerField()
-    end_week = models.PositiveSmallIntegerField()
-    size_comparison = models.CharField(max_length=100, blank=True, help_text="e.g. 'about the size of a lime'")
-    fact_text = models.TextField()
+
+    TRIMESTER_CHOICES = (
+        (1, "First Trimester"),
+        (2, "Second Trimester"),
+        (3, "Third Trimester"),
+    )
+
+    start_week = models.PositiveSmallIntegerField(help_text="Starting gestational week")
+    end_week = models.PositiveSmallIntegerField(help_text="Ending gestational week")
+    trimester = models.PositiveSmallIntegerField(choices=TRIMESTER_CHOICES)
+    title = models.CharField(max_length=200, help_text="Dashboard heading")
+    size_comparison = models.CharField(max_length=100, help_text="Example: About the size of an avocado")
+    average_length_cm = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True)
+    average_weight_g = models.PositiveIntegerField(null=True, blank=True)
+    image_name = models.CharField(max_length=100, blank=True, help_text="Example: week24.png")
+
+    # Changed from TextField -> JSONField: the seed data provides these
+    # as lists of bullet points, not single paragraphs.
+    baby_development = models.JSONField(default=list, blank=True, help_text="List of developmental milestones")
+    mother_changes = models.JSONField(default=list, blank=True, help_text="List of maternal body changes")
+    warning_signs = models.JSONField(default=list, blank=True, help_text="List of symptoms requiring medical care")
+
+    nutrition_tip = models.TextField(blank=True)
+    exercise_tip = models.TextField(blank=True)
+    weekly_milestone = models.CharField(max_length=250, blank=True)
+    fun_fact = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["start_week"]
+        verbose_name = "Weekly Baby Development"
+        verbose_name_plural = "Weekly Baby Development"
 
     def __str__(self):
         return f"Weeks {self.start_week}-{self.end_week}"

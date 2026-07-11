@@ -104,46 +104,180 @@ TRACKED_FIELDS = [
 ]
 
 
+from datetime import timedelta
+
+from django.conf import settings
+from django.db import models
+from django.utils import timezone
+
+
 class Medication(models.Model):
     """
-    A prescribed course of medication. Staff-entered, same trust model as
-    PrenatalVisit. Adherence (whether she actually took each dose) is
-    tracked separately in apps.tracker.models.MedicationLog -- mirrors the
-    existing PrenatalVisit (staff) / PersonalCheckIn (mother) split.
+    A prescribed course of medication entered by hospital staff.
+
+    Doctors prescribe the medication while mothers record whether they
+    actually took each dose through MedicationLog in the tracker app.
+
+    This follows the same trust model as PrenatalVisit:
+        • Hospital staff -> prescription
+        • Mother -> adherence
     """
+
+    # ------------------------------------------------------------------
+    # Relationships
+    # ------------------------------------------------------------------
+
     mother = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-        related_name="medications", limit_choices_to={"role": "mother"},
-    )
-    prescribed_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,
-        related_name="medications_prescribed",
-    )
-    visit = models.ForeignKey(
-        PrenatalVisit, on_delete=models.SET_NULL, null=True, blank=True, related_name="medications",
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="medications",
+        limit_choices_to={"role": "mother"},
     )
 
-    name = models.CharField(max_length=150)
-    dosage = models.CharField(max_length=50, help_text="e.g. 500mg")
-    frequency_per_day = models.PositiveSmallIntegerField(default=1)
+    prescribed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="medications_prescribed",
+    )
+
+    visit = models.ForeignKey(
+        "hospital_portal.PrenatalVisit",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="medications",
+    )
+
+    # ------------------------------------------------------------------
+    # Choices
+    # ------------------------------------------------------------------
+
+    MEDICATION_TYPE_CHOICES = [
+        ("supplement", "Supplement"),
+        ("vitamin", "Vitamin"),
+        ("antibiotic", "Antibiotic"),
+        ("painkiller", "Pain Relief"),
+        ("other", "Other"),
+    ]
+
+    ROUTE_CHOICES = [
+        ("oral", "Oral"),
+        ("injection", "Injection"),
+        ("iv", "Intravenous"),
+        ("topical", "Topical"),
+        ("other", "Other"),
+    ]
+
+    TIME_CHOICES = [
+        ("morning", "Morning"),
+        ("afternoon", "Afternoon"),
+        ("evening", "Evening"),
+        ("night", "Night"),
+        ("custom", "Custom Time"),
+    ]
+
+    FOOD_CHOICES = [
+        ("before", "Before Food"),
+        ("after", "After Food"),
+        ("with", "With Food"),
+        ("empty", "Empty Stomach"),
+        ("any", "Any Time"),
+    ]
+
+    # ------------------------------------------------------------------
+    # Medication Information
+    # ------------------------------------------------------------------
+
+    name = models.CharField(
+        max_length=150,
+        help_text="Medication name (e.g. Ferrous Sulfate)",
+    )
+
+    dosage = models.CharField(
+        max_length=50,
+        help_text="e.g. 500 mg, 5 mL",
+    )
+
+    medication_type = models.CharField(
+        max_length=20,
+        choices=MEDICATION_TYPE_CHOICES,
+        default="supplement",
+    )
+
+    purpose = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Reason for prescribing (e.g. Iron deficiency)",
+    )
+
+    route = models.CharField(
+        max_length=20,
+        choices=ROUTE_CHOICES,
+        default="oral",
+    )
+
+    # ------------------------------------------------------------------
+    # Schedule
+    # ------------------------------------------------------------------
+
+    frequency_per_day = models.PositiveSmallIntegerField(
+        default=1,
+        help_text="Number of doses per day",
+    )
+
+    medicine_time = models.CharField(
+        max_length=20,
+        choices=TIME_CHOICES,
+        default="morning",
+    )
+
+    reminder_time = models.TimeField(
+        null=True,
+        blank=True,
+        help_text="Optional reminder time",
+    )
+
+    food_instruction = models.CharField(
+        max_length=20,
+        choices=FOOD_CHOICES,
+        default="after",
+    )
+
     duration_days = models.PositiveSmallIntegerField()
-    start_date = models.DateField(default=timezone.localdate)
-    notes = models.TextField(blank=True)
+
+    start_date = models.DateField(
+        default=timezone.localdate,
+    )
+
+    notes = models.TextField(
+        blank=True,
+        help_text="Additional instructions from the doctor",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-start_date"]
 
+    # ------------------------------------------------------------------
+    # Computed Properties
+    # ------------------------------------------------------------------
+
     @property
     def end_date(self):
-        from datetime import timedelta
         return self.start_date + timedelta(days=self.duration_days - 1)
 
     @property
     def is_active(self):
         today = timezone.localdate()
         return self.start_date <= today <= self.end_date
+
+    @property
+    def days_remaining(self):
+        if not self.is_active:
+            return 0
+        return (self.end_date - timezone.localdate()).days + 1
 
     @property
     def day_number(self):
@@ -153,7 +287,10 @@ class Medication(models.Model):
 
     @property
     def expected_doses_so_far(self):
-        return min(max(self.day_number, 0), self.duration_days) * self.frequency_per_day
+        return (
+            min(max(self.day_number, 0), self.duration_days)
+            * self.frequency_per_day
+        )
 
     @property
     def total_expected_doses(self):
@@ -164,11 +301,40 @@ class Medication(models.Model):
         return self.logs.count()
 
     @property
+    def missed_doses(self):
+        return max(
+            self.expected_doses_so_far - self.taken_doses_count,
+            0,
+        )
+
+    @property
     def adherence_percent(self):
         expected = self.expected_doses_so_far
+
         if expected <= 0:
             return 0
-        return min(round(self.taken_doses_count / expected * 100), 100)
+
+        return min(
+            round((self.taken_doses_count / expected) * 100),
+            100,
+        )
+
+    @property
+    def status(self):
+        """
+        Overall medication status.
+        """
+
+        if not self.is_active:
+            return "completed"
+
+        if self.adherence_percent >= 90:
+            return "excellent"
+
+        if self.adherence_percent >= 70:
+            return "good"
+
+        return "needs_attention"
 
     def __str__(self):
         return f"{self.name} ({self.mother.username})"

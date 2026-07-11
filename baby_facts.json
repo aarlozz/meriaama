@@ -1,13 +1,1137 @@
 ﻿[
-  {"start_week": 1, "end_week": 4, "size_comparison": "smaller than a poppy seed", "fact_text": "In these earliest weeks, the fertilized egg implants and the foundations of the placenta begin forming. Many mothers haven't confirmed the pregnancy yet at this stage."},
-  {"start_week": 5, "end_week": 8, "size_comparison": "about the size of a raspberry", "fact_text": "The neural tube, heart, and early limb buds are forming. The heart typically begins beating during this window."},
-  {"start_week": 9, "end_week": 12, "size_comparison": "about the size of a lime", "fact_text": "Major organs have formed and continue maturing. Fingers and toes are becoming distinct, and the baby starts making small movements, though they're too small to feel yet."},
-  {"start_week": 13, "end_week": 16, "size_comparison": "about the size of an avocado", "fact_text": "The second trimester begins. Facial features become more defined, and the baby's skeleton continues hardening from soft cartilage into bone."},
-  {"start_week": 17, "end_week": 20, "size_comparison": "about the size of a banana", "fact_text": "Many mothers begin feeling movement around this stage. An anatomy ultrasound is commonly done around week 20 to check development."},
-  {"start_week": 21, "end_week": 24, "size_comparison": "about the size of an ear of corn", "fact_text": "The baby's hearing is developing, and they may respond to sounds. This stage is often considered a key point for viability with medical support if born early."},
-  {"start_week": 25, "end_week": 28, "size_comparison": "about the size of an eggplant", "fact_text": "The third trimester begins around this point. Eyes can open and close, and the baby is gaining weight steadily."},
-  {"start_week": 29, "end_week": 32, "size_comparison": "about the size of a squash", "fact_text": "Bones are fully formed but still soft and flexible. The baby is practicing breathing movements in preparation for birth."},
-  {"start_week": 33, "end_week": 36, "size_comparison": "about the size of a honeydew melon", "fact_text": "The baby is likely settling into a head-down position in preparation for delivery, though this can still change."},
-  {"start_week": 37, "end_week": 40, "size_comparison": "about the size of a small pumpkin", "fact_text": "The baby is considered full-term from week 37 onward. Final weight gain and lung maturation continue right up to delivery."},
-  {"start_week": 41, "end_week": 42, "size_comparison": "fully ready for birth", "fact_text": "Some pregnancies extend slightly past the due date. Your doctor will discuss monitoring or induction options if this happens."}
+  {
+    "start_week": 1,
+    "end_week": 1,
+    "trimester": 1,
+    "title": "Your Pregnancy Journey Begins",
+    "size_comparison": "Microscopic",
+    "average_length_cm": 0.0,
+    "average_weight_g": 0,
+    "image_name": "week01.png",
+    "baby_development": [
+      "Pregnancy is counted from the first day of your last menstrual period.",
+      "Your body is preparing an egg for ovulation.",
+      "No embryo has formed yet."
+    ],
+    "mother_changes": [
+      "Normal menstrual cycle may still be occurring.",
+      "Healthy habits are important before conception."
+    ],
+    "nutrition_tip": "Begin taking folic acid (400–800 mcg daily) if planning pregnancy.",
+    "exercise_tip": "Continue regular physical activity if healthy.",
+    "weekly_milestone": "Preparing for conception.",
+    "fun_fact": "Pregnancy weeks are counted before fertilization actually occurs.",
+    "warning_signs": [
+      "Seek medical advice if you have severe pelvic pain or unusually heavy bleeding."
+    ],
+    "is_active": true
+  },
+  {
+    "start_week": 2,
+    "end_week": 2,
+    "trimester": 1,
+    "title": "Ovulation Approaches",
+    "size_comparison": "Microscopic",
+    "average_length_cm": 0.0,
+    "average_weight_g": 0,
+    "image_name": "week02.png",
+    "baby_development": [
+      "Ovulation usually occurs this week.",
+      "Fertilization may occur if sperm meets the egg."
+    ],
+    "mother_changes": [
+      "Hormones prepare the uterus for implantation."
+    ],
+    "nutrition_tip": "Eat balanced meals rich in leafy vegetables.",
+    "exercise_tip": "Maintain moderate physical activity.",
+    "weekly_milestone": "Possible conception.",
+    "fun_fact": "The baby's genetic characteristics are determined at fertilization.",
+    "warning_signs": [],
+    "is_active": true
+  },
+  {
+    "start_week": 3,
+    "end_week": 3,
+    "trimester": 1,
+    "title": "A New Life Begins",
+    "size_comparison": "Smaller than a poppy seed",
+    "average_length_cm": 0.1,
+    "average_weight_g": 0,
+    "image_name": "week03.png",
+    "baby_development": [
+      "The fertilized egg becomes a blastocyst.",
+      "Cells begin dividing rapidly.",
+      "Implantation begins."
+    ],
+    "mother_changes": [
+      "Most women have no noticeable symptoms."
+    ],
+    "nutrition_tip": "Continue folic acid daily.",
+    "exercise_tip": "Walking is encouraged.",
+    "weekly_milestone": "Implantation begins.",
+    "fun_fact": "Your baby's DNA is already completely unique.",
+    "warning_signs": [
+      "Heavy bleeding should be evaluated."
+    ],
+    "is_active": true
+  },
+  {
+    "start_week": 4,
+    "end_week": 4,
+    "trimester": 1,
+    "title": "Tiny but Growing",
+    "size_comparison": "Poppy Seed",
+    "average_length_cm": 0.2,
+    "average_weight_g": 0,
+    "image_name": "week04.png",
+    "baby_development": [
+      "Placenta begins developing.",
+      "Amniotic sac forms.",
+      "Early nervous system starts forming."
+    ],
+    "mother_changes": [
+      "Missed period.",
+      "Fatigue.",
+      "Breast tenderness."
+    ],
+    "nutrition_tip": "Drink plenty of water.",
+    "exercise_tip": "Light walking is beneficial.",
+    "weekly_milestone": "Positive pregnancy test for many mothers.",
+    "fun_fact": "Your baby's future brain and spinal cord have started developing.",
+    "warning_signs": [
+      "Severe abdominal pain requires medical attention."
+    ],
+    "is_active": true
+  },
+  {
+    "start_week": 5,
+    "end_week": 5,
+    "trimester": 1,
+    "title": "The Heart Starts Developing",
+    "size_comparison": "Sesame Seed",
+    "average_length_cm": 0.4,
+    "average_weight_g": 0,
+    "image_name": "week05.png",
+    "baby_development": [
+      "Heart begins forming.",
+      "Brain development accelerates.",
+      "Neural tube closes."
+    ],
+    "mother_changes": [
+      "Morning sickness may begin.",
+      "Frequent urination."
+    ],
+    "nutrition_tip": "Eat smaller meals to reduce nausea.",
+    "exercise_tip": "Gentle stretching can help.",
+    "weekly_milestone": "Heart development begins.",
+    "fun_fact": "The heart will soon begin beating.",
+    "warning_signs": [
+      "Persistent vomiting causing dehydration requires medical review."
+    ],
+    "is_active": true
+  },
+  {
+    "start_week": 6,
+    "end_week": 6,
+    "trimester": 1,
+    "title": "Heartbeat Begins",
+    "size_comparison": "Lentil",
+    "average_length_cm": 0.6,
+    "average_weight_g": 1,
+    "image_name": "week06.png",
+    "baby_development": [
+      "Heartbeat can often be detected by ultrasound.",
+      "Eyes and ears begin forming.",
+      "Arm buds appear."
+    ],
+    "mother_changes": [
+      "Fatigue increases.",
+      "Morning sickness may worsen."
+    ],
+    "nutrition_tip": "Stay hydrated throughout the day.",
+    "exercise_tip": "Short walks are recommended if comfortable.",
+    "weekly_milestone": "Baby's heart starts beating.",
+    "fun_fact": "The heart beats much faster than an adult's.",
+    "warning_signs": [
+      "Heavy bleeding or severe cramping requires urgent evaluation."
+    ],
+    "is_active": true
+  },
+  {
+    "start_week": 7,
+    "end_week": 7,
+    "trimester": 1,
+    "title": "Rapid Brain Growth",
+    "size_comparison": "Blueberry",
+    "average_length_cm": 1.0,
+    "average_weight_g": 1,
+    "image_name": "week07.png",
+    "baby_development": [
+      "Brain grows rapidly.",
+      "Hands begin forming.",
+      "Facial features become visible."
+    ],
+    "mother_changes": [
+      "Food cravings may begin.",
+      "Smell sensitivity increases."
+    ],
+    "nutrition_tip": "Include protein-rich foods.",
+    "exercise_tip": "Prenatal stretching is beneficial.",
+    "weekly_milestone": "Face begins taking shape.",
+    "fun_fact": "Millions of brain cells are forming every minute.",
+    "warning_signs": [
+      "Persistent severe pain should be assessed."
+    ],
+    "is_active": true
+  },
+  {
+    "start_week": 8,
+    "end_week": 8,
+    "trimester": 1,
+    "title": "Tiny Fingers Form",
+    "size_comparison": "Kidney Bean",
+    "average_length_cm": 1.6,
+    "average_weight_g": 1,
+    "image_name": "week08.png",
+    "baby_development": [
+      "Fingers and toes develop.",
+      "Major organs continue forming.",
+      "Baby begins tiny movements."
+    ],
+    "mother_changes": [
+      "Mood changes.",
+      "Bloating."
+    ],
+    "nutrition_tip": "Iron-rich foods support healthy blood production.",
+    "exercise_tip": "Continue gentle activity.",
+    "weekly_milestone": "Hands and feet become recognizable.",
+    "fun_fact": "Although baby moves, you cannot feel it yet.",
+    "warning_signs": [
+      "Persistent fever should be evaluated."
+    ],
+    "is_active": true
+  },
+  {
+    "start_week": 9,
+    "end_week": 9,
+    "trimester": 1,
+    "title": "Now Officially a Fetus",
+    "size_comparison": "Grape",
+    "average_length_cm": 2.3,
+    "average_weight_g": 2,
+    "image_name": "week09.png",
+    "baby_development": [
+      "Embryo becomes a fetus.",
+      "Heart has four chambers.",
+      "Muscles continue developing."
+    ],
+    "mother_changes": [
+      "Fatigue.",
+      "Constipation."
+    ],
+    "nutrition_tip": "Increase dietary fiber.",
+    "exercise_tip": "Walking helps digestion.",
+    "weekly_milestone": "Embryo becomes fetus.",
+    "fun_fact": "Nearly all major organs have started developing.",
+    "warning_signs": [],
+    "is_active": true
+  },
+  {
+    "start_week": 10,
+    "end_week": 10,
+    "trimester": 1,
+    "title": "Tiny Nails Appear",
+    "size_comparison": "Strawberry",
+    "average_length_cm": 3.1,
+    "average_weight_g": 4,
+    "image_name": "week10.png",
+    "baby_development": [
+      "Tiny fingernails begin forming.",
+      "Brain continues rapid growth.",
+      "Joints can bend."
+    ],
+    "mother_changes": [
+      "Nausea may continue.",
+      "Mood swings are common."
+    ],
+    "nutrition_tip": "Eat calcium-rich foods.",
+    "exercise_tip": "Prenatal yoga may be suitable if recommended by your healthcare provider.",
+    "weekly_milestone": "Most major organs have formed.",
+    "fun_fact": "Baby can already swallow small amounts of amniotic fluid.",
+    "warning_signs": [
+      "Contact your healthcare provider if you have severe bleeding, severe abdominal pain, or persistent vomiting."
+    ],
+    "is_active": true
+  }
+  ,
+{
+  "start_week": 11,
+  "end_week": 11,
+  "trimester": 1,
+  "title": "Baby is Becoming More Active",
+  "size_comparison": "Lime",
+  "average_length_cm": 4.1,
+  "average_weight_g": 7,
+  "image_name": "week11.png",
+  "baby_development": [
+    "Bones begin hardening.",
+    "Hands can open and close.",
+    "Baby begins stretching and kicking.",
+    "Tooth buds continue developing."
+  ],
+  "mother_changes": [
+    "Morning sickness may begin improving.",
+    "Energy may slowly return."
+  ],
+  "nutrition_tip": "Eat calcium-rich foods to support bone development.",
+  "exercise_tip": "Gentle walking and stretching are beneficial.",
+  "weekly_milestone": "Baby can make tiny movements.",
+  "fun_fact": "Baby can yawn even though you can't feel movements yet.",
+  "warning_signs": [
+    "Heavy bleeding",
+    "Severe abdominal pain",
+    "Persistent vomiting causing dehydration"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 12,
+  "end_week": 12,
+  "trimester": 1,
+  "title": "The First Trimester is Ending",
+  "size_comparison": "Plum",
+  "average_length_cm": 5.4,
+  "average_weight_g": 14,
+  "image_name": "week12.png",
+  "baby_development": [
+    "All major organs are formed.",
+    "Baby begins swallowing amniotic fluid.",
+    "Finger and toenails continue developing."
+  ],
+  "mother_changes": [
+    "Nausea often decreases.",
+    "Uterus begins rising above the pelvis."
+  ],
+  "nutrition_tip": "Maintain balanced meals rich in protein.",
+  "exercise_tip": "Continue moderate activity if comfortable.",
+  "weekly_milestone": "First trimester completed.",
+  "fun_fact": "Baby already has fingerprints forming.",
+  "warning_signs": [
+    "Heavy vaginal bleeding",
+    "Loss of consciousness",
+    "Severe cramping"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 13,
+  "end_week": 13,
+  "trimester": 2,
+  "title": "Welcome to the Second Trimester",
+  "size_comparison": "Peach",
+  "average_length_cm": 7.4,
+  "average_weight_g": 23,
+  "image_name": "week13.png",
+  "baby_development": [
+    "Vocal cords begin forming.",
+    "Bones continue strengthening.",
+    "Baby practices swallowing."
+  ],
+  "mother_changes": [
+    "Energy levels usually improve.",
+    "Small baby bump may become noticeable."
+  ],
+  "nutrition_tip": "Increase iron intake to support growing blood volume.",
+  "exercise_tip": "Prenatal yoga may help improve flexibility.",
+  "weekly_milestone": "Second trimester begins.",
+  "fun_fact": "Baby already has unique fingerprints.",
+  "warning_signs": [
+    "Persistent severe headache",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 14,
+  "end_week": 14,
+  "trimester": 2,
+  "title": "Facial Expressions Develop",
+  "size_comparison": "Lemon",
+  "average_length_cm": 8.7,
+  "average_weight_g": 43,
+  "image_name": "week14.png",
+  "baby_development": [
+    "Baby can squint.",
+    "Facial muscles become more active.",
+    "Neck grows longer."
+  ],
+  "mother_changes": [
+    "Round ligament pain may appear.",
+    "Appetite usually increases."
+  ],
+  "nutrition_tip": "Eat fiber-rich foods to reduce constipation.",
+  "exercise_tip": "Swimming is often a comfortable exercise.",
+  "weekly_milestone": "Baby develops facial expressions.",
+  "fun_fact": "Baby may suck their thumb.",
+  "warning_signs": [
+    "Fluid leakage",
+    "Persistent abdominal pain"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 15,
+  "end_week": 15,
+  "trimester": 2,
+  "title": "Growing Stronger Every Day",
+  "size_comparison": "Apple",
+  "average_length_cm": 10.1,
+  "average_weight_g": 70,
+  "image_name": "week15.png",
+  "baby_development": [
+    "Skeleton keeps hardening.",
+    "Legs become longer than arms.",
+    "Baby moves frequently."
+  ],
+  "mother_changes": [
+    "Skin changes may appear.",
+    "You may feel more energetic."
+  ],
+  "nutrition_tip": "Continue taking prenatal vitamins.",
+  "exercise_tip": "Regular walking supports circulation.",
+  "weekly_milestone": "Rapid body growth.",
+  "fun_fact": "Baby can detect light through the skin.",
+  "warning_signs": [
+    "Severe dizziness",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 16,
+  "end_week": 16,
+  "trimester": 2,
+  "title": "Muscles Become Stronger",
+  "size_comparison": "Avocado",
+  "average_length_cm": 11.6,
+  "average_weight_g": 100,
+  "image_name": "week16.png",
+  "baby_development": [
+    "Muscles become stronger.",
+    "Eyes begin moving.",
+    "Heart pumps approximately 25 liters of blood daily."
+  ],
+  "mother_changes": [
+    "Some mothers may begin feeling fluttering movements.",
+    "Back discomfort may begin."
+  ],
+  "nutrition_tip": "Increase calcium intake.",
+  "exercise_tip": "Pelvic floor exercises can be helpful.",
+  "weekly_milestone": "Baby's movements become more coordinated.",
+  "fun_fact": "Baby's ears are close to their final position.",
+  "warning_signs": [
+    "Persistent severe pain",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 17,
+  "end_week": 17,
+  "trimester": 2,
+  "title": "Body Fat Begins Forming",
+  "size_comparison": "Pear",
+  "average_length_cm": 13.0,
+  "average_weight_g": 140,
+  "image_name": "week17.png",
+  "baby_development": [
+    "Fat tissue begins developing.",
+    "Skeleton continues strengthening.",
+    "Heartbeat can often be heard with a Doppler device."
+  ],
+  "mother_changes": [
+    "Baby bump becomes more noticeable.",
+    "Balance may begin changing."
+  ],
+  "nutrition_tip": "Eat healthy fats like nuts and avocados.",
+  "exercise_tip": "Prenatal stretching may relieve muscle tension.",
+  "weekly_milestone": "Baby starts storing fat.",
+  "fun_fact": "Baby's fingerprints are now permanent.",
+  "warning_signs": [
+    "Fluid leakage",
+    "Severe abdominal pain"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 18,
+  "end_week": 18,
+  "trimester": 2,
+  "title": "Baby Can Hear Sounds",
+  "size_comparison": "Bell Pepper",
+  "average_length_cm": 14.2,
+  "average_weight_g": 190,
+  "image_name": "week18.png",
+  "baby_development": [
+    "Hearing develops rapidly.",
+    "Baby reacts to loud noises.",
+    "Nervous system continues maturing."
+  ],
+  "mother_changes": [
+    "Many mothers begin feeling kicks.",
+    "Sleep position may become less comfortable."
+  ],
+  "nutrition_tip": "Drink plenty of water every day.",
+  "exercise_tip": "Walking and swimming remain good options.",
+  "weekly_milestone": "Baby begins hearing external sounds.",
+  "fun_fact": "Baby may recognize your voice later in pregnancy.",
+  "warning_signs": [
+    "Persistent contractions",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 19,
+  "end_week": 19,
+  "trimester": 2,
+  "title": "Protective Skin Coating Forms",
+  "size_comparison": "Mango",
+  "average_length_cm": 15.3,
+  "average_weight_g": 240,
+  "image_name": "week19.png",
+  "baby_development": [
+    "Vernix begins covering the skin.",
+    "Brain continues rapid growth.",
+    "Baby becomes more active."
+  ],
+  "mother_changes": [
+    "Stronger fetal movements.",
+    "Round ligament pain may continue."
+  ],
+  "nutrition_tip": "Include omega-3 rich foods if appropriate for your diet.",
+  "exercise_tip": "Prenatal yoga may improve flexibility and relaxation.",
+  "weekly_milestone": "Protective vernix develops.",
+  "fun_fact": "The white coating on baby's skin helps protect it from amniotic fluid.",
+  "warning_signs": [
+    "Severe headache",
+    "Visual disturbances"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 20,
+  "end_week": 20,
+  "trimester": 2,
+  "title": "Halfway Through Pregnancy",
+  "size_comparison": "Banana",
+  "average_length_cm": 16.5,
+  "average_weight_g": 300,
+  "image_name": "week20.png",
+  "baby_development": [
+    "Baby's movements become stronger.",
+    "Digestive system continues developing.",
+    "Hair begins growing."
+  ],
+  "mother_changes": [
+    "Most mothers clearly feel movement.",
+    "The uterus reaches around the level of the belly button."
+  ],
+  "nutrition_tip": "Continue a balanced diet with iron, calcium, and protein.",
+  "exercise_tip": "Aim for regular moderate exercise if advised by your healthcare provider.",
+  "weekly_milestone": "Halfway milestone reached.",
+  "fun_fact": "The anatomy scan is commonly performed around this time to assess development.",
+  "warning_signs": [
+    "Reduced fetal movement after movements have become established",
+    "Heavy bleeding",
+    "Fluid leakage"
+  ],
+  "is_active": true
+}
+,
+{
+  "start_week": 21,
+  "end_week": 21,
+  "trimester": 2,
+  "title": "Baby Can Sense the World",
+  "size_comparison": "Carrot",
+  "average_length_cm": 26.7,
+  "average_weight_g": 360,
+  "image_name": "week21.png",
+  "baby_development": [
+    "Taste buds are developing rapidly.",
+    "Baby swallows more amniotic fluid.",
+    "Eyebrows and eyelids are fully formed.",
+    "Digestive system continues maturing."
+  ],
+  "mother_changes": [
+    "Baby kicks become more noticeable.",
+    "Stretch marks may begin appearing."
+  ],
+  "nutrition_tip": "Eat foods rich in iron and vitamin C to support blood production.",
+  "exercise_tip": "Swimming and walking are excellent low-impact exercises.",
+  "weekly_milestone": "Baby begins practicing swallowing regularly.",
+  "fun_fact": "The flavors of foods you eat can slightly influence the taste of amniotic fluid.",
+  "warning_signs": [
+    "Persistent abdominal pain",
+    "Fluid leakage",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 22,
+  "end_week": 22,
+  "trimester": 2,
+  "title": "Tiny Features Become Clear",
+  "size_comparison": "Papaya",
+  "average_length_cm": 27.8,
+  "average_weight_g": 430,
+  "image_name": "week22.png",
+  "baby_development": [
+    "Lips, eyebrows and eyelashes are clearly visible.",
+    "Lungs continue developing.",
+    "Baby becomes more responsive to sounds."
+  ],
+  "mother_changes": [
+    "Backache may become more common.",
+    "Balance may change as your bump grows."
+  ],
+  "nutrition_tip": "Stay hydrated and include calcium-rich foods.",
+  "exercise_tip": "Maintain good posture during daily activities.",
+  "weekly_milestone": "Facial features are well developed.",
+  "fun_fact": "Baby may respond differently to familiar and unfamiliar voices.",
+  "warning_signs": [
+    "Painful contractions",
+    "Severe headache",
+    "Vision changes"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 23,
+  "end_week": 23,
+  "trimester": 2,
+  "title": "Baby Can Hear Your Voice",
+  "size_comparison": "Grapefruit",
+  "average_length_cm": 28.9,
+  "average_weight_g": 501,
+  "image_name": "week23.png",
+  "baby_development": [
+    "Baby recognizes familiar sounds.",
+    "Hearing improves every day.",
+    "Lung air sacs continue forming."
+  ],
+  "mother_changes": [
+    "You may notice stronger kicks.",
+    "Leg cramps can occur during sleep."
+  ],
+  "nutrition_tip": "Magnesium-rich foods may help support muscle function.",
+  "exercise_tip": "Gentle stretching before bed may reduce cramps.",
+  "weekly_milestone": "Baby can recognize your voice.",
+  "fun_fact": "Newborns often recognize their mother's voice immediately after birth.",
+  "warning_signs": [
+    "Fluid leakage",
+    "Persistent contractions",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 24,
+  "end_week": 24,
+  "trimester": 2,
+  "title": "Lungs Continue Developing",
+  "size_comparison": "Ear of Corn",
+  "average_length_cm": 30.0,
+  "average_weight_g": 600,
+  "image_name": "week24.png",
+  "baby_development": [
+    "Lungs produce surfactant.",
+    "Baby's skin becomes less transparent.",
+    "Sleep and wake cycles begin."
+  ],
+  "mother_changes": [
+    "Braxton Hicks contractions may begin.",
+    "Heartburn may become more common."
+  ],
+  "nutrition_tip": "Eat smaller meals if heartburn occurs.",
+  "exercise_tip": "Walking after meals may improve digestion.",
+  "weekly_milestone": "Baby develops early sleep cycles.",
+  "fun_fact": "Baby may become active at similar times every day.",
+  "warning_signs": [
+    "Regular painful contractions",
+    "Fluid leakage",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 25,
+  "end_week": 25,
+  "trimester": 2,
+  "title": "Baby Responds to Touch",
+  "size_comparison": "Cauliflower",
+  "average_length_cm": 34.6,
+  "average_weight_g": 660,
+  "image_name": "week25.png",
+  "baby_development": [
+    "Baby responds to touch and sound.",
+    "Nervous system becomes more mature.",
+    "Grasp reflex begins developing."
+  ],
+  "mother_changes": [
+    "Baby movements become stronger.",
+    "Sleeping comfortably may become more difficult."
+  ],
+  "nutrition_tip": "Maintain adequate protein intake.",
+  "exercise_tip": "Use pillows to support comfortable sleeping positions.",
+  "weekly_milestone": "Baby develops stronger reflexes.",
+  "fun_fact": "Baby may hiccup regularly as breathing muscles practice.",
+  "warning_signs": [
+    "Reduced fetal movement",
+    "Fluid leakage",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 26,
+  "end_week": 26,
+  "trimester": 2,
+  "title": "Eyes Begin Opening",
+  "size_comparison": "Zucchini",
+  "average_length_cm": 35.6,
+  "average_weight_g": 760,
+  "image_name": "week26.png",
+  "baby_development": [
+    "Eyes begin opening.",
+    "Retinas continue developing.",
+    "Baby reacts to bright light."
+  ],
+  "mother_changes": [
+    "Shortness of breath may occur occasionally.",
+    "Braxton Hicks contractions may continue."
+  ],
+  "nutrition_tip": "Continue eating iron-rich foods daily.",
+  "exercise_tip": "Take frequent breaks during physical activity.",
+  "weekly_milestone": "Baby opens their eyes.",
+  "fun_fact": "Baby may blink inside the womb.",
+  "warning_signs": [
+    "Persistent contractions",
+    "Heavy bleeding",
+    "Severe swelling"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 27,
+  "end_week": 27,
+  "trimester": 3,
+  "title": "Welcome to the Third Trimester",
+  "size_comparison": "Lettuce",
+  "average_length_cm": 36.6,
+  "average_weight_g": 875,
+  "image_name": "week27.png",
+  "baby_development": [
+    "Brain grows rapidly.",
+    "Lungs continue maturing.",
+    "Baby's movements become stronger."
+  ],
+  "mother_changes": [
+    "Fatigue may return.",
+    "Back discomfort becomes more common."
+  ],
+  "nutrition_tip": "Increase calcium and protein intake.",
+  "exercise_tip": "Prenatal stretching may relieve back discomfort.",
+  "weekly_milestone": "Third trimester begins.",
+  "fun_fact": "Baby now has regular sleep cycles.",
+  "warning_signs": [
+    "Persistent headache",
+    "Vision changes",
+    "Fluid leakage"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 28,
+  "end_week": 28,
+  "trimester": 3,
+  "title": "Rapid Brain Development",
+  "size_comparison": "Eggplant",
+  "average_length_cm": 37.6,
+  "average_weight_g": 1005,
+  "image_name": "week28.png",
+  "baby_development": [
+    "Brain folds become more complex.",
+    "Baby blinks frequently.",
+    "Bones continue strengthening."
+  ],
+  "mother_changes": [
+    "Sleep may become lighter.",
+    "Leg swelling may occur by evening."
+  ],
+  "nutrition_tip": "Reduce salty processed foods if swelling is troublesome.",
+  "exercise_tip": "Elevate your legs after prolonged standing.",
+  "weekly_milestone": "Brain growth accelerates.",
+  "fun_fact": "Baby may dream during sleep.",
+  "warning_signs": [
+    "Reduced fetal movement",
+    "Persistent severe swelling",
+    "Severe headache"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 29,
+  "end_week": 29,
+  "trimester": 3,
+  "title": "Baby Gains Body Fat",
+  "size_comparison": "Butternut Squash",
+  "average_length_cm": 38.6,
+  "average_weight_g": 1150,
+  "image_name": "week29.png",
+  "baby_development": [
+    "Body fat increases.",
+    "Muscles become stronger.",
+    "Baby regulates body temperature more effectively."
+  ],
+  "mother_changes": [
+    "Heartburn may increase.",
+    "Baby kicks can feel quite powerful."
+  ],
+  "nutrition_tip": "Choose smaller meals more frequently if heartburn occurs.",
+  "exercise_tip": "Avoid lying flat on your back for long periods.",
+  "weekly_milestone": "Rapid weight gain begins.",
+  "fun_fact": "Baby's muscles are now strong enough to make visible movements from outside.",
+  "warning_signs": [
+    "Persistent contractions",
+    "Fluid leakage",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 30,
+  "end_week": 30,
+  "trimester": 3,
+  "title": "Preparing for Birth",
+  "size_comparison": "Large Cabbage",
+  "average_length_cm": 39.9,
+  "average_weight_g": 1320,
+  "image_name": "week30.png",
+  "baby_development": [
+    "Brain connections increase rapidly.",
+    "Bone marrow produces red blood cells.",
+    "Baby practices breathing movements."
+  ],
+  "mother_changes": [
+    "You may tire more easily.",
+    "Baby movements become stronger but space becomes tighter."
+  ],
+  "nutrition_tip": "Continue eating iron-rich foods and staying well hydrated.",
+  "exercise_tip": "Gentle walking and pelvic floor exercises remain beneficial if approved by your healthcare provider.",
+  "weekly_milestone": "Baby continues preparing for life outside the womb.",
+  "fun_fact": "Although movement patterns change as space decreases, your baby should still move regularly.",
+  "warning_signs": [
+    "Reduced fetal movement",
+    "Regular painful contractions",
+    "Fluid leakage",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 31,
+  "end_week": 31,
+  "trimester": 3,
+  "title": "Baby's Senses Continue Developing",
+  "size_comparison": "Coconut",
+  "average_length_cm": 41.1,
+  "average_weight_g": 1500,
+  "image_name": "week31.png",
+  "baby_development": [
+    "All five senses are functioning.",
+    "Brain connections increase rapidly.",
+    "Baby can distinguish light from darkness."
+  ],
+  "mother_changes": [
+    "Shortness of breath may occur.",
+    "Braxton Hicks contractions may become more frequent."
+  ],
+  "nutrition_tip": "Eat small, nutritious meals to meet increased energy needs.",
+  "exercise_tip": "Continue gentle walking and pelvic floor exercises.",
+  "weekly_milestone": "Baby's senses are becoming more refined.",
+  "fun_fact": "Baby may recognize familiar voices and music.",
+  "warning_signs": [
+    "Regular contractions",
+    "Fluid leakage",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 32,
+  "end_week": 32,
+  "trimester": 3,
+  "title": "Baby Practices Breathing",
+  "size_comparison": "Jicama",
+  "average_length_cm": 42.4,
+  "average_weight_g": 1700,
+  "image_name": "week32.png",
+  "baby_development": [
+    "Practice breathing movements continue.",
+    "Skin becomes smoother as fat increases.",
+    "Fingernails reach fingertips."
+  ],
+  "mother_changes": [
+    "Baby movements remain strong.",
+    "Sleep may become more difficult."
+  ],
+  "nutrition_tip": "Stay hydrated and continue iron-rich foods.",
+  "exercise_tip": "Side sleeping with a pillow between the knees may improve comfort.",
+  "weekly_milestone": "Baby's lungs continue maturing.",
+  "fun_fact": "Most babies settle into a regular sleep pattern before birth.",
+  "warning_signs": [
+    "Reduced fetal movement",
+    "Persistent contractions",
+    "Fluid leakage"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 33,
+  "end_week": 33,
+  "trimester": 3,
+  "title": "Immune System Strengthens",
+  "size_comparison": "Pineapple",
+  "average_length_cm": 43.7,
+  "average_weight_g": 1900,
+  "image_name": "week33.png",
+  "baby_development": [
+    "Immune system continues developing.",
+    "Bones harden while the skull remains flexible.",
+    "Baby stores more body fat."
+  ],
+  "mother_changes": [
+    "Pelvic pressure may increase.",
+    "Frequent urination is common."
+  ],
+  "nutrition_tip": "Continue a balanced diet with adequate protein.",
+  "exercise_tip": "Avoid standing for long periods without breaks.",
+  "weekly_milestone": "Baby continues preparing for birth.",
+  "fun_fact": "Baby's skull bones remain flexible to help during delivery.",
+  "warning_signs": [
+    "Regular painful contractions",
+    "Heavy bleeding",
+    "Fluid leakage"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 34,
+  "end_week": 34,
+  "trimester": 3,
+  "title": "Baby Continues Growing",
+  "size_comparison": "Cantaloupe",
+  "average_length_cm": 45.0,
+  "average_weight_g": 2150,
+  "image_name": "week34.png",
+  "baby_development": [
+    "Lungs approach full maturity.",
+    "Baby gains weight steadily.",
+    "Nervous system continues refining."
+  ],
+  "mother_changes": [
+    "Braxton Hicks contractions may become stronger.",
+    "Back discomfort is common."
+  ],
+  "nutrition_tip": "Choose calcium-rich foods for bone health.",
+  "exercise_tip": "Gentle stretching may ease muscle tightness.",
+  "weekly_milestone": "Baby gains approximately 200–250 g each week.",
+  "fun_fact": "Most babies spend much of their time sleeping now.",
+  "warning_signs": [
+    "Reduced fetal movement",
+    "Persistent severe headache",
+    "Vision changes"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 35,
+  "end_week": 35,
+  "trimester": 3,
+  "title": "Baby's Kidneys Are Fully Developed",
+  "size_comparison": "Honeydew Melon",
+  "average_length_cm": 46.2,
+  "average_weight_g": 2400,
+  "image_name": "week35.png",
+  "baby_development": [
+    "Kidneys function well.",
+    "Liver continues maturing.",
+    "Baby accumulates protective body fat."
+  ],
+  "mother_changes": [
+    "Fatigue often increases.",
+    "Pelvic discomfort becomes more noticeable."
+  ],
+  "nutrition_tip": "Eat protein-rich snacks between meals.",
+  "exercise_tip": "Walking may help reduce stiffness.",
+  "weekly_milestone": "Baby is nearly ready for birth.",
+  "fun_fact": "Baby's hearing is fully developed and can recognize familiar voices.",
+  "warning_signs": [
+    "Fluid leakage",
+    "Painful contractions",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 36,
+  "end_week": 36,
+  "trimester": 3,
+  "title": "Baby May Move Head Down",
+  "size_comparison": "Romaine Lettuce",
+  "average_length_cm": 47.4,
+  "average_weight_g": 2620,
+  "image_name": "week36.png",
+  "baby_development": [
+    "Many babies move into a head-down position.",
+    "Lungs are close to full maturity.",
+    "Baby continues storing fat."
+  ],
+  "mother_changes": [
+    "Breathing may become easier if baby drops lower.",
+    "Pelvic pressure increases."
+  ],
+  "nutrition_tip": "Continue eating nutrient-dense meals.",
+  "exercise_tip": "Light walking remains beneficial unless advised otherwise.",
+  "weekly_milestone": "Baby often settles into birth position.",
+  "fun_fact": "Many babies now have a full head of hair, though this varies greatly.",
+  "warning_signs": [
+    "Regular contractions",
+    "Fluid leakage",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 37,
+  "end_week": 37,
+  "trimester": 3,
+  "title": "Early Full Term",
+  "size_comparison": "Swiss Chard",
+  "average_length_cm": 48.6,
+  "average_weight_g": 2860,
+  "image_name": "week37.png",
+  "baby_development": [
+    "Baby is considered early full term.",
+    "Lungs are mature.",
+    "Grasp becomes stronger."
+  ],
+  "mother_changes": [
+    "Signs of labor may begin.",
+    "Nesting instincts may increase."
+  ],
+  "nutrition_tip": "Stay hydrated and continue balanced meals.",
+  "exercise_tip": "Short walks may improve comfort.",
+  "weekly_milestone": "Baby is ready for birth if labor begins.",
+  "fun_fact": "Many babies are born between weeks 37 and 40.",
+  "warning_signs": [
+    "Regular contractions",
+    "Water breaking",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 38,
+  "end_week": 38,
+  "trimester": 3,
+  "title": "Baby Keeps Growing",
+  "size_comparison": "Leek",
+  "average_length_cm": 49.8,
+  "average_weight_g": 3080,
+  "image_name": "week38.png",
+  "baby_development": [
+    "Brain continues developing.",
+    "Baby practices coordinated sucking and swallowing.",
+    "Body fat continues increasing."
+  ],
+  "mother_changes": [
+    "Braxton Hicks contractions continue.",
+    "Pelvic pressure is common."
+  ],
+  "nutrition_tip": "Continue eating iron-rich foods.",
+  "exercise_tip": "Listen to your body and rest when needed.",
+  "weekly_milestone": "Baby continues preparing for birth.",
+  "fun_fact": "Baby's brain will continue developing rapidly after birth.",
+  "warning_signs": [
+    "Water breaking",
+    "Regular contractions",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 39,
+  "end_week": 39,
+  "trimester": 3,
+  "title": "Full Term",
+  "size_comparison": "Mini Watermelon",
+  "average_length_cm": 50.7,
+  "average_weight_g": 3288,
+  "image_name": "week39.png",
+  "baby_development": [
+    "Organs are fully developed.",
+    "Lungs are ready for independent breathing.",
+    "Baby continues gaining a small amount of fat."
+  ],
+  "mother_changes": [
+    "Labor can begin at any time.",
+    "Cervix may begin softening."
+  ],
+  "nutrition_tip": "Continue eating balanced meals and stay hydrated.",
+  "exercise_tip": "Gentle walking may support comfort if approved by your healthcare provider.",
+  "weekly_milestone": "Baby is full term.",
+  "fun_fact": "Only about 5% of babies are born exactly on their estimated due date.",
+  "warning_signs": [
+    "Regular contractions",
+    "Water breaking",
+    "Heavy bleeding"
+  ],
+  "is_active": true
+},
+{
+  "start_week": 40,
+  "end_week": 40,
+  "trimester": 3,
+  "title": "Meeting Your Baby Soon",
+  "size_comparison": "Small Pumpkin",
+  "average_length_cm": 51.2,
+  "average_weight_g": 3400,
+  "image_name": "week40.png",
+  "baby_development": [
+    "Baby is fully developed and ready for life outside the womb.",
+    "The lungs, brain and digestive system continue maturing.",
+    "Baby remains active while awaiting birth."
+  ],
+  "mother_changes": [
+    "Labor may begin naturally.",
+    "Pelvic pressure and contractions may increase."
+  ],
+  "nutrition_tip": "Eat light, balanced meals and drink plenty of fluids.",
+  "exercise_tip": "Stay mobile if comfortable and follow your healthcare team's guidance.",
+  "weekly_milestone": "Estimated due date has arrived.",
+  "fun_fact": "Many healthy pregnancies continue beyond 40 weeks under close medical supervision.",
+  "warning_signs": [
+    "Water breaking",
+    "Regular contractions every few minutes",
+    "Heavy bleeding",
+    "Reduced fetal movement"
+  ],
+  "is_active": true
+}
+
+
 ]

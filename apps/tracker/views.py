@@ -1,128 +1,418 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from .models import PersonalCheckIn, MedicationLog, DoctorQuestion
-from .forms import PersonalCheckInForm, DoctorQuestionForm
-from .services import build_weight_series, get_weekly_baby_fact
-from apps.hospital_portal.models import PrenatalVisit, Medication
+
+from .forms import (
+    PersonalCheckInForm,
+    DoctorQuestionForm,
+)
+
+from .models import (
+    PersonalCheckIn,
+    MedicationLog,
+    DoctorQuestion,
+)
+
+from .services import (
+    build_weight_series,
+    get_weekly_baby_fact,
+    pregnancy_progress,
+    medication_summary,
+)
+
+from apps.hospital_portal.models import (
+    PrenatalVisit,
+    Medication,
+)
+
+VALID_TIMELINE_TYPES = ("all", "visit", "checkin")
 
 
 @login_required
 def tracker_page(request):
-    """GET/POST /tracker/ -- combined timeline, medications, doctor questions,
-    weight trend, and baby development content for her current week."""
+    """
+    Pregnancy Tracker Dashboard
+
+    Combines:
+
+    • Pregnancy progress
+    • Weekly baby development
+    • Weight chart
+    • Medication dashboard
+    • Timeline
+    • Doctor questions
+    • Personal notes
+    """
+
     profile = getattr(request.user, "health_profile", None)
 
+    # -------------------------
+    # Save Personal Note
+    # -------------------------
+
     if request.method == "POST":
-        form = PersonalCheckInForm(request.POST, request.FILES)
+
+        form = PersonalCheckInForm(
+            request.POST,
+            request.FILES,
+        )
+
         if form.is_valid():
-            checkin = form.save(commit=False)
-            checkin.user = request.user
-            checkin.save()
-            messages.success(request, "Note saved.")
+
+            note = form.save(commit=False)
+            note.user = request.user
+            note.save()
+
+            messages.success(
+                request,
+                "Your private note has been saved."
+            )
+
             return redirect("tracker")
+
     else:
+
         form = PersonalCheckInForm()
 
-    visits = list(PrenatalVisit.objects.filter(mother=request.user))
-    checkins = list(PersonalCheckIn.objects.filter(user=request.user))
-    medications = Medication.objects.filter(mother=request.user).order_by("-start_date")
-    questions = DoctorQuestion.objects.filter(user=request.user)
+    # -------------------------
+    # Database Queries
+    # -------------------------
+
+    visits = list(
+        PrenatalVisit.objects.filter(
+            mother=request.user
+        ).order_by("-visit_date")
+    )
+
+    checkins = list(
+        PersonalCheckIn.objects.filter(
+            user=request.user
+        )
+    )
+
+    # prefetch_related("logs") avoids an N+1 query for every
+    # per-medication property (adherence_percent, taken_doses_count,
+    # expected_doses_so_far, day_number) that reads medication.logs.
+    medications = list(
+        Medication.objects.filter(
+            mother=request.user
+        )
+        .order_by("-start_date")
+        .prefetch_related("logs")
+    )
+
+    questions = DoctorQuestion.objects.filter(
+        user=request.user
+    )
+
+    # -------------------------
+    # Timeline Filter
+    # -------------------------
 
     type_filter = request.GET.get("type", "all")
-    items = []
+
+    if type_filter not in VALID_TIMELINE_TYPES:
+        type_filter = "all"
+
+    timeline_items = []
+
     if type_filter in ("all", "visit"):
-        items += [{"type": "visit", "date": v.visit_date, "obj": v} for v in visits]
+
+        for visit in visits:
+
+            timeline_items.append({
+                "type": "visit",
+                "date": visit.visit_date,
+                "obj": visit,
+            })
+
     if type_filter in ("all", "checkin"):
-        items += [{"type": "checkin", "date": c.logged_at.date(), "obj": c} for c in checkins]
-    items.sort(key=lambda item: item["date"], reverse=True)
 
-    paginator = Paginator(items, 20)  # bumped up since rows are compact now
-    timeline = paginator.get_page(request.GET.get("page"))
+        for note in checkins:
 
-    next_visit = PrenatalVisit.objects.filter(mother=request.user).exclude(
-        next_visit_date__isnull=True
-    ).order_by("-visit_date").first()
-    next_visit_date = next_visit.next_visit_date if next_visit else None
-    is_overdue = bool(next_visit_date and next_visit_date < timezone.localdate())
+            timeline_items.append({
+                "type": "checkin",
+                "date": note.logged_at.date(),
+                "obj": note,
+            })
 
-    weight_data = build_weight_series(profile, visits) if profile else None
-    baby_fact = get_weekly_baby_fact(profile.current_gestational_week) if profile else None
+    timeline_items.sort(
+        key=lambda item: item["date"],
+        reverse=True,
+    )
 
-    week = getattr(profile, "current_gestational_week", None)
-    if week:
-        subtitle = f"Week {week} of your pregnancy"
+    paginator = Paginator(
+        timeline_items,
+        20,
+    )
+
+    timeline = paginator.get_page(
+        request.GET.get("page")
+    )
+
+    # -------------------------
+    # Next Visit
+    # -------------------------
+
+    latest_visit = (
+        PrenatalVisit.objects.filter(
+            mother=request.user
+        )
+        .exclude(
+            next_visit_date__isnull=True
+        )
+        .order_by("-visit_date")
+        .first()
+    )
+
+    next_visit_date = (
+        latest_visit.next_visit_date
+        if latest_visit
+        else None
+    )
+
+    is_overdue = bool(
+        next_visit_date
+        and next_visit_date < timezone.localdate()
+    )
+
+    # -------------------------
+    # Dashboard Data
+    # -------------------------
+
+    weight_data = (
+        build_weight_series(profile, visits)
+        if profile
+        else None
+    )
+
+    baby_fact = (
+        get_weekly_baby_fact(profile.current_gestational_week)
+        if profile
+        else None
+    )
+
+    pregnancy = pregnancy_progress(profile)
+
+    # medications is already a concrete list here, so medication_summary()
+    # attaches remaining_doses to the exact same objects the template
+    # iterates over -- no reliance on queryset result-cache behavior.
+    medicine_dashboard = medication_summary(medications)
+
+    # -------------------------
+    # Header
+    # -------------------------
+
+    if pregnancy:
+
+        header_title = (
+            f"Week {pregnancy['week']} Pregnancy Tracker"
+        )
+
+        header_subtitle = (
+            f"{pregnancy['weeks_left']} weeks remaining • "
+            f"{pregnancy['progress']}% completed"
+        )
+
     else:
-        subtitle = "Monitor your pregnancy journey week by week"
 
-    return render(request, "tracker/timeline.html", {
-        "form": form, "timeline": timeline, "type_filter": type_filter,
-        "medications": medications, "questions": questions,
-        "next_visit_date": next_visit_date, "is_overdue": is_overdue,
-        "profile": profile, "weight_data": weight_data, "baby_fact": baby_fact,
-        "header_subtitle": subtitle,
-        "header_title": "Pregnancy Tracker",
-    })
+        header_title = "Pregnancy Tracker"
+        header_subtitle = "Track your pregnancy journey"
+
+    # -------------------------
+    # Render
+    # -------------------------
+
+    return render(
+        request,
+        "tracker/timeline.html",
+        {
+            "form": form,
+            "timeline": timeline,
+            "type_filter": type_filter,
+            "profile": profile,
+            "questions": questions,
+            "medications": medications,
+            "weight_data": weight_data,
+            "baby_fact": baby_fact,
+            "pregnancy": pregnancy,
+            "medicine_dashboard": medicine_dashboard,
+            "next_visit_date": next_visit_date,
+            "is_overdue": is_overdue,
+            "header_title": header_title,
+            "header_subtitle": header_subtitle,
+        },
+    )
 
 
 @login_required
 def edit_checkin(request, checkin_id):
-    checkin = get_object_or_404(PersonalCheckIn, id=checkin_id, user=request.user)
+    """
+    Edit one private pregnancy note.
+    """
+
+    checkin = get_object_or_404(
+        PersonalCheckIn,
+        id=checkin_id,
+        user=request.user,
+    )
+
     if request.method == "POST":
-        form = PersonalCheckInForm(request.POST, request.FILES, instance=checkin)
+
+        form = PersonalCheckInForm(
+            request.POST,
+            request.FILES,
+            instance=checkin,
+        )
+
         if form.is_valid():
+
             form.save()
-            messages.success(request, "Note updated.")
+
+            messages.success(
+                request,
+                "Your note has been updated.",
+            )
+
             return redirect("tracker")
+
     else:
-        form = PersonalCheckInForm(instance=checkin)
-    return render(request, "tracker/edit_checkin.html", {"form": form, "checkin": checkin})
+
+        form = PersonalCheckInForm(
+            instance=checkin
+        )
+
+    return render(
+        request,
+        "tracker/edit_checkin.html",
+        {
+            "form": form,
+            "checkin": checkin,
+        },
+    )
 
 
 @login_required
 def delete_checkin(request, checkin_id):
-    checkin = get_object_or_404(PersonalCheckIn, id=checkin_id, user=request.user)
+    """
+    Delete a private note.
+    """
+
+    checkin = get_object_or_404(
+        PersonalCheckIn,
+        id=checkin_id,
+        user=request.user,
+    )
+
     if request.method == "POST":
+
         checkin.delete()
-        messages.success(request, "Note deleted.")
+
+        messages.success(
+            request,
+            "Your private note has been deleted.",
+        )
+
     return redirect("tracker")
 
 
 @login_required
 def mark_dose_taken(request, medication_id):
-    medication = get_object_or_404(Medication, id=medication_id, mother=request.user)
+    """
+    Record one medication dose.
+    """
+
+    medication = get_object_or_404(
+        Medication,
+        id=medication_id,
+        mother=request.user,
+    )
+
     if request.method == "POST":
-        MedicationLog.objects.create(medication=medication, date=timezone.localdate())
-        messages.success(request, f"Marked a dose of {medication.name} as taken.")
+
+        MedicationLog.objects.create(
+            medication=medication,
+            date=timezone.localdate(),
+        )
+
+        messages.success(
+            request,
+            f"{medication.name} marked as taken.",
+        )
+
     return redirect("tracker")
 
 
 @login_required
 def add_question(request):
+    """
+    Save a question for the next prenatal visit.
+    """
+
     if request.method == "POST":
-        form = DoctorQuestionForm(request.POST)
+
+        form = DoctorQuestionForm(
+            request.POST
+        )
+
         if form.is_valid():
+
             question = form.save(commit=False)
             question.user = request.user
             question.save()
-            messages.success(request, "Question added.")
+
+            messages.success(
+                request,
+                "Question added for your next visit.",
+            )
+
     return redirect("tracker")
 
 
 @login_required
 def toggle_question(request, question_id):
-    question = get_object_or_404(DoctorQuestion, id=question_id, user=request.user)
+    """
+    Mark question answered/unanswered.
+    """
+
+    question = get_object_or_404(
+        DoctorQuestion,
+        id=question_id,
+        user=request.user,
+    )
+
     if request.method == "POST":
+
         question.is_answered = not question.is_answered
-        question.save(update_fields=["is_answered"])
+
+        question.save(
+            update_fields=["is_answered"]
+        )
+
     return redirect("tracker")
 
 
 @login_required
 def delete_question(request, question_id):
-    question = get_object_or_404(DoctorQuestion, id=question_id, user=request.user)
+    """
+    Delete a saved doctor question.
+    """
+
+    question = get_object_or_404(
+        DoctorQuestion,
+        id=question_id,
+        user=request.user,
+    )
+
     if request.method == "POST":
+
         question.delete()
+
+        messages.success(
+            request,
+            "Question removed.",
+        )
+
     return redirect("tracker")
