@@ -79,20 +79,30 @@ def _completeness_checklist(visits):
 
 @hospital_staff_required
 def mother_detail(request, mother_id):
-    """GET /hospital/mother/<id>/ -- her clinical profile + visit history + completeness checklist."""
+    """GET /hospital/mother/<id>/ -- her clinical profile + visit history + completeness checklist.
+    Doctors may only view mothers currently assigned to them; data entry and
+    admin can view any mother."""
     mother = get_object_or_404(User, id=mother_id, role=User.Role.MOTHER)
+
+    if request.user.role == User.Role.DOCTOR:
+        from apps.doctor_chat.models import DoctorAssignment
+        is_assigned = DoctorAssignment.objects.filter(
+            mother=mother, doctor=request.user, is_active=True
+        ).exists()
+        if not is_assigned:
+            return HttpResponseForbidden("You can only view records for mothers currently assigned to you.")
+
     profile = getattr(mother, "health_profile", None)
     visits = list(PrenatalVisit.objects.filter(mother=mother))
-    medications = Medication.objects.filter(mother=mother) 
+    medications = Medication.objects.filter(mother=mother)
 
     return render(request, "hospital_portal/mother_detail.html", {
         "mother": mother,
         "profile": profile,
         "visits": visits,
         "checklist": _completeness_checklist(visits),
-        "medications": medications,  # NEW
+        "medications": medications,
     })
-
 
 @hospital_staff_required
 def edit_health_profile(request, mother_id):

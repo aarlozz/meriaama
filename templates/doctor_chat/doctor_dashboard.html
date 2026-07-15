@@ -1,20 +1,30 @@
-{% extends "dashboard_base.html" %}
-{% block title %}My Patients{% endblock %}
-{% block content %}
+{% extends "hospital_portal/staff_base.html" %}
+{% block page_title %}My Patients{% endblock %}
+{% block dashboard_content %}
 <h1 class="text-2xl font-bold text-gray-900 mb-1">My Patients</h1>
 <p class="text-sm text-gray-500 mb-6">Mothers currently assigned to you.</p>
 
 <div class="space-y-2">
     {% for assignment in assignments %}
-        <a href="{% url 'chat-thread' assignment_id=assignment.id %}" class="flex justify-between items-center bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:border-rose-200 transition-colors">
+        <div class="flex justify-between items-center bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:border-rose-200 transition-colors">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-full bg-rose-100 text-rose-600 text-sm font-semibold flex items-center justify-center uppercase">{{ assignment.mother.username|first }}</div>
                 <span class="font-medium text-gray-900">{{ assignment.mother.username }}</span>
             </div>
-            {% if assignment.unread_count %}
-                <span class="bg-rose-600 text-white text-xs font-semibold rounded-full w-6 h-6 flex items-center justify-center">{{ assignment.unread_count }}</span>
-            {% endif %}
-        </a>
+            <div class="flex items-center gap-2">
+                <a href="{% url 'hospital-mother-detail' mother_id=assignment.mother.id %}"
+                   class="text-sm bg-gray-100 text-gray-700 rounded-lg px-3 py-1.5 font-medium hover:bg-gray-200">
+                    View Record
+                </a>
+                <a href="{% url 'chat-thread' assignment_id=assignment.id %}"
+                   class="relative text-sm bg-rose-600 text-white rounded-lg px-3 py-1.5 font-medium hover:bg-rose-700">
+                    Chat
+                    {% if assignment.unread_count %}
+                        <span class="ml-1 bg-white text-rose-600 text-xs font-semibold rounded-full w-5 h-5 inline-flex items-center justify-center align-middle">{{ assignment.unread_count }}</span>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
     {% empty %}
         <p class="text-gray-500 text-sm">No mothers assigned to you yet.</p>
     {% endfor %}
