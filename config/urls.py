@@ -22,6 +22,7 @@ urlpatterns = [
     path("hospital/", include("apps.hospital_portal.urls")),
     path("trimester-analysis/", include("apps.trimester_analysis.urls")),
     path("dashboard/", include("apps.pregnancy_dashboard.urls")),
+    path("doctor-chat/", include("apps.doctor_chat.urls")),
 ]
 
 if settings.DEBUG:
