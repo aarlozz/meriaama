@@ -1,0 +1,60 @@
+{% extends base_template %}
+{% block page_title %}Chat{% endblock %}
+{% block dashboard_content %}
+
+<div class="flex items-center gap-3 mb-6">
+    {% if is_doctor_view %}<a href="{% url 'doctor-dashboard' %}" class="text-sm text-rose-600 hover:underline">&larr; Back</a>{% endif %}
+    <div class="w-9 h-9 rounded-full bg-rose-100 text-rose-600 text-sm font-semibold flex items-center justify-center uppercase">{{ other_party.username|first }}</div>
+    <p class="font-semibold text-gray-900">{% if is_doctor_view %}{{ other_party.username }}{% else %}Dr. {{ other_party.username }}{% endif %}</p>
+</div>
+
+<div id="chat-log" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-4 h-[28rem] overflow-y-auto flex flex-col gap-3">
+    {% for message in chat_messages %}
+        <div class="flex {% if message.sender_id == request.user.id %}justify-end{% else %}justify-start{% endif %}" data-msg-id="{{ message.id }}">
+            <div class="max-w-[75%] rounded-2xl px-4 py-2.5 text-sm {% if message.sender_id == request.user.id %}bg-rose-600 text-white{% else %}bg-gray-100 text-gray-800{% endif %}">
+                <p>{{ message.text }}</p>
+                <p class="text-[10px] mt-1 {% if message.sender_id == request.user.id %}text-rose-100{% else %}text-gray-400{% endif %}">{{ message.created_at|date:"g:i A" }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-sm text-gray-400 text-center my-auto">No messages yet -- say hello.</p>
+    {% endfor %}
+</div>
+
+<form method="post" id="chat-form" class="flex gap-2">
+    {% csrf_token %}
+    {{ form.text }}
+    <button type="submit" class="bg-rose-600 text-white rounded-xl px-5 py-2.5 text-sm font-medium hover:bg-rose-700">Send</button>
+</form>
+
+<script>
+(function () {
+    var chatLog = document.getElementById("chat-log");
+    var lastId = 0;
+    var bubbles = chatLog.querySelectorAll("[data-msg-id]");
+    if (bubbles.length) lastId = bubbles[bubbles.length - 1].dataset.msgId;
+    chatLog.scrollTop = chatLog.scrollHeight;
+
+    function poll() {
+        fetch("{% url 'chat-poll' assignment_id=assignment.id %}?after=" + lastId)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (!data.messages.length) return;
+                data.messages.forEach(function (m) {
+                    var div = document.createElement("div");
+                    div.className = "flex justify-start";
+                    div.dataset.msgId = m.id;
+                    div.innerHTML = '<div class="max-w-[75%] rounded-2xl px-4 py-2.5 text-sm bg-gray-100 text-gray-800">' +
+                        '<p>' + m.text.replace(/</g, "&lt;") + '</p>' +
+                        '<p class="text-[10px] mt-1 text-gray-400">' + m.time + '</p></div>';
+                    chatLog.appendChild(div);
+                    lastId = m.id;
+                });
+                chatLog.scrollTop = chatLog.scrollHeight;
+            });
+    }
+
+    setInterval(poll, 4000);
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "dashboard_base.html" %}
+{% block title %}My Patients{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-gray-900 mb-1">My Patients</h1>
+<p class="text-sm text-gray-500 mb-6">Mothers currently assigned to you.</p>
+
+<div class="space-y-2">
+    {% for assignment in assignments %}
+        <a href="{% url 'chat-thread' assignment_id=assignment.id %}" class="flex justify-between items-center bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:border-rose-200 transition-colors">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-rose-100 text-rose-600 text-sm font-semibold flex items-center justify-center uppercase">{{ assignment.mother.username|first }}</div>
+                <span class="font-medium text-gray-900">{{ assignment.mother.username }}</span>
+            </div>
+            {% if assignment.unread_count %}
+                <span class="bg-rose-600 text-white text-xs font-semibold rounded-full w-6 h-6 flex items-center justify-center">{{ assignment.unread_count }}</span>
+            {% endif %}
+        </a>
+    {% empty %}
+        <p class="text-gray-500 text-sm">No mothers assigned to you yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

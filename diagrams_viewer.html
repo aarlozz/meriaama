@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meri Aama Schema & Diagrams Viewer</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-card: #121824;
+      --border-color: #232d42;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #ec4899;
+      --font-outfit: 'Outfit', sans-serif;
+      --font-inter: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-inter);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand h1 {
+      font-family: var(--font-outfit);
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a5b4fc 0%, var(--primary) 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand p {
+      margin: 4px 0 0 0;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 12px;
+    }
+
+    .tab-btn {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: var(--font-outfit);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--primary);
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+
+    .action-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: var(--font-inter);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    main {
+      flex: 1;
+      padding: 40px;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: calc(100% - 80px);
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 16px;
+    }
+
+    .card-title {
+      font-family: var(--font-outfit);
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .diagram-container {
+      background-color: #0d131f;
+      border-radius: 12px;
+      padding: 24px;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .mermaid {
+      visibility: hidden; /* Prevent flash of unstyled content */
+    }
+
+    .mermaid[data-processed="true"] {
+      visibility: visible;
+    }
+
+    pre.code-block {
+      background-color: #07090e;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      color: #38bdf8;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    footer {
+      background-color: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      padding: 20px 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background-color: white;
+        color: black;
+      }
+      header, footer, .tab-tabs, .action-btn {
+        display: none !important;
+      }
+      main {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+      }
+      .card {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+      }
+      .diagram-container {
+        background-color: white;
+        border: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <h1>Meri Aama Model Visualizer</h1>
+      <p>Interactive ER & Class Diagrams</p>
+    </div>
+    
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('er-diagram')">ER Diagram</button>
+      <button class="tab-btn" onclick="switchTab('class-diagram')">Class Diagram</button>
+      <button class="tab-btn" onclick="switchTab('raw-code')">Mermaid Spec</button>
+    </div>
+
+    <button class="action-btn" onclick="window.print()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+      Print / Save PDF
+    </button>
+  </header>
+
+  <main>
+    <!-- ER Diagram Tab -->
+    <div id="er-diagram" class="tab-content active">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Entity-Relationship (ER) Model</h2>
+          <span style="color: var(--text-muted); font-size: 14px;">Physical schema mapping relationships</span>
+        </div>
+        <div class="diagram-container">
+          <pre class="mermaid">
+erDiagram
+    User ||--|| HealthProfile : "has"
+    User ||--|| TrimesterNarrativeCache : "has"
+    User ||--o{ DailyWellnessLog : "creates"
+    User ||--o{ MoodEntry : "logs"
+    User ||--o{ PsychometricTest : "takes"
+    User ||--o{ Recommendation : "receives"
+    User ||--o{ MedicalReport : "uploads"
+    User ||--o{ PersonalCheckIn : "writes"
+    User ||--o{ DoctorQuestion : "asks"
+    User ||--o{ ForumPost : "authors"
+    User ||--o{ ForumComment : "authors"
+    User ||--o{ PrenatalVisit : "attends (mother)"
+    User ||--o{ PrenatalVisit : "inputs (staff)"
+    User ||--o{ Medication : "prescribed (mother)"
+    User ||--o{ Medication : "writes (prescriber)"
+    
+    User ||--o{ DoctorAssignment : "assigned_as_mother"
+    User ||--o{ DoctorAssignment : "assigned_as_doctor"
+    User ||--o{ DoctorAssignment : "makes_assignment"
+    DoctorAssignment ||--o{ ChatMessage : "has"
+    User ||--o{ ChatMessage : "sends"
+
+    PrenatalVisit ||--o{ Medication : "linked_in"
+    Medication ||--o{ MedicationLog : "tracked_by"
+    ForumPost ||--o{ ForumComment : "has"
+
+    DailyWellnessLog }o--o{ WellnessTip : "contains_nutrition"
+    DailyWellnessLog }o--o{ WellnessTip : "contains_mental"
+    DailyWellnessLog }o--o{ WellnessTip : "contains_exercise"
+    DailyWellnessLog }o--o{ WellnessTip : "contains_precaution"
+
+    User {
+        int id PK
+        string username
+        string password
+        string email
+        string role "mother | doctor | data_entry | admin"
+        string phone_number
+        string preferred_language
+    }
+
+    HealthProfile {
+        int id PK
+        int user_id FK
+        date last_menstrual_period
+        date expected_delivery_date
+        bool edd_is_manual_override
+        int current_gestational_week
+        int latest_mood_score
+        string latest_stress_level
+        string blood_group
+        text pre_existing_conditions
+        json allergies
+        string allergy_other
+        bool has_gestational_diabetes
+        bool has_hypertension
+        string dietary_preference
+        decimal height_cm
+        decimal pre_pregnancy_weight_kg
+        int previous_pregnancies_count
+        int live_births_count
+        json previous_complications
+        string previous_complications_other
+        bool smokes
+        bool drinks_alcohol
+    }
+
+    PrenatalVisit {
+        int id PK
+        int mother_id FK
+        int entered_by_id FK
+        date visit_date
+        int gestational_week
+        decimal maternal_weight_kg
+        string blood_pressure
+        decimal fundal_height_cm
+        int fetal_heart_rate_bpm
+        string fetal_movement
+        string urine_protein
+        string urine_glucose
+        decimal hemoglobin_g_dl
+        string fetal_position
+        string edema
+        text doctor_notes
+        date next_visit_date
+    }
+
+    Medication {
+        int id PK
+        int mother_id FK
+        int prescribed_by_id FK
+        int visit_id FK
+        string name
+        string dosage
+        string medication_type
+        string purpose
+        string route
+        int frequency_per_day
+        string medicine_time
+        time reminder_time
+        string food_instruction
+        int duration_days
+        date start_date
+        text notes
+    }
+
+    MedicationLog {
+        int id PK
+        int medication_id FK
+        date date
+        datetime logged_at
+    }
+
+    DoctorAssignment {
+        int id PK
+        int mother_id FK
+        int doctor_id FK
+        int assigned_by_id FK
+        bool is_active
+        datetime assigned_at
+    }
+
+    ChatMessage {
+        int id PK
+        int assignment_id FK
+        int sender_id FK
+        text text
+        bool is_read
+        datetime created_at
+    }
+
+    PersonalCheckIn {
+        int id PK
+        int user_id FK
+        text note
+        string image
+        datetime logged_at
+    }
+
+    DoctorQuestion {
+        int id PK
+        int user_id FK
+        string question
+        bool is_answered
+        datetime created_at
+    }
+
+    MoodEntry {
+        int id PK
+        int user_id FK
+        int score
+        json tags
+        string note
+        datetime logged_at
+    }
+
+    PsychometricTest {
+        int id PK
+        int user_id FK
+        string test_type
+        json answers
+        int total_score
+        string risk_level
+        datetime taken_at
+    }
+
+    TrimesterNarrativeCache {
+        int id PK
+        int user_id FK
+        int visit_count_at_generation
+        text narrative_text
+        json narrative_json
+        datetime generated_at
+    }
+
+    DailyWellnessLog {
+        int id PK
+        int user_id FK
+        date date
+        text personalized_text
+    }
+
+    WellnessTip {
+        int id PK
+        string code
+        string category
+        string trimester
+        text text
+        string source_name
+        json avoid_if_allergic_to
+        json avoid_if_condition
+        json avoid_if_diet
+        json only_if_condition
+        bool is_active
+    }
+
+    Recommendation {
+        int id PK
+        int user_id FK
+        text query
+        json retrieved_sources
+        text response_text
+        json structured_response
+        json safety_flags
+    }
+
+    MedicalReport {
+        int id PK
+        int user_id FK
+        string file
+        string status
+        text summary_text
+        json flagged_values
+    }
+
+    ForumPost {
+        int id PK
+        int author_id FK
+        string stage
+        string title
+        text body
+        string image
+        bool is_approved
+        datetime created_at
+    }
+
+    ForumComment {
+        int id PK
+        int post_id FK
+        int author_id FK
+        text body
+        datetime created_at
+    }
+          </pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Class Diagram Tab -->
+    <div id="class-diagram" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Logical Class Diagram</h2>
+          <span style="color: var(--text-muted); font-size: 14px;">Classes, attributes, properties, and methods</span>
+        </div>
+        <div class="diagram-container">
+          <pre class="mermaid">
+classDiagram
+    class User {
+        +Role role
+        +CharField phone_number
+        +CharField preferred_language
+        +is_hospital_staff() bool
+        +can_manage_staff() bool
+        +is_hospital_admin() bool
+    }
+
+    class HealthProfile {
+        +last_menstrual_period date
+        +expected_delivery_date date
+        +edd_is_manual_override bool
+        +current_gestational_week int
+        +latest_mood_score int
+        +latest_stress_level str
+        +blood_group str
+        +pre_existing_conditions text
+        +allergies json
+        +allergy_other str
+        +has_gestational_diabetes bool
+        +has_hypertension bool
+        +dietary_preference str
+        +height_cm decimal
+        +pre_pregnancy_weight_kg decimal
+        +previous_pregnancies_count int
+        +live_births_count int
+        +previous_complications json
+        +previous_complications_other str
+        +smokes bool
+        +drinks_alcohol bool
+        +recalculate_derived_dates() void
+        +weeks_until_due int
+        +is_first_pregnancy bool
+        +pre_pregnancy_bmi decimal
+        +recommended_weight_gain_range_kg tuple
+    }
+
+    class PrenatalVisit {
+        +FetalMovement fetal_movement
+        +UrineLevel urine_protein
+        +UrineLevel urine_glucose
+        +FetalPosition fetal_position
+        +Edema edema
+        +date visit_date
+        +int gestational_week
+        +decimal maternal_weight_kg
+        +str blood_pressure
+        +decimal fundal_height_cm
+        +int fetal_heart_rate_bpm
+        +text doctor_notes
+        +date next_visit_date
+        +save() void
+    }
+
+    class Medication {
+        +MedicationType medication_type
+        +Route route
+        +Time medicine_time
+        +FoodInstruction food_instruction
+        +str name
+        +str dosage
+        +str purpose
+        +int frequency_per_day
+        +time reminder_time
+        +int duration_days
+        +date start_date
+        +text notes
+        +end_date date
+        +is_active bool
+        +days_remaining int
+        +day_number int
+        +expected_doses_so_far int
+        +total_expected_doses int
+        +taken_doses_count int
+        +missed_doses int
+        +adherence_percent int
+        +status str
+    }
+
+    class MedicationLog {
+        +date date
+        +datetime logged_at
+    }
+
+    class DoctorAssignment {
+        +ForeignKey mother
+        +ForeignKey doctor
+        +ForeignKey assigned_by
+        +bool is_active
+        +datetime assigned_at
+    }
+
+    class ChatMessage {
+        +ForeignKey assignment
+        +ForeignKey sender
+        +text text
+        +bool is_read
+        +datetime created_at
+    }
+
+    class PersonalCheckIn {
+        +text note
+        +ImageField image
+        +datetime logged_at
+    }
+
+    class DoctorQuestion {
+        +str question
+        +bool is_answered
+        +datetime created_at
+    }
+
+    class WeeklyBabyFact {
+        +int start_week
+        +int end_week
+        +int trimester
+        +str title
+        +str size_comparison
+        +decimal average_length_cm
+        +int average_weight_g
+        +str image_name
+        +json baby_development
+        +json mother_changes
+        +json warning_signs
+        +text nutrition_tip
+        +text exercise_tip
+        +str weekly_milestone
+        +text fun_fact
+        +bool is_active
+    }
+
+    class MoodEntry {
+        +int score
+        +json tags
+        +str note
+        +datetime logged_at
+        +save() void
+        +tag_labels() list
+    }
+
+    class PsychometricTest {
+        +TestType test_type
+        +RiskLevel risk_level
+        +json answers
+        +int total_score
+        +datetime taken_at
+        +compute_risk_level() str
+        +save() void
+    }
+
+    class TrimesterNarrativeCache {
+        +int visit_count_at_generation
+        +text narrative_text
+        +json narrative_json
+        +datetime generated_at
+    }
+
+    class DailyWellnessLog {
+        +date date
+        +text personalized_text
+    }
+
+    class WellnessTip {
+        +Category category
+        +Trimester trimester
+        +str code
+        +text text
+        +str source_name
+        +json avoid_if_allergic_to
+        +json avoid_if_condition
+        +json avoid_if_diet
+        +json only_if_condition
+        +bool is_active
+    }
+
+    class Recommendation {
+        +str query
+        +json retrieved_sources
+        +str response_text
+        +json structured_response
+        +json safety_flags
+    }
+
+    class MedicalReport {
+        +Status status
+        +FileField file
+        +text summary_text
+        +json flagged_values
+    }
+
+    class ForumPost {
+        +Stage stage
+        +str title
+        +text body
+        +ImageField image
+        +bool is_approved
+        +datetime created_at
+    }
+
+    class ForumComment {
+        +text body
+        +datetime created_at
+    }
+
+    User "1" *-- "1" HealthProfile : user
+    User "1" *-- "1" TrimesterNarrativeCache : user
+    User "1" *-- "*" DailyWellnessLog : user
+    User "1" *-- "*" MoodEntry : user
+    User "1" *-- "*" PsychometricTest : user
+    User "1" *-- "*" Recommendation : user
+    User "1" *-- "*" MedicalReport : user
+    User "1" *-- "*" PersonalCheckIn : user
+    User "1" *-- "*" DoctorQuestion : user
+    User "1" *-- "*" ForumPost : author
+    User "1" *-- "*" ForumComment : author
+    User "1" *-- "*" PrenatalVisit : mother
+    User "1" *-- "*" PrenatalVisit : entered_by
+    User "1" *-- "*" Medication : mother
+    User "1" *-- "*" Medication : prescribed_by
+    User "1" *-- "*" DoctorAssignment : doctor_assignments (mother)
+    User "1" *-- "*" DoctorAssignment : assigned_mothers (doctor)
+    User "1" *-- "*" DoctorAssignment : assignments_made (assigned_by)
+    User "1" *-- "*" ChatMessage : messages_sent (sender)
+
+    PrenatalVisit "1" *-- "*" Medication : visit
+    Medication "1" *-- "*" MedicationLog : medication
+    ForumPost "1" *-- "*" ForumComment : post
+    DoctorAssignment "1" *-- "*" ChatMessage : assignment
+
+    DailyWellnessLog "*" *-- "*" WellnessTip : nutrition_tips
+    DailyWellnessLog "*" *-- "*" WellnessTip : mental_health_tips
+    DailyWellnessLog "*" *-- "*" WellnessTip : exercise_tips
+    DailyWellnessLog "*" *-- "*" WellnessTip : precaution_tips
+          </pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Raw Code Tab -->
+    <div id="raw-code" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Mermaid Schema Specifications</h2>
+          <button class="action-btn" style="padding: 6px 12px; font-size: 12px;" onclick="copyMermaidCode()">Copy Code</button>
+        </div>
+        <p style="color: var(--text-muted); margin-top: -10px; margin-bottom: 20px; font-size: 14px;">Copy this code to paste into any Mermaid-compatible editor (like GitHub Markdown or Mermaid Live Editor).</p>
+        <pre class="code-block" id="raw-mermaid-pre">
+# Paste the code here...
+        </pre>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Meri Aama Schema Visualizer | Generated dynamically from Django project configurations.</p>
+  </footer>
+
+  <!-- Mermaid JS ESM Loader -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    
+    // Set mermaid configs
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        background: '#0d131f',
+        primaryColor: '#6366f1',
+        primaryTextColor: '#f8fafc',
+        lineColor: '#232d42',
+        secondaryColor: '#ec4899',
+        tertiaryColor: '#121824'
+      }
+    });
+
+    // Make switchTab available globally
+    window.switchTab = function(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+
+      if (tabId === 'raw-code') {
+        loadRawCode();
+      }
+    }
+
+    function loadRawCode() {
+      // Fetch currently active diagram type code
+      const erCode = document.querySelector('#er-diagram pre.mermaid').textContent.trim();
+      const classCode = document.querySelector('#class-diagram pre.mermaid').textContent.trim();
+      
+      const combined = `%% === ENTITY RELATIONSHIP DIAGRAM === %%\n${erCode}\n\n\n%% === CLASS DIAGRAM === %%\n${classCode}`;
+      document.getElementById('raw-mermaid-pre').textContent = combined;
+    }
+
+    window.copyMermaidCode = function() {
+      const codeText = document.getElementById('raw-mermaid-pre').textContent;
+      navigator.clipboard.writeText(codeText).then(() => {
+        alert('Mermaid specifications copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+  </script>
+</body>
+</html>
