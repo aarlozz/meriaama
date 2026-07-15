@@ -1,7 +1,4 @@
-"""
-Extract text from an uploaded PDF with pdfplumber, then ask Groq to
-summarize in plain language and flag abnormal values.
-"""
+# apps/pdf_insight/pdf_summarizer.py
 import json
 import pdfplumber
 from apps.wellness_rag.groq_client import get_client
@@ -27,8 +24,8 @@ def extract_text_from_pdf(file_path):
     return "\n".join(text_parts)
 
 
-def summarize_report(file_path):
-    raw_text = extract_text_from_pdf(file_path)
+def summarize_report(raw_text):
+    """Now takes already-extracted text, instead of re-reading the file."""
     if not raw_text.strip():
         return {"summary": "Could not extract readable text from this PDF.", "flagged_values": []}
 
