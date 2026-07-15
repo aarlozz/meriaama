@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "apps.trimester_analysis",
     "apps.pregnancy_dashboard",
     "apps.insights",
+    "apps.doctor_chat",
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.doctor_chat.context_processors.unread_chat_count",
             ],
         },
     },
