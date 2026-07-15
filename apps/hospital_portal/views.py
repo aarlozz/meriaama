@@ -38,9 +38,12 @@ def hospital_admin_required(view_func):
 def staff_dashboard(request):
     """
     GET /hospital/ -- search mothers by username or phone number.
-    Admins additionally see a pending-approvals count and a full mother list
-    by default (not just search results).
+    Doctors are redirected straight to their patient list instead --
+    this view's search/approval tools are for data entry and admin.
     """
+    if request.user.role == User.Role.DOCTOR:
+        return redirect("doctor-dashboard")
+
     query = request.GET.get("q", "").strip()
     if query:
         results = User.objects.filter(role=User.Role.MOTHER).filter(
@@ -54,7 +57,7 @@ def staff_dashboard(request):
     pending_count = 0
     if request.user.is_hospital_admin():
         pending_count = User.objects.filter(
-            role__in=[User.Role.DATA_ENTRY],
+            role__in=[User.Role.DATA_ENTRY, User.Role.DOCTOR],
             is_active=False,
         ).count()
 
@@ -138,7 +141,7 @@ def add_visit(request, mother_id):
 def staff_approvals(request):
     """GET /hospital/approvals/ -- list pending staff accounts for admin to approve/reject."""
     pending = User.objects.filter(
-        role__in=[User.Role.DATA_ENTRY],
+        role__in=[User.Role.DATA_ENTRY, User.Role.DOCTOR],
         is_active=False,
     )
     return render(request, "hospital_portal/approvals.html", {"pending": pending})
