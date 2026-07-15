@@ -31,16 +31,23 @@ class MotherRegisterForm(UserCreationForm):
 
 class StaffRegisterForm(UserCreationForm):
     """
-    Public staff sign-up form. Only creates Data Entry Operator accounts --
-    doctor/nurse accounts are created by an admin directly (via /admin/ or
-    a future admin-side "add staff" form), not through public self-registration.
-    Creates an INACTIVE account pending admin approval either way.
+    Public staff sign-up form. Lets the registrant choose Doctor or Data
+    Entry Operator. Always creates an INACTIVE account pending admin
+    approval, regardless of which role is chosen -- so a doctor account
+    can't be used to log in until someone with admin rights approves it.
     """
     phone_number = forms.CharField(required=False, max_length=20)
+    role = forms.ChoiceField(
+        choices=[
+            (User.Role.DOCTOR, "Doctor"),
+            (User.Role.DATA_ENTRY, "Data Entry Operator"),
+        ],
+        label="I am registering as a",
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ["username", "phone_number"]
+        fields = ["username", "phone_number", "role"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -49,8 +56,8 @@ class StaffRegisterForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.role = User.Role.DATA_ENTRY
-        user.is_active = False  # pending admin approval
+        user.role = self.cleaned_data["role"]
+        user.is_active = False  # pending admin approval either way
         if commit:
             user.save()
         return user
