@@ -1,6 +1,7 @@
+from datetime import date, timedelta
+
 from django.conf import settings
 from django.db import models
-from datetime import date, timedelta
 
 
 class HealthProfile(models.Model):
@@ -26,6 +27,10 @@ class HealthProfile(models.Model):
     ]
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="health_profile")
+
+    # NEW -- powers age-risk flagging in anc_clinical.flag_engine
+    # (< AGE_RISK_MIN = teenage pregnancy, >= AGE_RISK_MAX = advanced maternal age)
+    date_of_birth = models.DateField(null=True, blank=True)
 
     last_menstrual_period = models.DateField(null=True, blank=True)
     expected_delivery_date = models.DateField(null=True, blank=True)
@@ -54,7 +59,6 @@ class HealthProfile(models.Model):
 
     # NEW -- power the weight-gain tracker and postpartum mode
     pre_pregnancy_weight_kg = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -74,6 +78,16 @@ class HealthProfile(models.Model):
         self.save(update_fields=update_fields)
 
     @property
+    def age(self):
+        if not self.date_of_birth:
+            return None
+        today = date.today()
+        years = today.year - self.date_of_birth.year
+        if (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day):
+            years -= 1
+        return years
+
+    @property
     def weeks_until_due(self):
         if not self.expected_delivery_date:
             return None
@@ -84,7 +98,6 @@ class HealthProfile(models.Model):
     def is_first_pregnancy(self):
         return self.previous_pregnancies_count == 0
 
-    
     @property
     def pre_pregnancy_bmi(self):
         if not self.height_cm or not self.pre_pregnancy_weight_kg:
