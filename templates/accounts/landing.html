@@ -1,34 +1,1394 @@
 {% extends "base.html" %}
-{% block title %}Meri Aama{% endblock %}
+{% load static %}
+
+{% block title %}Meri Aama | AI-Powered Pregnancy Care{% endblock %}
+
 {% block content %}
-<div class="text-center mb-10">
-    <h1 class="text-3xl font-bold text-rose-700 mb-2">Meri Aama</h1>
-    <p class="text-gray-600">Supporting mothers through every stage of pregnancy.</p>
-</div>
 
-<div class="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-    <div class="bg-white p-6 rounded-lg shadow text-center">
-        <div class="text-4xl mb-3">🤰</div>
-        <h2 class="text-lg font-semibold text-rose-700 mb-1">I'm a Mother</h2>
-        <p class="text-sm text-gray-600 mb-4">Track your pregnancy, mood, and wellness.</p>
-        <a href="{% url 'login' %}" class="block bg-rose-600 text-white rounded px-4 py-2 font-medium hover:bg-rose-700 mb-2">
-            Log in
-        </a>
-        <a href="{% url 'register-page' %}" class="block text-sm text-rose-600 hover:underline">
-            Create an account
-        </a>
+<div class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-sky-50">
+
+    <!-- ========================================= -->
+    <!-- Navigation -->
+    <!-- ========================================= -->
+
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-rose-100">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
+
+            <!-- Logo -->
+
+            <a href="{% url 'landing' %}" class="flex items-center gap-4">
+
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 shadow-lg">
+
+                    <i data-lucide="heart-handshake" class="h-7 w-7 text-white"></i>
+
+                </div>
+
+                <div>
+
+                    <h1 class="text-2xl font-black text-gray-900">
+
+                        Meri Aama
+
+                    </h1>
+
+                    <p class="-mt-1 text-sm text-gray-500">
+
+                        AI Pregnancy Companion
+
+                    </p>
+
+                </div>
+
+            </a>
+
+
+
+            <!-- Navigation Links -->
+
+            <nav class="hidden items-center gap-10 lg:flex">
+
+                <a href="#features"
+                    class="font-medium text-gray-600 transition hover:text-rose-600">
+
+                    Features
+
+                </a>
+
+                <a href="#how-it-works"
+                    class="font-medium text-gray-600 transition hover:text-rose-600">
+
+                    How It Works
+
+                </a>
+
+                <a href="#about"
+                    class="font-medium text-gray-600 transition hover:text-rose-600">
+
+                    About
+
+                </a>
+
+                <a href="#contact"
+                    class="font-medium text-gray-600 transition hover:text-rose-600">
+
+                    Contact
+
+                </a>
+
+            </nav>
+
+
+
+            <!-- Right Buttons -->
+
+<div class="flex items-center gap-4">
+
+    <!-- ================= Login Dropdown ================= -->
+
+    <div class="relative group">
+
+        <button
+            class="flex items-center gap-2 rounded-xl border border-rose-200 bg-white px-6 py-3 font-semibold text-gray-700 transition hover:bg-rose-50">
+
+            Login
+
+            <i data-lucide="chevron-down" class="h-4 w-4"></i>
+
+        </button>
+
+        <!-- Dropdown -->
+
+        <div class="absolute right-0 top-full pt-2">
+            <div class="hidden w-64 rounded-2xl bg-white shadow-2xl group-hover:block">
+            <a href="{% url 'login' %}"
+                class="flex items-center gap-3 px-5 py-4 transition hover:bg-rose-50">
+
+                <i data-lucide="heart" class="h-5 w-5 text-rose-500"></i>
+
+                <div>
+
+                    <p class="font-semibold">
+
+                        Mother Login
+
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+
+                        Continue as Mother
+
+                    </p>
+
+                </div>
+
+            </a>
+
+            <a href="{% url 'staff-login' %}"
+                class="flex items-center gap-3 border-t px-5 py-4 transition hover:bg-blue-50">
+
+                <i data-lucide="hospital" class="h-5 w-5 text-blue-500"></i>
+
+                <div>
+
+                    <p class="font-semibold">
+
+                        Hospital Login
+
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+
+                        Continue as Hospital
+
+                    </p>
+
+                </div>
+
+            </a>
+            </div>
+        </div>
+
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow text-center">
-        <div class="text-4xl mb-3">🏥</div>
-        <h2 class="text-lg font-semibold text-gray-700 mb-1">Hospital Staff</h2>
-        <p class="text-sm text-gray-600 mb-4">Manage patient records and checkups.</p>
-        <a href="{% url 'staff-login' %}" class="block bg-gray-700 text-white rounded px-4 py-2 font-medium hover:bg-gray-800 mb-2">
-            Log in
-        </a>
-        <a href="{% url 'staff-register' %}" class="block text-sm text-gray-600 hover:underline">
-            Register as staff
-        </a>
+
+
+    <!-- ================= Register Dropdown ================= -->
+
+    <div class="relative group">
+
+        <button
+            class="flex items-center gap-2 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 px-6 py-3 font-semibold text-white shadow-lg transition hover:scale-105 ">
+
+            Get Started
+
+            <i data-lucide="chevron-down" class="h-4 w-4"></i>
+
+        </button>
+
+        <!-- Dropdown -->
+
+        <div class="absolute right-0 top-full pt-2">
+    <div class="hidden w-64 rounded-2xl bg-white shadow-2xl group-hover:block">
+
+            <a href="{% url 'register-page' %}"
+                class="flex items-center gap-3 px-5 py-4 transition hover:bg-rose-50">
+
+                <i data-lucide="heart" class="h-5 w-5 text-rose-500"></i>
+
+                <div>
+
+                    <p class="font-semibold">
+
+                        Mother Registration
+
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+
+                        Create Mother Account
+
+                    </p>
+
+                </div>
+
+            </a>
+
+            <a href="{% url 'staff-register' %}"
+                class="flex items-center gap-3 border-t px-5 py-4 transition hover:bg-blue-50">
+
+                <i data-lucide="hospital" class="h-5 w-5 text-blue-500"></i>
+
+                <div>
+
+                    <p class="font-semibold">
+
+                        Hospital Registration
+
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+
+                        Register Healthcare Facility
+
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
     </div>
+
 </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ========================================= -->
+    <!-- Hero Section Starts Here -->
+    <!-- ========================================= -->
+
+    <!-- ========================================= -->
+<!-- Statistics -->
+<!-- ========================================= -->
+
+<section class="mx-auto max-w-7xl px-8 py-10">
+
+    <div
+        class="grid gap-6 rounded-[40px] bg-white p-10 shadow-xl md:grid-cols-2 xl:grid-cols-4">
+
+        <!-- Mothers -->
+
+        <div class="text-center">
+
+            <div
+                class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-100">
+
+                <i data-lucide="users" class="h-8 w-8 text-rose-600"></i>
+
+            </div>
+
+            <h2 class="mt-6 text-5xl font-black text-gray-900">
+
+                5K+
+
+            </h2>
+
+            <p class="mt-3 text-gray-500">
+
+                Mothers Supported
+
+            </p>
+
+        </div>
+
+
+
+        <!-- AI -->
+
+        <div class="text-center">
+
+            <div
+                class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100">
+
+                <i data-lucide="bot" class="h-8 w-8 text-sky-600"></i>
+
+            </div>
+
+            <h2 class="mt-6 text-5xl font-black text-gray-900">
+
+                24/7
+
+            </h2>
+
+            <p class="mt-3 text-gray-500">
+
+                AI Assistance
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Hospitals -->
+
+        <div class="text-center">
+
+            <div
+                class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100">
+
+                <i data-lucide="hospital" class="h-8 w-8 text-emerald-600"></i>
+
+            </div>
+
+            <h2 class="mt-6 text-5xl font-black text-gray-900">
+
+                100+
+
+            </h2>
+
+            <p class="mt-3 text-gray-500">
+
+                Healthcare Partners
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Accuracy -->
+
+        <div class="text-center">
+
+            <div
+                class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100">
+
+                <i data-lucide="heart-pulse"
+                    class="h-8 w-8 text-amber-600"></i>
+
+            </div>
+
+            <h2 class="mt-6 text-5xl font-black text-gray-900">
+
+                98%
+
+            </h2>
+
+            <p class="mt-3 text-gray-500">
+
+                Health Monitoring
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ========================================= -->
+<!-- Features -->
+<!-- ========================================= -->
+
+<section id="features" class="mx-auto max-w-7xl px-8 py-24">
+
+    <!-- Section Heading -->
+
+    <div class="mx-auto max-w-3xl text-center">
+
+        <span
+            class="inline-flex items-center gap-2 rounded-full bg-rose-100 px-5 py-2 text-sm font-semibold text-rose-600">
+
+            <i data-lucide="sparkles" class="h-4 w-4"></i>
+
+            Everything You Need
+
+        </span>
+
+        <h2 class="mt-6 text-5xl font-black text-gray-900">
+
+            Designed for Every Stage
+            <span class="text-rose-500">of Pregnancy</span>
+
+        </h2>
+
+        <p class="mt-6 text-lg leading-8 text-gray-500">
+
+            Meri Aama combines pregnancy tracking, AI guidance,
+            wellness monitoring, and healthcare support into one
+            intelligent platform.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- Feature Cards -->
+
+    <div class="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+
+        <!-- Card 1 -->
+
+        <div
+            class="group rounded-[32px] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-3 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-100">
+
+                <i data-lucide="heart-pulse"
+                    class="h-8 w-8 text-rose-600"></i>
+
+            </div>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Health Profile
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-gray-500">
+
+                Store pregnancy information, medical history,
+                allergies, blood group, and important health records.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Card 2 -->
+
+        <div
+            class="group rounded-[32px] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-3 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-pink-100">
+
+                <i data-lucide="baby"
+                    class="h-8 w-8 text-pink-600"></i>
+
+            </div>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Pregnancy Tracker
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-gray-500">
+
+                Track pregnancy week, baby's growth,
+                milestones, and expected due date.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Card 3 -->
+
+        <div
+            class="group rounded-[32px] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-3 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-100">
+
+                <i data-lucide="brain"
+                    class="h-8 w-8 text-purple-600"></i>
+
+            </div>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Psychometric Test
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-gray-500">
+
+                Assess stress, anxiety, and emotional wellbeing
+                with scientifically designed questionnaires.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Card 4 -->
+
+        <div
+            class="group rounded-[32px] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-3 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100">
+
+                <i data-lucide="pill"
+                    class="h-8 w-8 text-blue-600"></i>
+
+            </div>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Medicine Reminder
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-gray-500">
+
+                Never miss your medicines with smart reminders
+                and daily schedules.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Card 5 -->
+
+        <div
+            class="group rounded-[32px] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-3 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100">
+
+                <i data-lucide="hospital"
+                    class="h-8 w-8 text-green-600"></i>
+
+            </div>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Hospital Finder
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-gray-500">
+
+                Locate nearby hospitals, maternity centers,
+                and emergency healthcare facilities.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Card 6 -->
+
+        <div
+            class="group rounded-[32px] bg-gradient-to-br from-rose-500 to-pink-500 p-8 text-white shadow-xl transition duration-300 hover:-translate-y-3 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
+
+                <i data-lucide="bot"
+                    class="h-8 w-8"></i>
+
+            </div>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                AI Assistant
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-rose-100">
+
+                Ask pregnancy questions anytime and receive
+                personalized guidance powered by AI.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ========================================= -->
+<!-- How It Works -->
+<!-- ========================================= -->
+
+<section id="how-it-works" class="mx-auto max-w-7xl px-8 py-24">
+
+    <!-- Heading -->
+
+    <div class="mx-auto max-w-3xl text-center">
+
+        <span
+            class="inline-flex items-center gap-2 rounded-full bg-sky-100 px-5 py-2 text-sm font-semibold text-sky-600">
+
+            <i data-lucide="workflow" class="h-4 w-4"></i>
+
+            Simple & Easy
+
+        </span>
+
+        <h2 class="mt-6 text-5xl font-black text-gray-900">
+
+            How
+            <span class="text-rose-500">
+                Meri Aama
+            </span>
+            Works
+
+        </h2>
+
+        <p class="mt-6 text-lg leading-8 text-gray-500">
+
+            Get started in just a few simple steps and receive
+            personalized pregnancy care throughout your journey.
+
+        </p>
+
+    </div>
+
+
+    <!-- Timeline -->
+
+    <div class="mt-20 grid gap-8 lg:grid-cols-4">
+
+        <!-- Step 1 -->
+
+        <div
+            class="relative rounded-[30px] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-100">
+
+                <i data-lucide="user-plus"
+                    class="h-8 w-8 text-rose-600"></i>
+
+            </div>
+
+            <span
+                class="absolute right-6 top-6 rounded-full bg-rose-500 px-3 py-1 text-xs font-bold text-white">
+
+                STEP 01
+
+            </span>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Create Account
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-gray-500">
+
+                Register securely and create your personal
+                pregnancy profile.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Step 2 -->
+
+        <div
+            class="relative rounded-[30px] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100">
+
+                <i data-lucide="clipboard-list"
+                    class="h-8 w-8 text-blue-600"></i>
+
+            </div>
+
+            <span
+                class="absolute right-6 top-6 rounded-full bg-blue-500 px-3 py-1 text-xs font-bold text-white">
+
+                STEP 02
+
+            </span>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Complete Profile
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-gray-500">
+
+                Fill in your health information,
+                pregnancy details, and medical history.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Step 3 -->
+
+        <div
+            class="relative rounded-[30px] bg-white p-8 shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100">
+
+                <i data-lucide="activity"
+                    class="h-8 w-8 text-green-600"></i>
+
+            </div>
+
+            <span
+                class="absolute right-6 top-6 rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">
+
+                STEP 03
+
+            </span>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Track Your Health
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-gray-500">
+
+                Monitor your pregnancy progress,
+                daily wellness, medicines, and appointments.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- Step 4 -->
+
+        <div
+            class="relative rounded-[30px] bg-gradient-to-br from-rose-500 to-pink-500 p-8 text-white shadow-xl transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+
+            <div
+                class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
+
+                <i data-lucide="bot"
+                    class="h-8 w-8"></i>
+
+            </div>
+
+            <span
+                class="absolute right-6 top-6 rounded-full bg-white/20 px-3 py-1 text-xs font-bold">
+
+                STEP 04
+
+            </span>
+
+            <h3 class="mt-8 text-2xl font-bold">
+
+                Receive AI Guidance
+
+            </h3>
+
+            <p class="mt-4 leading-7 text-rose-100">
+
+                Get intelligent recommendations,
+                health insights, reminders,
+                and pregnancy support whenever you need it.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ========================================= -->
+<!-- Why Choose Meri Aama -->
+<!-- ========================================= -->
+
+<section id="about" class="mx-auto max-w-7xl px-8 py-24">
+
+    <div class="grid items-center gap-16 lg:grid-cols-2">
+
+        <!-- ================================= -->
+        <!-- Left Illustration -->
+        <!-- ================================= -->
+
+        <div class="relative">
+
+            <div class="rounded-[40px] bg-gradient-to-br from-rose-500 via-pink-500 to-rose-400 p-10 shadow-2xl">
+
+                <div class="rounded-[32px] bg-white/15 backdrop-blur-md p-10">
+
+                    <div class="flex justify-center">
+
+                        <div
+                            class="flex h-28 w-28 items-center justify-center rounded-full bg-white">
+
+                            <i data-lucide="heart-handshake"
+                                class="h-14 w-14 text-rose-500"></i>
+
+                        </div>
+
+                    </div>
+
+                    <h3 class="mt-8 text-center text-4xl font-bold text-white">
+
+                        Caring for Mothers,
+                        Every Day.
+
+                    </h3>
+
+                    <p class="mt-6 text-center leading-8 text-rose-100">
+
+                        Combining technology, healthcare,
+                        and artificial intelligence to provide
+                        personalized pregnancy support from
+                        the first trimester until delivery.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================= -->
+        <!-- Right Content -->
+        <!-- ================================= -->
+
+        <div>
+
+            <span
+                class="inline-flex items-center gap-2 rounded-full bg-rose-100 px-5 py-2 text-sm font-semibold text-rose-600">
+
+                <i data-lucide="badge-check" class="h-4 w-4"></i>
+
+                Why Choose Us
+
+            </span>
+
+            <h2 class="mt-6 text-5xl font-black text-gray-900">
+
+                Everything You Need
+
+                <span class="text-rose-500">
+
+                    in One Platform
+
+                </span>
+
+            </h2>
+
+            <p class="mt-6 text-lg leading-8 text-gray-500">
+
+                Meri Aama simplifies pregnancy care by bringing
+                health tracking, AI guidance, appointments,
+                wellness monitoring, and healthcare resources
+                together in one secure platform.
+
+            </p>
+
+
+
+            <div class="mt-10 grid gap-6">
+
+                <!-- Item -->
+
+                <div class="flex items-start gap-5">
+
+                    <div
+                        class="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100">
+
+                        <i data-lucide="shield-check"
+                            class="h-7 w-7 text-green-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="text-xl font-bold">
+
+                            Secure Health Records
+
+                        </h4>
+
+                        <p class="mt-2 text-gray-500">
+
+                            Your pregnancy and medical data
+                            remain safe and accessible whenever needed.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="flex items-start gap-5">
+
+                    <div
+                        class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100">
+
+                        <i data-lucide="bot"
+                            class="h-7 w-7 text-blue-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="text-xl font-bold">
+
+                            AI Pregnancy Assistant
+
+                        </h4>
+
+                        <p class="mt-2 text-gray-500">
+
+                            Get intelligent recommendations
+                            and answers to pregnancy-related questions.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="flex items-start gap-5">
+
+                    <div
+                        class="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100">
+
+                        <i data-lucide="brain"
+                            class="h-7 w-7 text-purple-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="text-xl font-bold">
+
+                            Mental Wellness Monitoring
+
+                        </h4>
+
+                        <p class="mt-2 text-gray-500">
+
+                            Regular psychometric assessments
+                            help monitor emotional wellbeing.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="flex items-start gap-5">
+
+                    <div
+                        class="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100">
+
+                        <i data-lucide="bell-ring"
+                            class="h-7 w-7 text-amber-600"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="text-xl font-bold">
+
+                            Smart Reminders
+
+                        </h4>
+
+                        <p class="mt-2 text-gray-500">
+
+                            Never miss medicines,
+                            appointments, or wellness activities.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ========================================= -->
+<!-- Call To Action -->
+<!-- ========================================= -->
+
+<section class="mx-auto max-w-7xl px-8 py-24">
+
+    <div
+        class="relative overflow-hidden rounded-[40px] bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 px-10 py-20 text-center shadow-2xl">
+
+        <!-- Decorative Circles -->
+
+        <div
+            class="absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/10 blur-3xl"></div>
+
+        <div
+            class="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
+
+        <!-- Content -->
+
+        <span
+            class="inline-flex items-center gap-2 rounded-full bg-white/20 px-5 py-2 text-sm font-semibold text-white">
+
+            <i data-lucide="sparkles" class="h-4 w-4"></i>
+
+            Start Today
+
+        </span>
+
+        <h2 class="mt-8 text-5xl font-black text-white lg:text-6xl">
+
+            Your Pregnancy Journey
+
+            <br>
+
+            Starts Here.
+
+        </h2>
+
+        <p
+            class="mx-auto mt-8 max-w-3xl text-xl leading-9 text-rose-100">
+
+            Join Meri Aama today and experience personalized pregnancy
+            care, AI-powered guidance, health tracking, medicine reminders,
+            psychometric assessments, and much more—all in one platform.
+
+        </p>
+
+        <!-- Buttons -->
+
+        <div class="mt-12 flex flex-wrap justify-center gap-5">
+
+            <a href="#"
+                class="rounded-2xl bg-white px-8 py-4 font-semibold text-rose-600 shadow-lg transition hover:-translate-y-1 hover:shadow-xl">
+
+                Create Free Account
+
+            </a>
+
+            <a href="#"
+                class="rounded-2xl border border-white/30 bg-white/10 px-8 py-4 font-semibold text-white backdrop-blur transition hover:bg-white/20">
+
+                Login
+
+            </a>
+
+        </div>
+
+
+
+        <!-- Highlights -->
+
+        <div
+            class="mt-14 grid gap-6 text-left md:grid-cols-3">
+
+            <div
+                class="rounded-2xl bg-white/10 p-6 backdrop-blur">
+
+                <i data-lucide="brain"
+                    class="mb-4 h-8 w-8 text-white"></i>
+
+                <h4 class="text-lg font-bold text-white">
+
+                    AI Assistance
+
+                </h4>
+
+                <p class="mt-2 text-sm text-rose-100">
+
+                    Intelligent pregnancy support whenever you need it.
+
+                </p>
+
+            </div>
+
+            <div
+                class="rounded-2xl bg-white/10 p-6 backdrop-blur">
+
+                <i data-lucide="heart-pulse"
+                    class="mb-4 h-8 w-8 text-white"></i>
+
+                <h4 class="text-lg font-bold text-white">
+
+                    Health Monitoring
+
+                </h4>
+
+                <p class="mt-2 text-sm text-rose-100">
+
+                    Track your wellbeing throughout every trimester.
+
+                </p>
+
+            </div>
+
+            <div
+                class="rounded-2xl bg-white/10 p-6 backdrop-blur">
+
+                <i data-lucide="hospital"
+                    class="mb-4 h-8 w-8 text-white"></i>
+
+                <h4 class="text-lg font-bold text-white">
+
+                    Healthcare Support
+
+                </h4>
+
+                <p class="mt-2 text-sm text-rose-100">
+
+                    Connect with trusted hospitals and healthcare providers.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ========================================= -->
+<!-- Footer -->
+<!-- ========================================= -->
+
+<footer id="contact" class="bg-slate-900 text-white">
+
+    <div class="mx-auto max-w-7xl px-8 py-20">
+
+        <div class="grid gap-14 lg:grid-cols-4">
+
+            <!-- ================================= -->
+            <!-- Brand -->
+            <!-- ================================= -->
+
+            <div>
+
+                <div class="flex items-center gap-4">
+
+                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500">
+
+                        <i data-lucide="heart-handshake"
+                           class="h-7 w-7 text-white"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-2xl font-black">
+
+                            Meri Aama
+
+                        </h2>
+
+                        <p class="text-sm text-slate-400">
+
+                            AI Pregnancy Companion
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <p class="mt-8 leading-8 text-slate-400">
+
+                    Empowering mothers through intelligent
+                    pregnancy care, personalized wellness tracking,
+                    mental health support, and AI-powered healthcare
+                    guidance.
+
+                </p>
+
+                <div class="mt-8 flex gap-4">
+
+                    <a href="#"
+                       class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 transition hover:bg-rose-500">
+
+                        <i data-lucide="facebook"
+                           class="h-5 w-5"></i>
+
+                    </a>
+
+                    <a href="#"
+                       class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 transition hover:bg-sky-500">
+
+                        <i data-lucide="linkedin"
+                           class="h-5 w-5"></i>
+
+                    </a>
+
+                    <a href="#"
+                       class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 transition hover:bg-gray-700">
+
+                        <i data-lucide="github"
+                           class="h-5 w-5"></i>
+
+                    </a>
+
+                    <a href="#"
+                       class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 transition hover:bg-pink-500">
+
+                        <i data-lucide="instagram"
+                           class="h-5 w-5"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================= -->
+            <!-- Quick Links -->
+            <!-- ================================= -->
+
+            <div>
+
+                <h3 class="text-xl font-bold">
+
+                    Quick Links
+
+                </h3>
+
+                <ul class="mt-8 space-y-4">
+
+                    <li><a href="#" class="text-slate-400 transition hover:text-white">Home</a></li>
+
+                    <li><a href="#features" class="text-slate-400 transition hover:text-white">Features</a></li>
+
+                    <li><a href="#how-it-works" class="text-slate-400 transition hover:text-white">How It Works</a></li>
+
+                    <li><a href="#about" class="text-slate-400 transition hover:text-white">About Us</a></li>
+
+                    <li><a href="#" class="text-slate-400 transition hover:text-white">Login</a></li>
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- ================================= -->
+            <!-- Features -->
+            <!-- ================================= -->
+
+            <div>
+
+                <h3 class="text-xl font-bold">
+
+                    Platform
+
+                </h3>
+
+                <ul class="mt-8 space-y-4">
+
+                    <li class="text-slate-400">Pregnancy Tracker</li>
+
+                    <li class="text-slate-400">AI Assistant</li>
+
+                    <li class="text-slate-400">Psychometric Test</li>
+
+                    <li class="text-slate-400">Medicine Reminder</li>
+
+                    <li class="text-slate-400">Hospital Finder</li>
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- ================================= -->
+            <!-- Contact -->
+            <!-- ================================= -->
+
+            <div>
+
+                <h3 class="text-xl font-bold">
+
+                    Contact
+
+                </h3>
+
+                <div class="mt-8 space-y-6">
+
+                    <div class="flex items-start gap-4">
+
+                        <i data-lucide="map-pin"
+                           class="mt-1 h-5 w-5 text-rose-400"></i>
+
+                        <p class="text-slate-400">
+
+                            Kathmandu, Nepal
+
+                        </p>
+
+                    </div>
+
+                    <div class="flex items-start gap-4">
+
+                        <i data-lucide="mail"
+                           class="mt-1 h-5 w-5 text-rose-400"></i>
+
+                        <p class="text-slate-400">
+
+                            support@meriaama.com
+
+                        </p>
+
+                    </div>
+
+                    <div class="flex items-start gap-4">
+
+                        <i data-lucide="phone"
+                           class="mt-1 h-5 w-5 text-rose-400"></i>
+
+                        <p class="text-slate-400">
+
+                            +977-XXXXXXXXXX
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Bottom -->
+
+        <div class="mt-16 border-t border-slate-800 pt-8">
+
+            <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
+
+                <p class="text-sm text-slate-500">
+
+                    © 2026 Meri Aama. All rights reserved.
+
+                </p>
+
+                <div class="flex gap-8">
+
+                    <a href="#" class="text-sm text-slate-500 transition hover:text-white">
+
+                        Privacy Policy
+
+                    </a>
+
+                    <a href="#" class="text-sm text-slate-500 transition hover:text-white">
+
+                        Terms & Conditions
+
+                    </a>
+
+                    <a href="#" class="text-sm text-slate-500 transition hover:text-white">
+
+                        Cookies
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+</div>
+
 {% endblock %}
+
