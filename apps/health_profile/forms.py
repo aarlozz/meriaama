@@ -21,6 +21,7 @@ class HealthProfileForm(forms.ModelForm):
     class Meta:
         model = HealthProfile
         fields = [
+            "date_of_birth",
             "last_menstrual_period", "expected_delivery_date", "edd_is_manual_override",
             "previous_pregnancies_count", "live_births_count",
             "previous_complications", "previous_complications_other",
@@ -31,6 +32,7 @@ class HealthProfileForm(forms.ModelForm):
             "height_cm", "pre_pregnancy_weight_kg", "blood_group",
         ]
         labels = {
+            "date_of_birth":"Date of birth",
             "last_menstrual_period": "First day of your last period",
             "expected_delivery_date": "Your due date",
             "edd_is_manual_override": "My doctor gave me a different due date",
@@ -58,6 +60,12 @@ class HealthProfileForm(forms.ModelForm):
             "pre_pregnancy_weight_kg": "If you know it -- used to show you a healthy weight-gain range for your pregnancy.",
         }
         widgets = {
+            "date_of_birth": forms.DateInput(
+    attrs={
+        "type": "date",
+        "class": "hp-input"
+    }
+),
             "last_menstrual_period": forms.DateInput(attrs={"type": "date", "class": "hp-input"}),
             "expected_delivery_date": forms.DateInput(attrs={"type": "date", "id": "id_expected_delivery_date", "class": "hp-input"}),
             "edd_is_manual_override": forms.CheckboxInput(attrs={"id": "id_edd_override", "class": "hp-checkbox"}),
