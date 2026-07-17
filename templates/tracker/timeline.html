@@ -234,13 +234,60 @@
         <div class="p-6 space-y-3">
             {% for item in timeline %}
                 {% if item.type == 'visit' %}
-                <div class="flex gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4">
-                    <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shrink-0">🏥</div>
+                <div class="flex gap-3 rounded-xl border {% if item.obj.is_flagged %}border-red-200 bg-red-50{% else %}border-blue-100 bg-blue-50{% endif %} p-4">
+                    <div class="w-10 h-10 rounded-full {% if item.obj.is_flagged %}bg-red-500{% else %}bg-blue-500{% endif %} text-white flex items-center justify-center shrink-0">🏥</div>
                     <div class="flex-1">
-                        <div class="flex justify-between"><p class="font-semibold text-gray-800">Prenatal Visit</p><span class="text-sm text-gray-500">{{ item.date|date:"M d, Y" }}</span></div>
-                        {% if item.obj.maternal_weight_kg %}<p class="text-sm text-gray-600">Weight: {{ item.obj.maternal_weight_kg }} kg</p>{% endif %}
+                        <div class="flex justify-between items-start">
+                            <p class="font-semibold text-gray-800">
+                                Prenatal Visit -- Week {{ item.obj.gestational_week|default:"—" }}
+                                {% if item.obj.is_flagged %}
+                                    <span class="ml-2 text-xs font-semibold text-red-600 bg-red-100 rounded-full px-2 py-0.5">Needs attention</span>
+                                {% endif %}
+                            </p>
+                            <span class="text-sm text-gray-500">{{ item.date|date:"M d, Y" }}</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-x-4 text-sm text-gray-600 mt-1">
+                            {% if item.obj.maternal_weight_kg %}<span>Weight: {{ item.obj.maternal_weight_kg }} kg</span>{% endif %}
+                            {% if item.obj.blood_pressure %}<span>BP: {{ item.obj.blood_pressure }}</span>{% endif %}
+                        </div>
+
+                        {% if item.obj.is_flagged and item.obj.flag_reasons %}
+                        <div class="mt-2 rounded-lg bg-red-100 p-2">
+                            <ul class="text-sm text-red-700 list-disc list-inside">
+                                {% for reason in item.obj.flag_reasons %}
+                                    <li>{{ reason.reason }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        {% if item.obj.lab_results.exists %}
+                        <div class="mt-2">
+                            <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Lab results</p>
+                            {% for lab in item.obj.lab_results.all %}
+                                <p class="text-sm {% if lab.is_flagged %}text-red-600{% else %}text-gray-600{% endif %}">
+                                    {{ lab.test_name }}: {{ lab.value_numeric|default:lab.value_text }} {{ lab.unit }}
+                                    {% if lab.is_flagged %} -- {{ lab.flag_reason }}{% endif %}
+                                </p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        {% if item.obj.ultrasound_reports.exists %}
+                        <div class="mt-2">
+                            <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Ultrasound</p>
+                            {% for scan in item.obj.ultrasound_reports.all %}
+                                <p class="text-sm {% if scan.is_flagged %}text-red-600{% else %}text-gray-600{% endif %}">
+                                    {{ scan.get_scan_type_display }} ({{ scan.scan_date }})
+                                    {% if scan.is_flagged %} -- {{ scan.flag_reason }}{% endif %}
+                                </p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
+                
                 {% elif item.type == 'checkin' %}
                 <div class="flex gap-3 rounded-xl border border-violet-100 bg-violet-50 p-4">
                     <div class="w-10 h-10 rounded-full bg-violet-500 text-white flex items-center justify-center shrink-0">📝</div>
