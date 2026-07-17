@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
+    
     # Web pages (Django templates, session auth) -- this is what mothers actually browse
     path("", include("apps.accounts.urls")),
     # We'll add each line below back in as we build that app together:
