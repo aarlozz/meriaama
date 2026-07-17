@@ -1,0 +1,214 @@
+{% extends "hospital_portal/staff_base.html" %} {% block page_title %}Record
+Ultrasound{% endblock %} {% block dashboard_content %}
+<a
+  href="{% url 'hospital-visit-detail' visit_id=visit.id %}"
+  class="text-sm text-rose-600 hover:underline"
+  >&larr; Back to visit</a
+>
+<h1 class="text-2xl font-bold text-rose-700 mt-3 mb-6">
+  Ultrasound Report -- {{ visit.mother.username }} ({{ visit.visit_date }})
+</h1>
+<p class="text-sm text-gray-500 mb-4">
+  Select a scan type below -- only the fields relevant to that scan will appear.
+</p>
+
+<form method="post" class="bg-white p-6 rounded-lg shadow" id="ultrasound-form">
+  {% csrf_token %}
+
+  <div class="mb-6 pb-6 border-b">
+    <label class="block text-sm font-medium mb-1"
+      >{{ form.scan_type.label }}</label
+    >
+    {{ form.scan_type }} {% if form.scan_type.errors %}
+    <p class="text-xs text-red-600 mt-1">
+      {{ form.scan_type.errors|striptags }}
+    </p>
+    {% endif %}
+
+    <label class="block text-sm font-medium mb-1 mt-4"
+      >{{ form.scan_date.label }}</label
+    >
+    {{ form.scan_date }} {% if form.scan_date.errors %}
+    <p class="text-xs text-red-600 mt-1">
+      {{ form.scan_date.errors|striptags }}
+    </p>
+    {% endif %}
+  </div>
+
+  <!-- Dating / Viability scan fields -->
+  <div
+    class="scan-group grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+    data-scan-group="dating"
+  >
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.intrauterine_confirmed.label }}</label
+      >{{ form.intrauterine_confirmed }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.number_of_fetuses.label }}</label
+      >{{ form.number_of_fetuses }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.fetal_cardiac_activity.label }}</label
+      >{{ form.fetal_cardiac_activity }}
+    </div>
+  </div>
+
+  <!-- NT + Dual marker scan fields -->
+  <div
+    class="scan-group grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+    data-scan-group="nt_dual"
+  >
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.nuchal_translucency_mm.label }}</label
+      >{{ form.nuchal_translucency_mm }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.dual_marker_risk.label }}</label
+      >{{ form.dual_marker_risk }}
+    </div>
+  </div>
+
+  <!-- Anomaly scan fields -->
+  <div
+    class="scan-group grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+    data-scan-group="anomaly"
+  >
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.placenta_position.label }}</label
+      >{{ form.placenta_position }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.liquor_status.label }}</label
+      >{{ form.liquor_status }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.fetal_movement_normal.label }}</label
+      >{{ form.fetal_movement_normal }}
+    </div>
+  </div>
+
+  <!-- Growth scan fields -->
+  <div
+    class="scan-group grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+    data-scan-group="growth"
+  >
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.head_circumference_mm.label }}</label
+      >{{ form.head_circumference_mm }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.abdominal_circumference_mm.label }}</label
+      >{{ form.abdominal_circumference_mm }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.femur_length_mm.label }}</label
+      >{{ form.femur_length_mm }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.estimated_gestational_age_weeks.label }}</label
+      >{{ form.estimated_gestational_age_weeks }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.estimated_fetal_weight_g.label }}</label
+      >{{ form.estimated_fetal_weight_g }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.estimated_fetal_weight_percentile.label }}</label
+      >{{ form.estimated_fetal_weight_percentile }}
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1"
+        >{{ form.placenta_position.label }} (growth)</label
+      >{{ form.liquor_status }}
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <label class="block text-sm font-medium mb-1">{{ form.notes.label }}</label>
+    {{ form.notes }}
+  </div>
+
+  <button
+    type="submit"
+    class="mt-6 bg-rose-600 text-white rounded px-4 py-2 font-medium hover:bg-rose-700"
+  >
+    Save ultrasound report
+  </button>
+</form>
+
+{% if visit.ultrasound_reports.exists %}
+<div class="mt-8 bg-white p-6 rounded-lg shadow">
+  <h2 class="text-lg font-semibold text-rose-700 mb-3">Previous reports for this visit</h2>
+  {% for report in visit.ultrasound_reports.all %}
+  <div class="border-b py-3">
+    <div class="flex justify-between items-center mb-2">
+      <span class="font-medium text-gray-800">{{ report.get_scan_type_display }} -- {{ report.scan_date }}</span>
+      {% if report.is_flagged %}
+        <span class="text-red-600 font-medium text-sm">Flagged: {{ report.flag_reason }}</span>
+      {% else %}
+        <span class="text-green-600 text-sm">Normal</span>
+      {% endif %}
+    </div>
+    <div class="text-sm text-gray-600 grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-1">
+      {% if report.scan_type == "dating" %}
+        <span>Intrauterine confirmed: {% if report.intrauterine_confirmed == True %}Yes{% elif report.intrauterine_confirmed == False %}No{% else %}Not recorded{% endif %}</span>
+        <span>Number of fetuses: {{ report.number_of_fetuses|default:"Not recorded" }}</span>
+        <span>Cardiac activity: {% if report.fetal_cardiac_activity == True %}Yes{% elif report.fetal_cardiac_activity == False %}No{% else %}Not recorded{% endif %}</span>
+      {% elif report.scan_type == "nt_dual" %}
+        <span>NT: {{ report.nuchal_translucency_mm|default:"Not recorded" }} mm</span>
+        <span>Dual marker risk: {{ report.dual_marker_risk|default:"Not recorded" }}</span>
+      {% elif report.scan_type == "anomaly" %}
+        <span>Placenta position: {{ report.placenta_position|default:"Not recorded" }}</span>
+        <span>Liquor status: {{ report.liquor_status|default:"Not recorded" }}</span>
+        <span>Fetal movement normal: {% if report.fetal_movement_normal == True %}Yes{% elif report.fetal_movement_normal == False %}No{% else %}Not recorded{% endif %}</span>
+      {% elif report.scan_type == "growth" %}
+        <span>HC: {{ report.head_circumference_mm|default:"Not recorded" }} mm</span>
+        <span>AC: {{ report.abdominal_circumference_mm|default:"Not recorded" }} mm</span>
+        <span>FL: {{ report.femur_length_mm|default:"Not recorded" }} mm</span>
+        <span>Est. GA: {{ report.estimated_gestational_age_weeks|default:"Not recorded" }} wks</span>
+        <span>EFW: {{ report.estimated_fetal_weight_g|default:"Not recorded" }} g</span>
+        <span>EFW percentile: {{ report.estimated_fetal_weight_percentile|default:"Not recorded" }}</span>
+        <span>Liquor status: {{ report.liquor_status|default:"Not recorded" }}</span>
+      {% endif %}
+      {% if report.notes %}<span class="col-span-full text-gray-500 italic">Notes: {{ report.notes }}</span>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const scanTypeSelect = document.getElementById("id_scan_type");
+    const groups = document.querySelectorAll(".scan-group");
+
+    function updateVisibility() {
+      const selected = scanTypeSelect.value;
+      groups.forEach(function (group) {
+        group.style.display =
+          group.dataset.scanGroup === selected ? "" : "none";
+      });
+    }
+
+    if (scanTypeSelect) {
+      scanTypeSelect.addEventListener("change", updateVisibility);
+      updateVisibility(); // run on load too, in case of pre-filled edit
+    }
+  });
+</script>
+{% endblock %}
