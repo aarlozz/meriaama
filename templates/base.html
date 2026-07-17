@@ -91,10 +91,11 @@
     </nav>
     {% endif %} -->
 
-{% if request.resolver_match.url_name != "login" %}
+
+{% with page=request.resolver_match.url_name %}
+{% if page != "login" and page != "register" and page != "landing" %}
 <main class="max-w-7xl mx-auto px-6 py-8">
 {% endif %}
-
     {% if messages %}
         {% for message in messages %}
             <div class="mb-4 rounded-xl border border-amber-300 bg-amber-100 px-4 py-3 text-amber-800">
@@ -105,9 +106,9 @@
 
     {% block content %}{% endblock %}
 
-{% if request.resolver_match.url_name != "login" %}
+{% if page != "login" and page != "register" and page != "landing" %}
 </main>
 {% endif %}
-
+{% endwith %}
 </body>
 </html>
