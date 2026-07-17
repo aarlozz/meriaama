@@ -83,7 +83,9 @@ def tracker_page(request):
     visits = list(
         PrenatalVisit.objects.filter(
             mother=request.user
-        ).order_by("-visit_date")
+        )
+        .prefetch_related("lab_results", "ultrasound_reports")
+        .order_by("-visit_date")
     )
 
     checkins = list(
