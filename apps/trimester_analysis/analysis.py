@@ -5,9 +5,23 @@ Trimester Analysis Engine
 Responsibilities
 ----------------
 - Pregnancy progress (current week, completion %, milestones)
-- Trimester summaries (weight, BP, hemoglobin, FHR, urine, edema)
-- Clinical alerts (flags), grouped and overall
-- Timeline + chart data generation
+- Trimester summaries built from ALL recorded clinical data: vitals,
+  lab results, and ultrasound reports -- not just the 10 core visit
+  fields.
+- Severity is NEVER re-derived here. This app used to duplicate its own
+  crude BP/Hb thresholds and guess severity from keyword-matching on
+  concern strings, which drifted from the real clinical rules in
+  anc_clinical. Now:
+    * vitals severity  -> PrenatalVisit.flag_reasons (anc_clinical.flag_engine)
+    * lab severity      -> LabResult.severity (anc_clinical.models / LabTestReference)
+    * scan severity     -> classified locally (UltrasoundReport has no
+                            severity field yet, just is_flagged/flag_reason)
+  This keeps trimester_analysis and the pregnancy dashboard from ever
+  disagreeing about whether something is "moderate" or "severe".
+- Per-trimester "what's missing" list, reusing
+  anc_clinical.schedule_rules.trimester_checklist so pending labs/scans
+  match what the dashboard already shows.
+- Timeline + chart data generation (now includes labs/scans per visit)
 - AI narrative prompt generation
 
 The AI model never analyses raw visit objects. Python performs all clinical
@@ -21,26 +35,41 @@ from statistics import mean
 from apps.hospital_portal.models import TRACKED_FIELDS
 
 # ---------------------------------------------------------
-# Clinical Thresholds
+# Display-only thresholds (BP/HB "status" labels for charts/highlights).
+# NOT used to decide severity or flagging anymore -- that's owned by
+# anc_clinical.flag_engine / LabResult.severity / LabTestReference.
 # ---------------------------------------------------------
 
-TRIMESTER_RANGES = {
-    1: (1, 13),
-    2: (14, 27),
-    3: (28, 45),
-}
+TRIMESTER_RANGES = {1: (1, 13), 2: (14, 27), 3: (28, 45)}
 
 NORMAL_FHR = (110, 160)
 NORMAL_HB = 11.0
-NORMAL_BP = (120, 80)
 ELEVATED_BP = (130, 80)
 HIGH_BP = (140, 90)
 SEVERE_BP = (160, 110)
 
 FHR_NORMAL_RANGE = (110, 160)
-HEMOGLOBIN_LOW_THRESHOLD = 11.0
-BP_HIGH_THRESHOLD = (140, 90)
-BP_ELEVATED_THRESHOLD = (130, 80)
+
+# UltrasoundReport doesn't carry a severity field, so classify from the
+# reason text it already writes in UltrasoundReport.clean(). Keep this in
+# sync if the wording there ever changes.
+ULTRASOUND_SEVERE_MARKERS = (
+    "not confirmed",
+    "no fetal cardiac activity",
+    "implausible",
+    "below 10th percentile",
+)
+
+
+def ultrasound_severity(report):
+    """Classify an already-flagged UltrasoundReport as moderate/severe."""
+    if not report.is_flagged:
+        return None
+    text = (report.flag_reason or "").lower()
+    if any(marker in text for marker in ULTRASOUND_SEVERE_MARKERS):
+        return "severe"
+    return "moderate"
+
 
 # ---------------------------------------------------------
 # Basic Helpers
@@ -48,7 +77,6 @@ BP_ELEVATED_THRESHOLD = (130, 80)
 
 
 def get_trimester(week):
-    """Convert gestational week into trimester number."""
     if week is None:
         return None
     if week <= 13:
@@ -59,16 +87,7 @@ def get_trimester(week):
 
 
 def trimester_name(number):
-    return {
-        1: "First Trimester",
-        2: "Second Trimester",
-        3: "Third Trimester",
-    }.get(number, "Unknown")
-
-
-# ---------------------------------------------------------
-# Blood Pressure Parser
-# ---------------------------------------------------------
+    return {1: "First Trimester", 2: "Second Trimester", 3: "Third Trimester"}.get(number, "Unknown")
 
 
 def parse_bp(bp):
@@ -82,26 +101,15 @@ def parse_bp(bp):
         return None
 
 
-# ---------------------------------------------------------
-# Trend Helpers
-# ---------------------------------------------------------
-
-
 def calculate_change(current, previous):
     if current is None or previous is None:
         return None
     diff = round(float(current) - float(previous), 1)
-    if diff > 0:
-        direction = "up"
-    elif diff < 0:
-        direction = "down"
-    else:
-        direction = "same"
+    direction = "up" if diff > 0 else "down" if diff < 0 else "same"
     return {"difference": diff, "direction": direction}
 
 
 def trend_direction(values):
-    """Returns 'Increasing', 'Stable', 'Decreasing', or 'Insufficient Data'."""
     values = [float(v) for v in values if v is not None]
     if len(values) < 2:
         return "Insufficient Data"
@@ -111,35 +119,19 @@ def trend_direction(values):
     return "Increasing" if diff > 0 else "Decreasing"
 
 
-# ---------------------------------------------------------
-# Safe Statistics
-# ---------------------------------------------------------
-
-
 def average(values):
     values = [float(v) for v in values if v is not None]
-    if not values:
-        return None
-    return round(mean(values), 1)
+    return round(mean(values), 1) if values else None
 
 
 def latest(values):
     values = [v for v in values if v is not None]
-    if not values:
-        return None
-    return values[-1]
+    return values[-1] if values else None
 
 
 def first(values):
     values = [v for v in values if v is not None]
-    if not values:
-        return None
-    return values[0]
-
-
-# ---------------------------------------------------------
-# Health Status Helpers
-# ---------------------------------------------------------
+    return values[0] if values else None
 
 
 def bp_status(bp):
@@ -177,23 +169,69 @@ def fhr_status(rate):
 
 
 # ---------------------------------------------------------
+# Flag builders -- these READ existing severity, they don't compute it
+# ---------------------------------------------------------
+
+
+def _visit_flags(visits):
+    flags = []
+    for v in visits:
+        for reason in (v.flag_reasons or []):
+            flags.append({
+                "date": v.visit_date,
+                "week": v.gestational_week,
+                "source": "Vitals",
+                "severity": reason.get("severity", "moderate"),
+                "message": reason.get("reason", ""),
+            })
+    return flags
+
+
+def _lab_flags(labs):
+    flags = []
+    for lr in labs:
+        if not lr.is_flagged:
+            continue
+        flags.append({
+            "date": lr.recorded_at.date() if lr.recorded_at else None,
+            "week": getattr(lr.visit, "gestational_week", None),
+            "source": "Lab",
+            "severity": lr.severity or "moderate",
+            "message": f"{lr.test_name}: {lr.flag_reason}" if lr.flag_reason else f"{lr.test_name} flagged",
+        })
+    return flags
+
+
+def _scan_flags(scans):
+    flags = []
+    for ur in scans:
+        if not ur.is_flagged:
+            continue
+        flags.append({
+            "date": ur.scan_date,
+            "week": getattr(ur.visit, "gestational_week", None),
+            "source": "Ultrasound",
+            "severity": ultrasound_severity(ur) or "moderate",
+            "message": f"{ur.get_scan_type_display()}: {ur.flag_reason}" if ur.flag_reason else ur.get_scan_type_display(),
+        })
+    return flags
+
+
+# ---------------------------------------------------------
 # Chart + Timeline Builders
 # ---------------------------------------------------------
 
 
 def build_chart_data(visits):
     charts = {"weeks": [], "weight": [], "hb": [], "fundal": [], "fhr": [], "bp_sys": [], "bp_dia": []}
-
     for visit in visits:
         if visit.gestational_week is None:
             continue
-
         charts["weeks"].append(visit.gestational_week)
         charts["weight"].append(float(visit.maternal_weight_kg) if visit.maternal_weight_kg is not None else None)
         charts["hb"].append(float(visit.hemoglobin_g_dl) if visit.hemoglobin_g_dl is not None else None)
         charts["fundal"].append(float(visit.fundal_height_cm) if visit.fundal_height_cm is not None else None)
         charts["fhr"].append(visit.fetal_heart_rate_bpm)
-
         bp = parse_bp(visit.blood_pressure)
         if bp:
             charts["bp_sys"].append(bp[0])
@@ -201,11 +239,23 @@ def build_chart_data(visits):
         else:
             charts["bp_sys"].append(None)
             charts["bp_dia"].append(None)
-
     return charts
 
 
-def build_timeline(visits):
+def build_timeline(visits, labs=None, scans=None):
+    """
+    One entry per visit, now carrying that visit's own lab results,
+    ultrasound reports, and clinical flags -- not just the 10 core
+    vitals fields.
+    """
+    labs_by_visit = defaultdict(list)
+    for lr in (labs or []):
+        labs_by_visit[lr.visit_id].append(lr)
+
+    scans_by_visit = defaultdict(list)
+    for ur in (scans or []):
+        scans_by_visit[ur.visit_id].append(ur)
+
     visits = sorted(visits, key=lambda x: (x.gestational_week or 0, x.visit_date))
     timeline = []
     previous = None
@@ -217,6 +267,9 @@ def build_timeline(visits):
             "date": visit.visit_date,
             "trimester": get_trimester(visit.gestational_week),
             "changes": {},
+            "labs": labs_by_visit.get(visit.id, []),
+            "scans": scans_by_visit.get(visit.id, []),
+            "flags": visit.flag_reasons or [],
         }
 
         if previous:
@@ -236,9 +289,15 @@ def build_timeline(visits):
 # ---------------------------------------------------------
 
 
-def analyze_trimester(trimester, visits, profile=None):
-    """Performs detailed analysis for one trimester."""
+def analyze_trimester(trimester, visits, profile=None, checklist=None, labs=None, scans=None):
+    """
+    Performs detailed analysis for one trimester using vitals + labs +
+    scans together, with severity taken from the already-computed
+    anc_clinical values (never re-derived here).
+    """
     visits = sorted(visits, key=lambda x: (x.gestational_week or 0, x.visit_date))
+    labs = labs or []
+    scans = scans or []
 
     result = {
         "trimester": trimester,
@@ -247,105 +306,104 @@ def analyze_trimester(trimester, visits, profile=None):
         "status": "good",
         "summary": "",
         "highlights": [],
-        "concerns": [],
+        "flags": [],
+        "severe_count": 0,
+        "moderate_count": 0,
         "recommendations": [],
         "weight_start": None,
         "weight_end": None,
         "weight_gain": None,
         "charts": build_chart_data(visits),
-        "timeline": build_timeline(visits),
+        "timeline": build_timeline(visits, labs, scans),
+        "checklist": checklist,  # {"labs": [...], "scans": [...]} or None
     }
 
     if not visits:
         result["status"] = "no_data"
         result["summary"] = "No prenatal visits recorded."
-        result["flags"] = []
+        if checklist:
+            missing_labs = [l["label"] for l in checklist["labs"] if not l["recorded"]]
+            missing_scans = [s["label"] for s in checklist["scans"] if not s["recorded"]]
+            if missing_labs:
+                result["recommendations"].append(f"Not yet recorded: {', '.join(missing_labs)}.")
+            if missing_scans:
+                result["recommendations"].append(f"Scan(s) not yet done: {', '.join(missing_scans)}.")
         return result
 
     # -------------------------------------------------------
-    # Weight Analysis
+    # Weight
     # -------------------------------------------------------
     weights = [float(v.maternal_weight_kg) for v in visits if v.maternal_weight_kg is not None]
-
     result["weight_start"] = weights[0] if weights else None
     result["weight_end"] = weights[-1] if weights else None
-
     if len(weights) >= 2:
         gain = round(weights[-1] - weights[0], 1)
         result["weight_gain"] = gain
         result["highlights"].append({"title": "Weight change", "value": f"{gain:+.1f} kg"})
-        if gain < 0:
-            result["concerns"].append("Weight has decreased during this trimester.")
     elif weights:
         result["highlights"].append({"title": "Current weight", "value": f"{weights[-1]} kg"})
 
     # -------------------------------------------------------
-    # Blood Pressure
+    # Display-only highlights (BP / Hb / FHR) -- severity comes from flags below
     # -------------------------------------------------------
-    bp_values = []
-    for visit in visits:
-        bp = parse_bp(visit.blood_pressure)
-        if not bp:
-            continue
-        bp_values.append(bp)
-
-        if bp[0] >= BP_HIGH_THRESHOLD[0] or bp[1] >= BP_HIGH_THRESHOLD[1]:
-            result["status"] = "attention"
-            result["concerns"].append(f"Week {visit.gestational_week}: Blood pressure reached {bp[0]}/{bp[1]}.")
-        elif bp[0] >= BP_ELEVATED_THRESHOLD[0] or bp[1] >= BP_ELEVATED_THRESHOLD[1]:
-            result["concerns"].append(f"Week {visit.gestational_week}: Mild blood pressure elevation.")
-
+    bp_values = [parse_bp(v.blood_pressure) for v in visits if parse_bp(v.blood_pressure)]
     if bp_values:
-        avg_sys = round(sum(i[0] for i in bp_values) / len(bp_values))
-        avg_dia = round(sum(i[1] for i in bp_values) / len(bp_values))
+        avg_sys = round(sum(b[0] for b in bp_values) / len(bp_values))
+        avg_dia = round(sum(b[1] for b in bp_values) / len(bp_values))
         result["highlights"].append({"title": "Average BP", "value": f"{avg_sys}/{avg_dia}"})
 
-    # -------------------------------------------------------
-    # Hemoglobin
-    # -------------------------------------------------------
-    hb = [float(v.hemoglobin_g_dl) for v in visits if v.hemoglobin_g_dl is not None]
-    if hb:
-        latest_hb = hb[-1]
-        result["highlights"].append({"title": "Hemoglobin", "value": f"{latest_hb:.1f} g/dL"})
-        if latest_hb < HEMOGLOBIN_LOW_THRESHOLD:
-            result["concerns"].append("Latest hemoglobin is below the recommended level.")
+    hb_values = [float(v.hemoglobin_g_dl) for v in visits if v.hemoglobin_g_dl is not None]
+    if hb_values:
+        result["highlights"].append({"title": "Hemoglobin", "value": f"{hb_values[-1]:.1f} g/dL"})
+
+    fhr_values = [v.fetal_heart_rate_bpm for v in visits if v.fetal_heart_rate_bpm]
+    if fhr_values:
+        result["highlights"].append({"title": "Latest fetal heart rate", "value": f"{fhr_values[-1]} bpm"})
+
+    if labs:
+        result["highlights"].append({"title": "Lab results this trimester", "value": str(len(labs))})
+    if scans:
+        result["highlights"].append({"title": "Scans this trimester", "value": str(len(scans))})
 
     # -------------------------------------------------------
-    # Fetal Heart Rate
+    # Real clinical flags -- vitals + labs + scans, merged and sorted
     # -------------------------------------------------------
-    fhr = [v.fetal_heart_rate_bpm for v in visits if v.fetal_heart_rate_bpm]
-    if fhr:
-        latest_fhr = fhr[-1]
-        result["highlights"].append({"title": "Latest fetal heart rate", "value": f"{latest_fhr} bpm"})
-        if not (FHR_NORMAL_RANGE[0] <= latest_fhr <= FHR_NORMAL_RANGE[1]):
-            result["concerns"].append("Latest fetal heart rate is outside the usual range.")
+    flags = _visit_flags(visits) + _lab_flags(labs) + _scan_flags(scans)
+    flags.sort(key=lambda f: f["date"] or visits[0].visit_date)
+    result["flags"] = flags
+
+    severe = [f for f in flags if f["severity"] == "severe"]
+    moderate = [f for f in flags if f["severity"] == "moderate"]
+    result["severe_count"] = len(severe)
+    result["moderate_count"] = len(moderate)
+    result["status"] = "attention" if severe else ("monitor" if moderate else "good")
 
     # -------------------------------------------------------
-    # Urine Protein
+    # What's missing this trimester -- reused from anc_clinical so this
+    # never disagrees with the pregnancy dashboard's own checklist
     # -------------------------------------------------------
-    protein_positive = any(v.urine_protein in ("plus1", "plus2", "plus3") for v in visits)
-    if protein_positive:
-        result["concerns"].append("Protein was detected in urine during this trimester.")
+    if checklist:
+        missing_labs = [l["label"] for l in checklist["labs"] if not l["recorded"]]
+        missing_scans = [s["label"] for s in checklist["scans"] if not s["recorded"]]
+        if missing_labs:
+            result["recommendations"].append(f"Still pending this trimester: {', '.join(missing_labs)}.")
+        if missing_scans:
+            result["recommendations"].append(f"Scan(s) not yet done: {', '.join(missing_scans)}.")
+
+    if severe:
+        result["recommendations"].append("Discuss the severe finding(s) below with your doctor as soon as possible.")
+    elif moderate:
+        result["recommendations"].append("Bring up the flagged item(s) below at your next visit.")
 
     # -------------------------------------------------------
-    # Edema
+    # Summary
     # -------------------------------------------------------
-    edema = any(v.edema in ("mild_face", "mild_hands_feet", "severe") for v in visits)
-    if edema:
-        result["concerns"].append("Swelling was recorded during this trimester.")
-
-    # -------------------------------------------------------
-    # Summary + Recommendations
-    # -------------------------------------------------------
-    if not result["concerns"]:
+    if not flags:
         result["summary"] = "Measurements remained generally stable throughout this trimester."
+    elif severe:
+        result["summary"] = f"{len(severe)} finding(s) need prompt attention, plus {len(moderate)} to monitor."
     else:
-        result["summary"] = f"{len(result['concerns'])} observation(s) may require discussion during your next antenatal visit."
-        result["recommendations"].append("Continue attending scheduled prenatal visits.")
-        result["recommendations"].append("Discuss any persistent symptoms with your healthcare provider.")
-
-    # Flags -- used by the template's "Clinical Findings" section
-    result["flags"] = [{"severity": "concern", "message": c} for c in result["concerns"]]
+        result["summary"] = f"{len(moderate)} observation(s) may require discussion during your next antenatal visit."
 
     return result
 
@@ -356,23 +414,11 @@ def analyze_trimester(trimester, visits, profile=None):
 
 
 def calculate_health_score(results):
-    """Starts at 100 and subtracts points for abnormal findings."""
+    """Starts at 100, subtracts by REAL severity counts (not keyword guesses)."""
     score = 100
-    for trimester in results:
-        for concern in trimester["concerns"]:
-            text = concern.lower()
-            if "blood pressure" in text:
-                score -= 10
-            elif "hemoglobin" in text:
-                score -= 8
-            elif "protein" in text:
-                score -= 10
-            elif "heart rate" in text:
-                score -= 10
-            elif "swelling" in text:
-                score -= 5
-            else:
-                score -= 3
+    for t in results:
+        score -= t.get("severe_count", 0) * 12
+        score -= t.get("moderate_count", 0) * 5
     return max(score, 0)
 
 
@@ -386,11 +432,12 @@ def determine_risk(score):
 
 def build_overall_summary(results):
     total_visits = sum(r["visit_count"] for r in results)
-    concerns, highlights = [], []
+    flags, highlights, recommendations = [], [], []
 
-    for trimester in results:
-        concerns.extend(trimester["concerns"])
-        highlights.extend(trimester["highlights"])
+    for t in results:
+        flags.extend(t.get("flags", []))
+        highlights.extend(t["highlights"])
+        recommendations.extend(t.get("recommendations", []))
 
     score = calculate_health_score(results)
     risk = determine_risk(score)
@@ -399,9 +446,12 @@ def build_overall_summary(results):
         "health_score": score,
         "risk": risk,
         "total_visits": total_visits,
-        "total_concerns": len(concerns),
+        "total_concerns": len(flags),
+        "severe_count": sum(t.get("severe_count", 0) for t in results),
+        "moderate_count": sum(t.get("moderate_count", 0) for t in results),
         "highlights": highlights,
-        "concerns": concerns,
+        "flags": flags,
+        "recommendations": recommendations,
     }
 
 
@@ -411,19 +461,14 @@ def build_overall_summary(results):
 
 
 def calculate_completion(visits):
-    """Calculates how complete the clinical records are, across the tracked fields."""
     if not visits:
         return 0
-
     total = len(TRACKED_FIELDS) * len(visits)
     completed = 0
-
     for visit in visits:
         for field_name, _ in TRACKED_FIELDS:
-            value = getattr(visit, field_name)
-            if value not in (None, ""):
+            if getattr(visit, field_name) not in (None, ""):
                 completed += 1
-
     return round(completed / total * 100)
 
 
@@ -431,9 +476,7 @@ def build_milestones(profile, latest_visit):
     milestones = []
     if not latest_visit:
         return milestones
-
     week = latest_visit.gestational_week or 0
-
     if week >= 12:
         milestones.append("First trimester completed.")
     if week >= 20:
@@ -442,16 +485,13 @@ def build_milestones(profile, latest_visit):
         milestones.append("Third trimester started.")
     if week >= 37:
         milestones.append("Early-term pregnancy reached.")
-
     if profile and profile.expected_delivery_date:
         milestones.append(f"Expected delivery: {profile.expected_delivery_date}")
-
     return milestones
 
 
 def build_progress(profile, visits):
     latest_visit = visits[-1] if visits else None
-
     return {
         "completion": calculate_completion(visits),
         "milestones": build_milestones(profile, latest_visit),
@@ -465,19 +505,44 @@ def build_progress(profile, visits):
 # ---------------------------------------------------------
 
 
-def build_full_analysis(all_visits, profile=None):
-    buckets = defaultdict(list)
+def build_full_analysis(all_visits, profile=None, mother=None):
+    """
+    mother is required to pull labs/scans and the anc_clinical checklist.
+    Falls back gracefully (no lab/scan data, no checklist) if not passed,
+    so this doesn't hard-break other callers.
+    """
+    from apps.anc_clinical.models import LabResult, UltrasoundReport
 
+    visit_ids = [v.id for v in all_visits]
+    all_labs = list(LabResult.objects.filter(visit_id__in=visit_ids).select_related("visit")) if visit_ids else []
+    all_scans = list(UltrasoundReport.objects.filter(visit_id__in=visit_ids).select_related("visit")) if visit_ids else []
+
+    buckets = defaultdict(list)
     for visit in all_visits:
         trimester = get_trimester(visit.gestational_week)
         if trimester:
             buckets[trimester].append(visit)
 
-    trimester_results = [analyze_trimester(t, buckets[t], profile) for t in (1, 2, 3)]
+    checklists = {}
+    if mother is not None:
+        from apps.anc_clinical.schedule_rules import trimester_checklist as _trimester_checklist
+        latest_week = all_visits[-1].gestational_week if all_visits else None
+        for entry in _trimester_checklist(mother, latest_week):
+            checklists[entry["number"]] = entry
+
+    trimester_results = []
+    for t in (1, 2, 3):
+        t_visits = buckets[t]
+        t_ids = {v.id for v in t_visits}
+        t_labs = [lr for lr in all_labs if lr.visit_id in t_ids]
+        t_scans = [ur for ur in all_scans if ur.visit_id in t_ids]
+        trimester_results.append(
+            analyze_trimester(t, t_visits, profile, checklist=checklists.get(t), labs=t_labs, scans=t_scans)
+        )
 
     overall = build_overall_summary(trimester_results)
     charts = build_chart_data(all_visits)
-    timeline = build_timeline(all_visits)
+    timeline = build_timeline(all_visits, all_labs, all_scans)
     progress = build_progress(profile, all_visits)
 
     return {
@@ -497,10 +562,8 @@ def build_full_analysis(all_visits, profile=None):
 def generate_narrative_prompt(trimesters):
     """
     Builds the (system_prompt, user_prompt) pair sent to Groq. Only ever
-    receives already-computed structured facts (highlights/concerns per
-    trimester) -- never raw visit objects. Instructs the model to respond
-    as structured JSON so the template can render it properly, instead of
-    a single opaque paragraph.
+    receives already-computed structured facts -- never raw visit/lab/scan
+    objects. Instructs the model to respond as structured JSON.
     """
     lines = []
     for t in trimesters:
@@ -509,8 +572,10 @@ def generate_narrative_prompt(trimesters):
             lines.append(f"  Weight change: {t['weight_gain']:+.1f} kg")
         for item in t["highlights"]:
             lines.append(f"  Highlight: {item['title']} = {item['value']}")
-        for concern in t["concerns"]:
-            lines.append(f"  Concern: {concern}")
+        for flag in t.get("flags", []):
+            lines.append(f"  {flag['severity'].capitalize()} ({flag['source']}): {flag['message']}")
+        for rec in t.get("recommendations", []):
+            lines.append(f"  Pending/recommended: {rec}")
         lines.append("")
 
     system_prompt = (

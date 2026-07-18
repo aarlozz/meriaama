@@ -12,7 +12,9 @@ def trimester_analysis_page(request):
         PrenatalVisit.objects.filter(mother=request.user).order_by("gestational_week", "visit_date")
     )
     profile = getattr(request.user, "health_profile", None)
-    analysis = build_full_analysis(visits, profile)
+    # mother=request.user lets build_full_analysis pull LabResult /
+    # UltrasoundReport rows and the anc_clinical trimester checklist for her.
+    analysis = build_full_analysis(visits, profile, mother=request.user)
     latest_visit = visits[-1] if visits else None
 
     narrative = None
