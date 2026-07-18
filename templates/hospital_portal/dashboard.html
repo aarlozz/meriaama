@@ -1,43 +1,98 @@
-{% extends "hospital_portal/staff_base.html" %}
-{% block page_title %}Search Mothers{% endblock %}
-{% block dashboard_content %}
-<h1 class="text-2xl font-bold text-gray-900 mb-1">Mothers</h1>
-<p class="text-sm text-gray-500 mb-6">
-    {% if query %}Search results for "{{ query }}"{% else %}All registered mothers{% endif %}
-</p>
+{% extends "hospital_portal/hospital_base.html" %}
 
-<form method="get" class="mb-6 flex gap-2">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search by username or phone number"
-           class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500">
-    <button type="submit" class="bg-rose-600 text-white rounded-lg px-4 py-2 font-medium hover:bg-rose-700">Search</button>
-    {% if query %}<a href="{% url 'hospital-dashboard' %}" class="text-sm text-gray-500 hover:underline self-center">Clear</a>{% endif %}
-</form>
+{% block title %}Search Mothers · Meri Aama{% endblock %}
+{% block page_title %}Mothers{% endblock %}
 
-{% if pending_count %}
-<a href="{% url 'hospital-staff-approvals' %}" class="block mb-6 bg-amber-50 border border-amber-300 rounded-lg p-3 text-sm text-amber-800 hover:bg-amber-100">
-    {{ pending_count }} staff account{{ pending_count|pluralize }} pending approval &rarr;
-</a>
-{% endif %}
+{% block content %}
+<div class="-m-8 min-h-[calc(100%+4rem)] p-8" style="background:#FBF5F3;">
 
-<div class="space-y-2">
-    {% for mother in results %}
-    <div class="flex justify-between items-center bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:border-rose-200 transition-colors">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full bg-rose-100 text-rose-600 text-sm font-semibold flex items-center justify-center uppercase">{{ mother.username|first }}</div>
-            <div>
-                <span class="font-medium text-gray-900 block">{{ mother.username }}</span>
-                {% if mother.phone_number %}<span class="text-xs text-gray-400">{{ mother.phone_number }}</span>{% endif %}
-            </div>
-        </div>
-        <a href="{% url 'hospital-mother-detail' mother_id=mother.id %}"
-           class="text-sm bg-gray-100 text-gray-700 rounded-lg px-3 py-1.5 font-medium hover:bg-gray-200">
-            View Record
-        </a>
-    </div>
-    {% empty %}
-    <p class="text-gray-500 text-sm">
-        {% if query %}No mothers matched "{{ query }}".{% else %}No mothers registered yet.{% endif %}
+    <p class="text-sm mb-6" style="color:#8C7480;">
+        {% if query %}
+            Showing results for "<span class="font-medium" style="color:#3B1E2F;">{{ query }}</span>"
+        {% else %}
+            Every mother registered with the hospital, searchable by name or phone.
+        {% endif %}
     </p>
-    {% endfor %}
+
+    <form method="get" class="mb-6">
+        <div class="bg-white rounded-2xl border p-2 flex flex-col sm:flex-row gap-2 shadow-sm focus-within:ring-2 transition-shadow"
+             style="border-color:#F0DEE2; --tw-ring-color:#E1315B4D;">
+            <label for="mother-search" class="sr-only">Search by username or phone number</label>
+            <div class="flex items-center gap-2 flex-1 px-3">
+                <i data-lucide="search" class="w-4 h-4 shrink-0" style="color:#C79AA6;"></i>
+                <input id="mother-search" type="text" name="q" value="{{ query }}"
+                       placeholder="Search by username or phone number"
+                       class="flex-1 py-2.5 bg-transparent focus:outline-none text-[15px]"
+                       style="color:#3B1E2F;">
+            </div>
+            <button type="submit"
+                    class="rounded-xl px-5 py-2.5 font-medium text-white text-sm hover:opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 transition-opacity"
+                    style="background:#E1315B; --tw-ring-color:#E1315B;">
+                Search
+            </button>
+        </div>
+        {% if query %}
+            <a href="{% url 'hospital-dashboard' %}" class="inline-block mt-2 text-xs hover:underline" style="color:#8C7480;">
+                Clear search
+            </a>
+        {% endif %}
+    </form>
+
+    {% if pending_count %}
+    <a href="{% url 'hospital-staff-approvals' %}"
+       class="flex items-center gap-3 mb-6 rounded-2xl p-4 border hover:brightness-[0.98] transition-all"
+       style="background:#FBF0E3; border-color:#EFD5AE;">
+        <i data-lucide="user-check" class="w-5 h-5 shrink-0" style="color:#C97A2B;"></i>
+        <p class="text-sm flex-1" style="color:#8A5A22;">
+            <span class="font-semibold">{{ pending_count }}</span> staff account{{ pending_count|pluralize }} waiting on approval
+        </p>
+        <i data-lucide="arrow-right" class="w-4 h-4" style="color:#C97A2B;"></i>
+    </a>
+    {% endif %}
+
+    <div class="space-y-3">
+        {% for mother in results %}
+        {% cycle "#E1315B" "#6E8F7C" "#C97A2B" as tabcolor silent %}
+        <div class="flex items-center justify-between bg-white rounded-2xl border-l-4 p-4 shadow-sm hover:shadow-md transition-shadow"
+             style="border-left-color:{{ tabcolor }}; border-top:1px solid #F0DEE2; border-right:1px solid #F0DEE2; border-bottom:1px solid #F0DEE2;">
+            <div class="flex items-center gap-4 min-w-0">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center font-heading font-semibold text-lg shrink-0"
+                     style="background:{{ tabcolor }}1A; color:{{ tabcolor }};">
+                    {{ mother.username|first|upper }}
+                </div>
+                <div class="min-w-0">
+                    <p class="font-heading font-semibold truncate" style="color:#3B1E2F;">{{ mother.username }}</p>
+                    {% if mother.phone_number %}
+                    <p class="text-xs mt-0.5" style="color:#A98A94; font-family:'IBM Plex Mono', ui-monospace, monospace;">
+                        {{ mother.phone_number }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            <a href="{% url 'assign-doctor' mother_id=mother.id %}"
+               class="flex items-center gap-1 text-sm font-medium rounded-xl px-4 py-2 hover:brightness-95 transition-all shrink-0"
+               style="color:#3B1E2F; background:#F7EEF0;">
+                Assign doctor
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </a>
+            <a href="{% url 'hospital-mother-detail' mother_id=mother.id %}"
+               class="flex items-center gap-1 text-sm font-medium rounded-xl px-4 py-2 hover:brightness-95 transition-all shrink-0"
+               style="color:#3B1E2F; background:#F7EEF0;">
+                View record
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+        {% empty %}
+        <div class="text-center py-16">
+            <div class="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style="background:#F7EEF0;">
+                <i data-lucide="search-x" class="w-6 h-6" style="color:#C79AA6;"></i>
+            </div>
+            <p class="text-sm" style="color:#8C7480;">
+                {% if query %}No mothers matched "{{ query }}".{% else %}No mothers registered yet.{% endif %}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}

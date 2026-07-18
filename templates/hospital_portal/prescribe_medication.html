@@ -1,19 +1,70 @@
-{% extends "base.html" %}
-{% block title %}Prescribe Medication{% endblock %}
-{% block content %}
-<a href="{% url 'hospital-mother-detail' mother_id=mother.id %}" class="text-sm text-rose-600 hover:underline">&larr; Back to {{ mother.username }}</a>
-<h1 class="text-2xl font-bold text-rose-700 mt-3 mb-6">Prescribe Medication -- {{ mother.username }}</h1>
+{% extends "hospital_portal/hospital_base.html" %}
 
-<form method="post" class="bg-white p-6 rounded-lg shadow max-w-md">
-    {% csrf_token %}
-    {% for field in form %}
-        <div class="mb-4">
-            <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
-            {{ field }}
-            {% if field.help_text %}<p class="text-xs text-gray-400 mt-1">{{ field.help_text }}</p>{% endif %}
-            {% if field.errors %}<p class="text-xs text-red-600 mt-1">{{ field.errors|striptags }}</p>{% endif %}
-        </div>
-    {% endfor %}
-    <button type="submit" class="bg-rose-600 text-white rounded px-4 py-2 font-medium hover:bg-rose-700">Prescribe</button>
-</form>
+{% block title %}Prescribe Medication · Meri Aama{% endblock %}
+{% block page_title %}Prescribe medication{% endblock %}
+
+{% block content %}
+<div class="-m-8 min-h-[calc(100%+4rem)] p-8" style="background:#FBF5F3;">
+
+    <a href="{% url 'hospital-mother-detail' mother_id=mother.id %}"
+       class="inline-flex items-center gap-1 text-sm hover:underline mb-4" style="color:#E1315B;">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to {{ mother.username }}
+    </a>
+
+    <div class="mb-6">
+        <p class="text-xs uppercase tracking-wide mb-1" style="color:#C79AA6;">Prescribe medication</p>
+        <h2 class="text-2xl font-heading font-bold" style="color:#3B1E2F;">{{ mother.username }}</h2>
+    </div>
+
+    <form method="post" class="rx-form bg-white p-6 rounded-2xl shadow-sm max-w-md" style="border:1px solid #F0DEE2;">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <p class="text-xs mt-1" style="color:#A98A94;">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                    <p class="text-xs mt-1" style="color:#C0304F;">{{ field.errors|striptags }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit"
+                class="rounded-xl px-5 py-2.5 font-medium text-white text-sm hover:opacity-90 transition-opacity"
+                style="background:#E1315B;">
+            Prescribe
+        </button>
+    </form>
+
+</div>
+
+<style>
+    .rx-form input[type="text"],
+    .rx-form input[type="number"],
+    .rx-form input[type="date"],
+    .rx-form input:not([type]),
+    .rx-form textarea,
+    .rx-form select {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border: 1px solid #E3D3D8;
+        border-radius: 0.75rem;
+        font-size: 0.9375rem;
+        color: #3B1E2F;
+        background: #FFFFFF;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .rx-form input:focus,
+    .rx-form textarea:focus,
+    .rx-form select:focus {
+        outline: none;
+        border-color: #E1315B;
+        box-shadow: 0 0 0 3px rgba(225, 49, 91, 0.15);
+    }
+    .rx-form textarea {
+        min-height: 5.5rem;
+        resize: vertical;
+    }
+</style>
 {% endblock %}

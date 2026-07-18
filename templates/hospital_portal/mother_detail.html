@@ -1,67 +1,99 @@
-{% extends "hospital_portal/staff_base.html" %}
+{% extends "hospital_portal/hospital_base.html" %}
+
+{% block title %}{{ mother.username }} · Meri Aama{% endblock %}
 {% block page_title %}{{ mother.username }}{% endblock %}
-{% block dashboard_content %}
-<div class="flex justify-between items-start mb-6">
-    <div>
-        <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ mother.username }}</h1>
-        <p class="text-sm text-gray-500">{{ mother.phone_number }}</p>
-    </div>
-    <div class="flex gap-2">
-        <a href="{% url 'hospital-edit-profile' mother_id=mother.id %}"
-           class="text-sm bg-gray-100 text-gray-700 rounded-lg px-3 py-1.5 font-medium hover:bg-gray-200">
-            Edit Health Profile
-        </a>
-        <a href="{% url 'hospital-add-visit' mother_id=mother.id %}"
-           class="text-sm bg-rose-600 text-white rounded-lg px-3 py-1.5 font-medium hover:bg-rose-700">
-            Record Visit
-        </a>
-        <a href="{% url 'hospital-prescribe-medication' mother_id=mother.id %}"
-           class="text-sm bg-rose-600 text-white rounded-lg px-3 py-1.5 font-medium hover:bg-rose-700">
-            Prescribe Medication
-        </a>
-    </div>
-</div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-        <h2 class="font-semibold text-gray-900 mb-3">Health Profile</h2>
-        {% if profile %}
-            <p class="text-sm text-gray-600">Gestational week: {{ profile.current_gestational_week|default:"—" }}</p>
-        {% else %}
-            <p class="text-sm text-gray-500">No health profile created yet.</p>
-        {% endif %}
+{% block content %}
+<div class="-m-8 min-h-[calc(100%+4rem)] p-8" style="background:#FBF5F3;">
+
+    <div class="flex items-start justify-between mb-6 flex-wrap gap-3">
+        <div>
+            <a href="{% url 'hospital-dashboard' %}"
+               class="inline-flex items-center gap-1 text-xs mb-2 hover:underline" style="color:#8C7480;">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to registry
+            </a>
+            <p class="text-sm" style="color:#A98A94; font-family:'IBM Plex Mono', ui-monospace, monospace;">
+                {{ mother.phone_number|default:"No phone on file" }}
+            </p>
+        </div>
+        <div class="flex gap-2">
+            <a href="{% url 'hospital-add-visit' mother_id=mother.id %}"
+               class="text-sm rounded-xl px-4 py-2 font-medium text-white hover:opacity-90 transition-opacity"
+               style="background:#E1315B;">
+                Record visit
+            </a>
+            <a href="{% url 'hospital-prescribe-medication' mother_id=mother.id %}"
+               class="text-sm rounded-xl px-4 py-2 font-medium border hover:bg-[#FBE4E9] transition-colors"
+               style="color:#E1315B; border-color:#E1315B;">
+                Prescribe medication
+            </a>
+        </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-        <h2 class="font-semibold text-gray-900 mb-3">Record Completeness</h2>
-        <ul class="space-y-1">
-            {% for item in checklist %}
-                <li class="text-sm flex items-center gap-2 {% if item.recorded %}text-green-700{% else %}text-gray-400{% endif %}">
-                    {% if item.recorded %}✓{% else %}○{% endif %} {{ item.label }}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+            <h2 class="font-heading font-semibold mb-4" style="color:#3B1E2F;">Health profile</h2>
+            {% if profile %}
+            <div class="flex items-baseline gap-2">
+                <span class="text-3xl font-heading font-bold" style="color:#E1315B;">
+                    {{ profile.current_gestational_week|default:"—" }}
+                </span>
+                <span class="text-sm" style="color:#8C7480;">weeks gestational age</span>
+            </div>
+            {% else %}
+            <p class="text-sm" style="color:#8C7480;">No health profile created yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+            <h2 class="font-heading font-semibold mb-4" style="color:#3B1E2F;">Record completeness</h2>
+            <ul class="space-y-2">
+                {% for item in checklist %}
+                <li class="flex items-center gap-2 text-sm">
+                    {% if item.recorded %}
+                    <span class="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style="background:#6E8F7C;">
+                        <i data-lucide="check" class="w-2.5 h-2.5 text-white"></i>
+                    </span>
+                    <span style="color:#3B1E2F;">{{ item.label }}</span>
+                    {% else %}
+                    <span class="w-4 h-4 rounded-full shrink-0" style="border:1.5px solid #E3D3D8;"></span>
+                    <span style="color:#B7A3AB;">{{ item.label }}</span>
+                    {% endif %}
                 </li>
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-</div>
 
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6">
-    <h2 class="font-semibold text-gray-900 mb-3">Visits</h2>
-    {% for visit in visits %}
+    <div class="bg-white rounded-2xl p-5 shadow-sm mb-4" style="border:1px solid #F0DEE2;">
+        <h2 class="font-heading font-semibold mb-3" style="color:#3B1E2F;">Visits</h2>
+        {% for visit in visits %}
         <a href="{% url 'hospital-visit-detail' visit_id=visit.id %}"
-           class="block text-sm text-gray-700 hover:text-rose-600 py-1">
-            {{ visit.gestational_week }} weeks — {{ visit.created_at|date:"M j, Y" }}
+           class="flex items-center justify-between py-2.5 {% if not forloop.last %}border-b{% endif %} group"
+           style="border-color:#F5EBED;">
+            <span class="text-sm font-medium group-hover:underline" style="color:#3B1E2F;">
+                Week {{ visit.gestational_week }} visit
+            </span>
+            <span class="text-xs" style="color:#A98A94; font-family:'IBM Plex Mono', ui-monospace, monospace;">
+                {{ visit.created_at|date:"M j, Y" }}
+            </span>
         </a>
-    {% empty %}
-        <p class="text-gray-500 text-sm">No visits recorded yet.</p>
-    {% endfor %}
-</div>
+        {% empty %}
+        <p class="text-sm" style="color:#8C7480;">No visits recorded yet.</p>
+        {% endfor %}
+    </div>
 
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-    <h2 class="font-semibold text-gray-900 mb-3">Medications</h2>
-    {% for med in medications %}
-        <p class="text-sm text-gray-700 py-1">{{ med.name }} — {{ med.duration_days }} days</p>
-    {% empty %}
-        <p class="text-gray-500 text-sm">No medications prescribed yet.</p>
-    {% endfor %}
+    <div class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+        <h2 class="font-heading font-semibold mb-3" style="color:#3B1E2F;">Medications</h2>
+        {% for med in medications %}
+        <div class="flex items-center justify-between py-2.5 {% if not forloop.last %}border-b{% endif %}" style="border-color:#F5EBED;">
+            <span class="text-sm font-medium" style="color:#3B1E2F;">{{ med.name }}</span>
+            <span class="text-xs" style="color:#8C7480;">{{ med.duration_days }} days</span>
+        </div>
+        {% empty %}
+        <p class="text-sm" style="color:#8C7480;">No medications prescribed yet.</p>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}

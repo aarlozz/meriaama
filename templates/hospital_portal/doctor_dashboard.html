@@ -1,22 +1,42 @@
 {% extends "hospital_portal/staff_base.html" %}
 {% block page_title %}My Patients{% endblock %}
 {% block dashboard_content %}
-<h1 class="text-2xl font-bold text-gray-900 mb-1">My Patients</h1>
-<p class="text-sm text-gray-500 mb-6">Mothers currently assigned to you.</p>
+<div class="-m-6 -mt-2 min-h-[calc(100%+2rem)] px-6 pt-2 pb-8" style="background:#FBF5F3;">
 
-<div class="space-y-2">
-    {% for assignment in assignments %}
-        <a href="{% url 'chat-thread' assignment_id=assignment.id %}" class="flex justify-between items-center bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:border-rose-200 transition-colors">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-rose-100 text-rose-600 text-sm font-semibold flex items-center justify-center uppercase">{{ assignment.mother.username|first }}</div>
-                <span class="font-medium text-gray-900">{{ assignment.mother.username }}</span>
+    <div class="pt-6 mb-6">
+        <h1 class="text-2xl font-heading font-bold" style="color:#3B1E2F;">My Patients</h1>
+        <p class="text-sm mt-1" style="color:#8C7480;">Mothers currently assigned to you.</p>
+    </div>
+
+    <div class="space-y-3">
+        {% for assignment in assignments %}
+        {% cycle "#E1315B" "#6E8F7C" "#C97A2B" as tabcolor silent %}
+        <a href="{% url 'chat-thread' assignment_id=assignment.id %}"
+           class="flex items-center justify-between bg-white rounded-2xl border-l-4 p-4 shadow-sm hover:shadow-md transition-shadow"
+           style="border-left-color:{{ tabcolor }}; border-top:1px solid #F0DEE2; border-right:1px solid #F0DEE2; border-bottom:1px solid #F0DEE2;">
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center font-heading font-semibold text-lg shrink-0"
+                     style="background:{{ tabcolor }}1A; color:{{ tabcolor }};">
+                    {{ assignment.mother.username|first|upper }}
+                </div>
+                <span class="font-heading font-semibold" style="color:#3B1E2F;">{{ assignment.mother.username }}</span>
             </div>
             {% if assignment.unread_count %}
-                <span class="bg-rose-600 text-white text-xs font-semibold rounded-full w-6 h-6 flex items-center justify-center">{{ assignment.unread_count }}</span>
+            <span class="text-white text-xs font-semibold rounded-full w-6 h-6 flex items-center justify-center shrink-0"
+                  style="background:#E1315B;">
+                {{ assignment.unread_count }}
+            </span>
             {% endif %}
         </a>
-    {% empty %}
-        <p class="text-gray-500 text-sm">No mothers assigned to you yet.</p>
-    {% endfor %}
+        {% empty %}
+        <div class="text-center py-16">
+            <div class="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style="background:#F7EEF0;">
+                <i data-lucide="users" class="w-6 h-6" style="color:#C79AA6;"></i>
+            </div>
+            <p class="text-sm" style="color:#8C7480;">No mothers assigned to you yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}
