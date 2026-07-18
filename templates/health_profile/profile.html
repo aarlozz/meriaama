@@ -17,6 +17,7 @@ Manage your pregnancy information
     <p class="text-sm text-gray-500 mt-1">A few questions about you -- takes about two minutes.</p>
 </div>
 
+
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
         <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Weeks pregnant</p>
@@ -60,6 +61,14 @@ Manage your pregnancy information
         <div data-panel="dates" class="hp-panel space-y-5">
             <p class="text-xs text-gray-400 -mt-1 mb-1">Helps us work out how far along you are.</p>
 
+              <div>
+        <label class="hp-label">{{ form.date_of_birth.label }}</label>
+        {{ form.date_of_birth }}
+        <p class="hp-help">{{ form.date_of_birth.help_text }}</p>
+        {% if form.date_of_birth.errors %}
+            <p class="hp-error">{{ form.date_of_birth.errors|striptags }}</p>
+        {% endif %}
+    </div>
             <div>
                 <label class="hp-label">{{ form.last_menstrual_period.label }}</label>
                 {{ form.last_menstrual_period }}

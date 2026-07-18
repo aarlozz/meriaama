@@ -1,0 +1,91 @@
+{% extends "hospital_portal/staff_base.html" %}
+{% block page_title %}Visit — {{ visit.visit_date }}{% endblock %}
+{% block dashboard_content %}
+
+<div class="flex justify-between items-start mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ mother.username }} — Visit</h1>
+        <p class="text-sm text-gray-500">{{ visit.visit_date }} (week {{ visit.gestational_week|default:"—" }})</p>
+    </div>
+    <a href="{% url 'hospital-mother-detail' mother_id=mother.id %}"
+       class="text-sm bg-gray-100 text-gray-700 rounded-lg px-3 py-1.5 font-medium hover:bg-gray-200">
+        Back to {{ mother.username }}
+    </a>
+</div>
+
+{% if visit.is_flagged %}
+<div class="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6">
+    <p class="font-semibold text-red-700 mb-1">⚠ Flagged</p>
+    <ul class="text-sm text-red-600 list-disc list-inside">
+        {% for reason in visit.flag_reasons %}
+            <li>{{ reason }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="flex gap-2 mb-6">
+    <a href="{% url 'anc-record-labs' visit_id=visit.id %}"
+       class="text-sm bg-gray-100 text-gray-700 rounded-lg px-3 py-1.5 font-medium hover:bg-gray-200">
+        Record Labs
+    </a>
+    <a href="{% url 'anc-record-ultrasound' visit_id=visit.id %}"
+       class="text-sm bg-gray-100 text-gray-700 rounded-lg px-3 py-1.5 font-medium hover:bg-gray-200">
+        Record Ultrasound
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+        <h2 class="font-semibold text-gray-900 mb-3">Vitals</h2>
+        <p class="text-sm text-gray-600">Weight: {{ visit.maternal_weight_kg|default:"—" }} kg</p>
+        <p class="text-sm text-gray-600">Blood pressure: {{ visit.blood_pressure|default:"—" }}</p>
+        <p class="text-sm text-gray-600">Pulse: {{ visit.pulse_bpm|default:"—" }} bpm</p>
+        <p class="text-sm text-gray-600">SpO2: {{ visit.spo2_percent|default:"—" }}%</p>
+        <p class="text-sm text-gray-600">Fundal height: {{ visit.fundal_height_cm|default:"—" }} cm</p>
+        <p class="text-sm text-gray-600">Fetal heart rate: {{ visit.fetal_heart_rate_bpm|default:"—" }} bpm</p>
+        <p class="text-sm text-gray-600">Edema: {{ visit.get_edema_display|default:"—" }}</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+        <h2 class="font-semibold text-gray-900 mb-3">Exam Findings</h2>
+        <p class="text-sm text-gray-600">Lungs: {% if visit.lungs_abnormal %}Abnormal{% else %}Clear{% endif %}</p>
+        <p class="text-sm text-gray-600">Heart: {% if visit.heart_abnormal %}Abnormal{% else %}Normal{% endif %}</p>
+        <p class="text-sm text-gray-600">Pallor: {% if visit.pallor_present %}Present{% else %}Absent{% endif %}</p>
+        <p class="text-sm text-gray-600">Jaundice: {% if visit.jaundice_present %}Present{% else %}Absent{% endif %}</p>
+        <p class="text-sm text-gray-600">Fetal position: {{ visit.get_fetal_position_display|default:"—" }}</p>
+    </div>
+</div>
+
+{% if visit.lab_results.exists %}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6">
+    <h2 class="font-semibold text-gray-900 mb-3">Lab Results</h2>
+    {% for lab in visit.lab_results.all %}
+        <p class="text-sm py-1 {% if lab.is_flagged %}text-red-600 font-medium{% else %}text-gray-700{% endif %}">
+            {{ lab.test_name }}: {{ lab.value_numeric|default:lab.value_text }} {{ lab.unit }}
+            {% if lab.is_flagged %} — {{ lab.flag_reason }}{% endif %}
+        </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if visit.ultrasound_reports.exists %}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6">
+    <h2 class="font-semibold text-gray-900 mb-3">Ultrasound Reports</h2>
+    {% for scan in visit.ultrasound_reports.all %}
+        <p class="text-sm py-1 {% if scan.is_flagged %}text-red-600 font-medium{% else %}text-gray-700{% endif %}">
+            {{ scan.get_scan_type_display }} — {{ scan.scan_date }}
+            {% if scan.is_flagged %} — {{ scan.flag_reason }}{% endif %}
+        </p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if visit.doctor_notes %}
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+    <h2 class="font-semibold text-gray-900 mb-3">Notes</h2>
+    <p class="text-sm text-gray-700 whitespace-pre-line">{{ visit.doctor_notes }}</p>
+</div>
+{% endif %}
+
+{% endblock %}
