@@ -216,3 +216,32 @@ class VisitSchedule(models.Model):
 
     def __str__(self):
         return f"{self.mother.username} -- expected {self.expected_date} (wk {self.expected_gestational_week})"
+    
+
+class AncScheduleRule(models.Model):
+    """
+    Data-driven "what's due when" table. Separate from LabTestReference
+    (which judges whether an entered value is normal) -- this answers
+    "should this test have been ordered at all." Never touched by
+    signals.py or flag_engine.py; read-only, consumed by schedule_rules.py.
+    """
+    CATEGORY_CHOICES = [("lab", "Lab"), ("ultrasound", "Ultrasound")]
+    APPLIES_TO_CHOICES = [
+        ("first_visit", "First visit only"),
+        ("follow_up", "Follow-up (until ~20-28 weeks)"),
+        ("third_trimester", "Third trimester (28+ weeks)"),
+    ]
+
+    category = models.CharField(max_length=12, choices=CATEGORY_CHOICES)
+    code = models.CharField(max_length=50)  # LabResult.test_code or UltrasoundReport.scan_type
+    label = models.CharField(max_length=150)
+
+    applies_to = models.CharField(max_length=20, choices=APPLIES_TO_CHOICES, blank=True)  # labs
+    week_min = models.FloatField(null=True, blank=True)   # ultrasounds
+    week_max = models.FloatField(null=True, blank=True)   # None = recurring (growth scan)
+
+    class Meta:
+        indexes = [models.Index(fields=["category", "code"])]
+
+    def __str__(self):
+        return f"{self.get_category_display()}: {self.label}"    

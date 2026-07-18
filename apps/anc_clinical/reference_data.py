@@ -95,3 +95,124 @@ TEXT_TEST_RULES = {
         "reason": "VDRL reactive — refer for specialist management",
     },
 }
+
+# Seed for AncScheduleRule. Lab codes must match LabPanelForm.FIELD_MAP
+# codes exactly (anc_clinical/forms.py) since pending_labs() checks against
+# LabResult.test_code. Blood group is intentionally excluded -- it lives on
+# HealthProfile and is already flagged via evaluate_rh_factor() in
+# flag_engine.py. LFT has no LabPanelForm field / LabResult.test_code yet,
+# so it's left out rather than invented -- add both if you want it tracked.
+SCHEDULE_RULE_SEED = [
+    # --- Labs: first visit ---
+    dict(category="lab", code="HB", label="Hemoglobin", applies_to="first_visit"),
+    dict(category="lab", code="URINE_PROTEIN", label="Urine Protein", applies_to="first_visit"),
+    dict(category="lab", code="URINE_GLUCOSE", label="Urine Glucose", applies_to="first_visit"),
+    dict(category="lab", code="HIV", label="HIV", applies_to="first_visit"),
+    dict(category="lab", code="HBSAG", label="HBsAg", applies_to="first_visit"),
+    dict(category="lab", code="VDRL", label="VDRL", applies_to="first_visit"),
+    dict(category="lab", code="RFT_CREATININE", label="Serum Creatinine (RFT)", applies_to="first_visit"),
+    dict(category="lab", code="TSH", label="TSH", applies_to="first_visit"),
+    dict(category="lab", code="GCT", label="Glucose Challenge Test", applies_to="first_visit"),
+    dict(category="lab", code="HBA1C", label="HbA1c", applies_to="first_visit"),
+
+    # --- Labs: follow-up (until ~20wks, carried forward to <28wks per our agreed default) ---
+    dict(category="lab", code="HB", label="Hemoglobin", applies_to="follow_up"),
+    dict(category="lab", code="URINE_PROTEIN", label="Urine Protein", applies_to="follow_up"),
+    dict(category="lab", code="URINE_GLUCOSE", label="Urine Glucose", applies_to="follow_up"),
+    dict(category="lab", code="HIV", label="HIV", applies_to="follow_up"),
+    dict(category="lab", code="HBSAG", label="HBsAg", applies_to="follow_up"),
+    dict(category="lab", code="VDRL", label="VDRL", applies_to="follow_up"),
+    dict(category="lab", code="RFT_CREATININE", label="Serum Creatinine (RFT)", applies_to="follow_up"),
+    dict(category="lab", code="TSH", label="TSH", applies_to="follow_up"),
+    dict(category="lab", code="GCT", label="Glucose Challenge Test", applies_to="follow_up"),
+    dict(category="lab", code="HBA1C", label="HbA1c", applies_to="follow_up"),
+
+    # --- Labs: third trimester (28+ wks) -- full repeat ---
+    dict(category="lab", code="HB", label="Hemoglobin", applies_to="third_trimester"),
+    dict(category="lab", code="URINE_PROTEIN", label="Urine Protein", applies_to="third_trimester"),
+    dict(category="lab", code="URINE_GLUCOSE", label="Urine Glucose", applies_to="third_trimester"),
+    dict(category="lab", code="HIV", label="HIV", applies_to="third_trimester"),
+    dict(category="lab", code="HBSAG", label="HBsAg", applies_to="third_trimester"),
+    dict(category="lab", code="VDRL", label="VDRL", applies_to="third_trimester"),
+    dict(category="lab", code="RFT_CREATININE", label="Serum Creatinine (RFT)", applies_to="third_trimester"),
+    dict(category="lab", code="TSH", label="TSH", applies_to="third_trimester"),
+    dict(category="lab", code="GCT", label="Glucose Challenge Test", applies_to="third_trimester"),
+    dict(category="lab", code="HBA1C", label="HbA1c", applies_to="third_trimester"),
+
+    # --- Ultrasounds: code matches UltrasoundReport.scan_type ---
+    dict(category="ultrasound", code="dating", label="Dating / Viability Scan", week_min=6, week_max=9),
+    dict(category="ultrasound", code="nt_dual", label="NT Scan + Dual Marker", week_min=11, week_max=13.86),
+    dict(category="ultrasound", code="anomaly", label="Anomaly Scan (TIFFA)", week_min=18, week_max=22),
+    dict(category="ultrasound", code="growth", label="Growth Scan", week_min=28, week_max=None),
+]
+
+# ------------------------------------------------------------------
+# Dashboard trimester checklist
+# Used only by the pregnancy dashboard.
+# ------------------------------------------------------------------
+
+TRIMESTER_CHECKLIST = {
+    1: {
+        "labs": [
+            "HB",
+            "URINE_PROTEIN",
+            "URINE_GLUCOSE",
+            "HIV",
+            "HBSAG",
+            "VDRL",
+            "RFT_CREATININE",
+            "TSH",
+            "GCT",
+            "HBA1C",
+        ],
+        "scans": [
+            "dating",
+            "nt_dual",
+        ],
+    },
+
+    2: {
+        "labs": [
+            "HB",
+            "URINE_PROTEIN",
+            "URINE_GLUCOSE",
+            "GCT",
+        ],
+        "scans": [
+            "anomaly",
+        ],
+    },
+
+    3: {
+        "labs": [
+            "HB",
+            "URINE_PROTEIN",
+            "URINE_GLUCOSE",
+            "HIV",
+            "HBSAG",
+            "VDRL",
+        ],
+        "scans": [
+            "growth",
+        ],
+    },
+}
+TEST_LABELS = {
+    "HB": "Hemoglobin",
+    "URINE_PROTEIN": "Urine Protein",
+    "URINE_GLUCOSE": "Urine Glucose",
+    "HIV": "HIV",
+    "HBSAG": "HBsAg",
+    "VDRL": "VDRL",
+    "RFT_CREATININE": "Serum Creatinine",
+    "TSH": "TSH",
+    "GCT": "Glucose Challenge Test",
+    "HBA1C": "HbA1c",
+}
+
+SCAN_LABELS = {
+    "dating": "Dating / Viability Scan",
+    "nt_dual": "NT Scan + Dual Marker",
+    "anomaly": "Anomaly Scan (TIFFA)",
+    "growth": "Growth Scan",
+}
