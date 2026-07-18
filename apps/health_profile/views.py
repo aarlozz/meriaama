@@ -15,7 +15,7 @@ def health_profile_page(request):
         form = HealthProfileForm(request.POST, instance=profile)
         if form.is_valid():
             dates_changed = bool(
-                {"last_menstrual_period", "edd_is_manual_override"} & set(form.changed_data)
+                {"date_of_birth", "last_menstrual_period", "edd_is_manual_override"} & set(form.changed_data)
             )
             instance = form.save()
             if dates_changed:

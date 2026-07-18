@@ -2,49 +2,123 @@
 {% load static %}
 {% block title %}Trimester Analysis{% endblock %}
 {% block content %}
-<div class="space-y-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+  .font-display { font-family: 'Fraunces', ui-serif, serif; font-optical-sizing: auto; letter-spacing: -0.01em; }
+  body, .font-body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
 
+  .card { background:#fff; border:1px solid #ffe4e9; border-radius:1.5rem; box-shadow: 0 1px 2px rgba(159,18,57,.04), 0 8px 24px -12px rgba(159,18,57,.10); }
+  .rule { height:1px; background:linear-gradient(to right, #fecdd3, transparent); }
+
+  .trend-chip { display:inline-flex; align-items:center; gap:.3rem; font-size:.7rem; font-weight:600; padding:.2rem .6rem; border-radius:999px; background:#fff1f2; color:#9f1239; white-space:nowrap; border:1px solid #ffe4e9; }
+  .chip-empty { display:none; }
+
+  .icon { width:1em; height:1em; display:inline-block; vertical-align:-0.125em; }
+
+  .badge { width:1.75rem; height:1.75rem; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .badge-severe { background:#881337; color:#fff; }
+  .badge-moderate { background:#e11d48; color:#fff; }
+  .badge-normal { background:#ffe4e9; color:#9f1239; }
+  .badge-nodata { background:#f5f5f4; color:#a8a29e; }
+
+  .sign-badge { width:20px; height:20px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; transition:transform .15s ease; }
+  .sign-badge:hover { transform:scale(1.3); }
+  .sign-badge svg { width:11px; height:11px; }
+
+  .signs-scroll::-webkit-scrollbar { height:6px; }
+  .signs-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,.08); border-radius:4px; }
+  .signs-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.35); border-radius:4px; }
+
+  .flag-col { max-height:22rem; overflow-y:auto; }
+  .flag-col::-webkit-scrollbar { width:5px; }
+  .flag-col::-webkit-scrollbar-thumb { background:#fecdd3; border-radius:4px; }
+
+  .stepper-link { transition: background .15s ease, color .15s ease; }
+  .stepper-link[aria-current="true"] { background:#9f1239; color:#fff; }
+
+  .timeline-rail { position:relative; }
+  .timeline-rail::before { content:''; position:absolute; left:15px; top:8px; bottom:8px; width:2px; background:linear-gradient(to bottom, #fda4af, #ffe4e9); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<!-- icon sprite: minimal line-icon set, all currentColor so they inherit rose tones -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-alert-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+    <symbol id="i-droplet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></symbol>
+    <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+    <symbol id="i-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2m0 16v2m8-10h2M2 12H4m13.657-6.343l1.414-1.414M4.929 19.071l1.414-1.414m12.728 1.414l-1.414-1.414M6.343 6.343L4.929 4.929"/><circle cx="12" cy="12" r="4"></circle></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  </defs>
+</svg>
+
+<div class="space-y-8 font-body text-stone-800">
+
+    <!-- ============ HEADER ============ -->
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
         <div>
-            <p class="text-sm uppercase tracking-wider text-pink-500 font-semibold">Pregnancy Dashboard</p>
-            <h1 class="text-3xl font-bold text-gray-900 mt-2">Trimester Analysis</h1>
-            <p class="text-gray-500 mt-2">View your pregnancy progress, clinical trends and AI-generated insights collected across all prenatal visits.</p>
+            <p class="text-sm uppercase tracking-wider text-rose-600 font-semibold">Pregnancy Dashboard</p>
+            <h1 class="font-display text-4xl font-semibold text-rose-950 mt-2">Trimester Analysis</h1>
+            <p class="text-stone-500 mt-2 max-w-xl">Your pregnancy progress, clinical trends, and AI-generated insights, gathered across every prenatal visit on file.</p>
         </div>
         {% if progress.current_week %}
         <div class="mt-6 lg:mt-0">
-            <div class="bg-pink-600 text-white rounded-2xl px-6 py-4 shadow-lg">
-                <p class="text-xs uppercase tracking-wide opacity-80">Current Pregnancy</p>
-                <h2 class="text-4xl font-bold mt-1">Week {{ progress.current_week }}</h2>
+            <div class="bg-rose-950 text-white rounded-2xl px-6 py-4 shadow-lg" style="box-shadow:0 12px 28px -12px rgba(136,19,55,.45);">
+                <p class="text-xs uppercase tracking-wide text-rose-300">Current Pregnancy</p>
+                <h2 class="font-display text-4xl font-semibold mt-1">Week {{ progress.current_week }}</h2>
             </div>
         </div>
         {% endif %}
     </div>
 
+    <!-- ============ TRIMESTER STEPPER ============ -->
+    {% if trimesters %}
+    <div class="card px-5 py-4 flex flex-wrap items-center gap-2.5">
+        <span class="text-xs uppercase tracking-wide text-stone-400 font-semibold mr-1">Jump to</span>
+        {% for trimester in trimesters %}
+        <a href="#trimester-{{ trimester.trimester }}" class="stepper-link text-sm font-medium px-4 py-1.5 rounded-full bg-rose-50 text-rose-800 hover:bg-rose-100">
+            Trimester {{ trimester.trimester }} <span class="opacity-60">&middot; {{ trimester.visit_count }} visit{{ trimester.visit_count|pluralize }}</span>
+        </a>
+        {% endfor %}
+        <a href="#visit-history" class="stepper-link text-sm font-medium px-4 py-1.5 rounded-full bg-rose-50 text-rose-800 hover:bg-rose-100">Full visit history</a>
+    </div>
+    {% endif %}
+
+    <!-- ============ AI SUMMARY ============ -->
     {% if narrative %}
-    <div class="bg-gradient-to-r from-pink-50 via-white to-purple-50 rounded-3xl border border-pink-100 shadow-sm p-8">
+    <div class="card p-8">
         <div class="flex items-start gap-5 mb-6">
-            <div class="w-14 h-14 rounded-full bg-pink-500 flex items-center justify-center text-white shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m0 16v2m8-10h2M2 12H4m13.657-6.343l1.414-1.414M4.929 19.071l1.414-1.414m12.728 1.414l-1.414-1.414M6.343 6.343L4.929 4.929"/>
-                    <circle cx="12" cy="12" r="4"></circle>
-                </svg>
+            <div class="w-12 h-12 rounded-full bg-rose-950 flex items-center justify-center text-white shrink-0">
+                <svg class="icon" style="width:22px;height:22px"><use href="#i-sparkle"/></svg>
             </div>
             <div>
-                <h2 class="text-xl font-bold text-gray-900">AI Pregnancy Summary</h2>
-                <p class="text-gray-500 text-sm mt-1">Automatically generated from your clinical visit history.</p>
+                <h2 class="font-display text-2xl font-semibold text-rose-950">AI Pregnancy Summary</h2>
+                <p class="text-stone-500 text-sm mt-1">Automatically generated from your clinical visit history.</p>
             </div>
         </div>
 
         {% if narrative.overall_progress %}
-            <p class="text-gray-700 leading-relaxed mb-6">{{ narrative.overall_progress }}</p>
+            <p class="text-stone-700 leading-relaxed mb-6">{{ narrative.overall_progress }}</p>
         {% endif %}
 
         {% if narrative.trimester_notes %}
             <div class="grid sm:grid-cols-3 gap-4 mb-6">
                 {% for note in narrative.trimester_notes %}
-                    <div class="bg-white/70 rounded-2xl p-4 border border-pink-100">
-                        <p class="text-xs font-semibold uppercase tracking-wide text-pink-500 mb-1">Trimester {{ note.trimester }}</p>
-                        <p class="text-sm text-gray-600 leading-relaxed">{{ note.note }}</p>
+                    <div class="bg-rose-50/60 rounded-2xl p-4 border border-rose-100">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-rose-600 mb-1">Trimester {{ note.trimester }}</p>
+                        <p class="text-sm text-stone-600 leading-relaxed">{{ note.note }}</p>
                     </div>
                 {% endfor %}
             </div>
@@ -53,20 +127,20 @@
         <div class="grid sm:grid-cols-2 gap-6">
             {% if narrative.positive_signs %}
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-green-600 mb-2">Positive signs</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-rose-400 mb-2 flex items-center gap-1.5"><svg class="icon"><use href="#i-check"/></svg>Positive signs</p>
                     <ul class="space-y-1.5">
                         {% for sign in narrative.positive_signs %}
-                            <li class="flex items-start gap-2 text-sm text-gray-700"><span class="text-green-500 mt-0.5">✓</span><span>{{ sign }}</span></li>
+                            <li class="flex items-start gap-2 text-sm text-stone-700"><span class="text-rose-300 mt-0.5">&middot;</span><span>{{ sign }}</span></li>
                         {% endfor %}
                     </ul>
                 </div>
             {% endif %}
             {% if narrative.things_to_discuss %}
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-2">Things to discuss with your doctor</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-rose-800 mb-2 flex items-center gap-1.5"><svg class="icon"><use href="#i-alert-circle"/></svg>Things to discuss with your doctor</p>
                     <ul class="space-y-1.5">
                         {% for item in narrative.things_to_discuss %}
-                            <li class="flex items-start gap-2 text-sm text-gray-700"><span class="text-amber-500 mt-0.5">!</span><span>{{ item }}</span></li>
+                            <li class="flex items-start gap-2 text-sm text-stone-700"><span class="text-rose-500 mt-0.5">&middot;</span><span>{{ item }}</span></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -74,134 +148,317 @@
         </div>
 
         {% if narrative.next_visit_advice %}
-            <div class="mt-6 pt-5 border-t border-pink-100">
-                <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Before your next visit</p>
-                <p class="text-sm text-gray-700">{{ narrative.next_visit_advice }}</p>
+            <div class="mt-6 pt-5 border-t border-rose-100">
+                <p class="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-1">Before your next visit</p>
+                <p class="text-sm text-stone-700">{{ narrative.next_visit_advice }}</p>
             </div>
         {% endif %}
     </div>
     {% endif %}
 
+    <!-- ============ STAT CARDS ============ -->
     <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-2xl shadow-sm border p-6">
-            <p class="text-sm text-gray-500">Prenatal Visits</p>
-            <h2 class="text-4xl font-bold mt-3 text-pink-600">{{ overall.total_visits }}</h2>
-            <p class="text-sm text-gray-400 mt-2">Total hospital visits recorded</p>
+        <div class="card p-6">
+            <p class="text-sm text-stone-500 flex items-center gap-1.5"><svg class="icon text-rose-400"><use href="#i-calendar"/></svg>Prenatal Visits</p>
+            <h2 class="font-display text-4xl font-semibold mt-3 text-rose-700">{{ overall.total_visits }}</h2>
+            <p class="text-sm text-stone-400 mt-2">Total hospital visits recorded</p>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border p-6">
-            <p class="text-sm text-gray-500">Clinical Concerns</p>
-            <h2 class="text-4xl font-bold mt-3 text-red-500">{{ overall.total_concerns }}</h2>
-            <p class="text-sm text-gray-400 mt-2">Items needing attention</p>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm border p-6">
-            <p class="text-sm text-gray-500">Record Completeness</p>
-            <h2 class="text-4xl font-bold mt-3 text-green-600">{{ progress.completion }}%</h2>
-            <div class="w-full h-3 rounded-full bg-gray-200 mt-5 overflow-hidden">
-                <div class="h-full bg-green-500 rounded-full" style="width:{{ progress.completion }}%;"></div>
+        <div class="card p-6">
+            <p class="text-sm text-stone-500 flex items-center gap-1.5"><svg class="icon text-rose-400"><use href="#i-alert-circle"/></svg>Clinical Concerns</p>
+            <h2 class="font-display text-4xl font-semibold mt-3 text-rose-900">{{ overall.total_concerns }}</h2>
+            <div class="flex items-center gap-3 mt-2">
+                <span class="inline-flex items-center gap-1.5 text-xs font-medium text-rose-900"><span class="w-2 h-2 rounded-full bg-rose-900"></span>{{ overall.severe_count }} severe</span>
+                <span class="inline-flex items-center gap-1.5 text-xs font-medium text-rose-500"><span class="w-2 h-2 rounded-full bg-rose-500"></span>{{ overall.moderate_count }} moderate</span>
             </div>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border p-6">
-            <p class="text-sm text-gray-500">Pregnancy Milestones</p>
-            <h2 class="text-4xl font-bold mt-3 text-purple-600">{{ progress.milestones|length }}</h2>
-            <p class="text-sm text-gray-400 mt-2">Achieved so far</p>
+        <div class="card p-6">
+            <p class="text-sm text-stone-500">Record Completeness</p>
+            <h2 class="font-display text-4xl font-semibold mt-3 text-rose-700">{{ progress.completion }}%</h2>
+            <div class="w-full h-2.5 rounded-full bg-rose-50 mt-5 overflow-hidden">
+                <div class="h-full bg-rose-500 rounded-full" style="width:{{ progress.completion }}%;"></div>
+            </div>
+        </div>
+        <div class="card p-6">
+            <p class="text-sm text-stone-500 flex items-center gap-1.5"><svg class="icon text-rose-400"><use href="#i-check"/></svg>Pregnancy Milestones</p>
+            <h2 class="font-display text-4xl font-semibold mt-3 text-rose-700">{{ progress.milestones|length }}</h2>
+            <p class="text-sm text-stone-400 mt-2">Achieved so far</p>
         </div>
     </div>
 
     {% if progress.milestones %}
-    <div class="bg-white rounded-2xl shadow-sm border p-6">
-        <h2 class="text-xl font-bold mb-5">Pregnancy Milestones</h2>
+    <div class="card p-6">
+        <h2 class="font-display text-xl font-semibold mb-5 text-rose-950">Pregnancy Milestones</h2>
         <div class="grid md:grid-cols-2 gap-4">
             {% for milestone in progress.milestones %}
-            <div class="flex items-center gap-3 p-4 rounded-xl bg-green-50">
-                <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">✓</div>
-                <div class="text-gray-800 font-medium">{{ milestone }}</div>
+            <div class="flex items-center gap-3 p-4 rounded-xl bg-rose-50">
+                <div class="badge badge-normal"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg></div>
+                <div class="text-stone-800 font-medium">{{ milestone }}</div>
             </div>
             {% endfor %}
         </div>
     </div>
     {% endif %}
 
-    <div class="grid xl:grid-cols-2 gap-6">
-        <div class="bg-white rounded-2xl shadow-sm border p-6">
-            <h2 class="text-xl font-bold text-gray-900">Weight Trend</h2>
-            <p class="text-sm text-gray-500 mb-4">Maternal weight throughout pregnancy</p>
-            <div class="h-80"><canvas id="weightChart"></canvas></div>
+    <!-- ============ CHARTS: GROWTH & VITALS ============ -->
+    <div>
+        <div class="flex items-baseline gap-3 mb-1">
+            <h2 class="font-display text-2xl font-semibold text-rose-950">Growth &amp; Vitals</h2>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm border p-6">
-            <h2 class="text-xl font-bold text-gray-900">Blood Pressure</h2>
-            <p class="text-sm text-gray-500 mb-4">Systolic / Diastolic trend</p>
-            <div class="h-80"><canvas id="bpChart"></canvas></div>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm border p-6">
-            <h2 class="text-xl font-bold text-gray-900">Hemoglobin</h2>
-            <p class="text-sm text-gray-500 mb-4">g/dL trend</p>
-            <div class="h-80"><canvas id="hbChart"></canvas></div>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm border p-6">
-            <h2 class="text-xl font-bold text-gray-900">Fetal Heart Rate</h2>
-            <p class="text-sm text-gray-500 mb-4">Beats per minute</p>
-            <div class="h-80"><canvas id="fhrChart"></canvas></div>
+        <p class="text-sm text-stone-500 mb-4">How your body and baby's growth markers are tracking week to week.</p>
+        <div class="grid xl:grid-cols-2 gap-6">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-semibold text-stone-900 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-trending-up"/></svg>Weight Trend</h3>
+                    <span id="chip-weight" class="trend-chip chip-empty"></span>
+                </div>
+                <p class="text-sm text-stone-500 mb-4">Maternal weight throughout pregnancy</p>
+                <div class="h-72"><canvas id="weightChart"></canvas></div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-semibold text-stone-900 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-bars"/></svg>Fundal Height</h3>
+                    <span id="chip-fundal" class="trend-chip chip-empty"></span>
+                </div>
+                <p class="text-sm text-stone-500 mb-4">Uterine growth, measured cm from pubic bone</p>
+                <div class="h-72"><canvas id="fundalChart"></canvas></div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-semibold text-stone-900 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-activity"/></svg>Pulse &amp; SpO2</h3>
+                    <div class="flex gap-2">
+                        <span id="chip-pulse" class="trend-chip chip-empty"></span>
+                        <span id="chip-spo2" class="trend-chip chip-empty"></span>
+                    </div>
+                </div>
+                <p class="text-sm text-stone-500 mb-4">Pulse (bpm, solid) and oxygen saturation (%, dashed)</p>
+                <div class="h-72"><canvas id="pulseSpo2Chart"></canvas></div>
+            </div>
+            <div class="card p-6">
+                <h3 class="text-lg font-semibold text-stone-900 mb-1 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-bars"/></svg>Weight Gain by Trimester</h3>
+                <p class="text-sm text-stone-500 mb-4">Net kg gained within each trimester</p>
+                <div class="h-72"><canvas id="weightGainChart"></canvas></div>
+            </div>
         </div>
     </div>
 
+    <!-- ============ CHARTS: HEART & LABS ============ -->
+    <div>
+        <h2 class="font-display text-2xl font-semibold text-rose-950 mb-1">Heart &amp; Labs</h2>
+        <p class="text-sm text-stone-500 mb-4">Cardiovascular readings and lab values across your visit history.</p>
+        <div class="grid xl:grid-cols-2 gap-6">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-semibold text-stone-900 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-heart"/></svg>Blood Pressure</h3>
+                    <span id="chip-bp" class="trend-chip chip-empty"></span>
+                </div>
+                <p class="text-sm text-stone-500 mb-4">Systolic (solid) / Diastolic (dashed)</p>
+                <div class="h-72"><canvas id="bpChart"></canvas></div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-semibold text-stone-900 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-heart"/></svg>Fetal Heart Rate</h3>
+                    <span id="chip-fhr" class="trend-chip chip-empty"></span>
+                </div>
+                <p class="text-sm text-stone-500 mb-4">Beats per minute</p>
+                <div class="h-72"><canvas id="fhrChart"></canvas></div>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-lg font-semibold text-stone-900 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-droplet"/></svg>Hemoglobin</h3>
+                    <span id="chip-hb" class="trend-chip chip-empty"></span>
+                </div>
+                <p class="text-sm text-stone-500 mb-4">g/dL trend</p>
+                <div class="h-72"><canvas id="hbChart"></canvas></div>
+            </div>
+            <div class="card p-6">
+                <h3 class="text-lg font-semibold text-stone-900 mb-1 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-droplet"/></svg>Lab Results Trend</h3>
+                <p class="text-sm text-stone-500 mb-4">Every numeric lab value recorded, grouped by test. Gaps mean that test wasn't run that visit.</p>
+                <div class="h-72"><canvas id="labsChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ SIGNATURE: SCREENING SIGNS TIMELINE ============ -->
+    {% if timeline %}
+    <div class="rounded-3xl p-8 text-white" style="background:linear-gradient(155deg,#4c0519,#881337 60%,#9f1239);">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+            <div>
+                <p class="text-xs uppercase tracking-wider text-rose-300 font-semibold">Visit by visit</p>
+                <h2 class="font-display text-2xl font-semibold mt-1">Screening Signs Timeline</h2>
+                <p class="text-rose-200 text-sm mt-1 max-w-xl">Urine screening, swelling and fetal movement checked at each visit, side by side, so a pattern is visible before it becomes a page of numbers.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 text-xs text-rose-100">
+                <span class="inline-flex items-center gap-1.5"><span class="sign-badge" style="background:#ffe4e9;color:#9f1239"><svg><use href="#i-check"/></svg></span>Good</span>
+                <span class="inline-flex items-center gap-1.5"><span class="sign-badge" style="background:#e11d48;color:#fff"><svg><use href="#i-alert-circle"/></svg></span>Caution</span>
+                <span class="inline-flex items-center gap-1.5"><span class="sign-badge" style="background:#4c0519;color:#fff"><svg><use href="#i-alert-triangle"/></svg></span>Concern</span>
+                <span class="inline-flex items-center gap-1.5"><span class="sign-badge" style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.6)"><svg><use href="#i-minus"/></svg></span>Not recorded</span>
+            </div>
+        </div>
+        <div id="signsTimeline" class="signs-scroll overflow-x-auto pb-2"></div>
+    </div>
+    {% endif %}
+
+    <!-- ============ PER-TRIMESTER BREAKDOWN ============ -->
     <div class="space-y-8">
         {% for trimester in trimesters %}
-        <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
-            <div class="bg-gradient-to-r from-pink-600 to-rose-500 px-8 py-6 text-white">
+        <div id="trimester-{{ trimester.trimester }}" data-trimester="{{ trimester.trimester }}" class="card overflow-hidden scroll-mt-6">
+            <div class="px-8 py-6 text-white" style="background:linear-gradient(120deg,#9f1239,#e11d48);">
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold">Trimester {{ trimester.trimester }}</h2>
-                        <p class="text-pink-100 mt-1">{{ trimester.visit_count }} Prenatal Visit{{ trimester.visit_count|pluralize }}</p>
+                        <h2 class="font-display text-2xl font-semibold">Trimester {{ trimester.trimester }}</h2>
+                        <p class="text-rose-100 mt-1">{{ trimester.visit_count }} Prenatal Visit{{ trimester.visit_count|pluralize }}</p>
                     </div>
                     <div class="text-right">
                         <div class="text-sm uppercase tracking-wide opacity-90">Weight Gain</div>
-                        <div class="text-3xl font-bold">{% if trimester.weight_gain %}{{ trimester.weight_gain }} kg{% else %}—{% endif %}</div>
+                        <div class="font-display text-3xl font-semibold">{% if trimester.weight_gain %}{{ trimester.weight_gain }} kg{% else %}&mdash;{% endif %}</div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-4 gap-5 p-6">
-                <div class="bg-pink-50 rounded-xl p-5"><p class="text-gray-500 text-sm">Weight Start</p><h3 class="text-3xl font-bold text-pink-600 mt-2">{{ trimester.weight_start|default:"—" }}</h3></div>
-                <div class="bg-sky-50 rounded-xl p-5"><p class="text-gray-500 text-sm">Weight End</p><h3 class="text-3xl font-bold text-sky-600 mt-2">{{ trimester.weight_end|default:"—" }}</h3></div>
-                <div class="bg-green-50 rounded-xl p-5"><p class="text-gray-500 text-sm">Visits</p><h3 class="text-3xl font-bold text-green-600 mt-2">{{ trimester.visit_count }}</h3></div>
-                <div class="bg-purple-50 rounded-xl p-5"><p class="text-gray-500 text-sm">Clinical Flags</p><h3 class="text-3xl font-bold text-purple-600 mt-2">{{ trimester.flags|length }}</h3></div>
+            <div class="grid md:grid-cols-5 gap-5 p-6">
+                <div class="bg-rose-50 rounded-xl p-5"><p class="text-stone-500 text-sm">Weight Start</p><h3 class="text-3xl font-semibold text-rose-700 mt-2">{{ trimester.weight_start|default:"—" }}</h3></div>
+                <div class="bg-rose-100/70 rounded-xl p-5"><p class="text-stone-500 text-sm">Weight End</p><h3 class="text-3xl font-semibold text-rose-800 mt-2">{{ trimester.weight_end|default:"—" }}</h3></div>
+                <div class="bg-rose-50 rounded-xl p-5"><p class="text-stone-500 text-sm">Visits</p><h3 class="text-3xl font-semibold text-rose-600 mt-2">{{ trimester.visit_count }}</h3></div>
+                <div class="bg-rose-950 rounded-xl p-5"><p class="text-rose-300 text-sm">Severe</p><h3 class="text-3xl font-semibold text-white mt-2">{{ trimester.severe_count }}</h3></div>
+                <div class="bg-rose-500 rounded-xl p-5"><p class="text-rose-50 text-sm">Moderate</p><h3 class="text-3xl font-semibold text-white mt-2">{{ trimester.moderate_count }}</h3></div>
             </div>
 
+            <!-- Clinical findings, split into three scannable columns. Darker = more urgent -->
             <div class="px-6 pb-6">
-                <h3 class="text-xl font-semibold mb-4">Clinical Findings</h3>
-                {% if trimester.flags %}
-                    <div class="space-y-4">
-                        {% for flag in trimester.flags %}
-                        <div class="rounded-xl border p-4 {% if flag.severity == 'concern' %}border-red-300 bg-red-50{% elif flag.severity == 'caution' %}border-yellow-300 bg-yellow-50{% else %}border-green-300 bg-green-50{% endif %}">
-                            <span class="font-semibold">{% if flag.severity == "concern" %}🔴 Concern{% elif flag.severity == "caution" %}🟡 Caution{% else %}🟢 Normal{% endif %}</span>
-                            <p class="mt-2 text-gray-700">{{ flag.message }}</p>
+                <h3 class="text-xl font-semibold mb-4 text-stone-900">Clinical Findings</h3>
+                <div class="grid md:grid-cols-3 gap-4">
+
+                    <div class="rounded-2xl border border-rose-200 overflow-hidden">
+                        <div class="bg-rose-950 text-white px-4 py-2.5 flex items-center justify-between">
+                            <span class="font-semibold text-sm flex items-center gap-2"><svg class="icon"><use href="#i-alert-triangle"/></svg>Severe</span>
+                            <span class="text-xs font-bold bg-white/15 rounded-full px-2 py-0.5">{{ trimester.severe_count }}</span>
                         </div>
-                        {% endfor %}
+                        <div class="flag-col p-3 space-y-2 bg-rose-50/50">
+                            {% for flag in trimester.flags %}
+                                {% if flag.severity == "severe" %}
+                                <div class="flag-card severity-severe bg-white rounded-xl border border-rose-200 p-3">
+                                    <div class="flex items-center justify-between text-xs text-stone-400 mb-1">
+                                        <span>{{ flag.source }}{% if flag.week %} &middot; Week {{ flag.week }}{% endif %}</span>
+                                        {% if flag.date %}<span>{{ flag.date }}</span>{% endif %}
+                                    </div>
+                                    <p class="text-sm text-stone-700">{{ flag.message }}</p>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                            <p class="empty-state text-sm text-stone-400 italic px-1 py-2">No severe findings this trimester.</p>
+                        </div>
                     </div>
-                {% else %}
-                    <div class="rounded-xl bg-green-50 border border-green-200 p-5"><p class="text-green-700">✅ No significant clinical concerns were identified during this trimester.</p></div>
-                {% endif %}
+
+                    <div class="rounded-2xl border border-rose-200 overflow-hidden">
+                        <div class="bg-rose-500 text-white px-4 py-2.5 flex items-center justify-between">
+                            <span class="font-semibold text-sm flex items-center gap-2"><svg class="icon"><use href="#i-alert-circle"/></svg>Moderate</span>
+                            <span class="text-xs font-bold bg-white/15 rounded-full px-2 py-0.5">{{ trimester.moderate_count }}</span>
+                        </div>
+                        <div class="flag-col p-3 space-y-2 bg-rose-50/50">
+                            {% for flag in trimester.flags %}
+                                {% if flag.severity == "moderate" %}
+                                <div class="flag-card severity-moderate bg-white rounded-xl border border-rose-200 p-3">
+                                    <div class="flex items-center justify-between text-xs text-stone-400 mb-1">
+                                        <span>{{ flag.source }}{% if flag.week %} &middot; Week {{ flag.week }}{% endif %}</span>
+                                        {% if flag.date %}<span>{{ flag.date }}</span>{% endif %}
+                                    </div>
+                                    <p class="text-sm text-stone-700">{{ flag.message }}</p>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                            <p class="empty-state text-sm text-stone-400 italic px-1 py-2">No moderate findings this trimester.</p>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-rose-200 overflow-hidden">
+                        <div class="bg-rose-100 text-rose-900 px-4 py-2.5 flex items-center justify-between">
+                            <span class="font-semibold text-sm flex items-center gap-2"><svg class="icon"><use href="#i-check"/></svg>Normal</span>
+                            <span class="normal-count text-xs font-bold bg-rose-900/10 rounded-full px-2 py-0.5">0</span>
+                        </div>
+                        <div class="flag-col p-3 space-y-2 bg-rose-50/50">
+                            {% for flag in trimester.flags %}
+                                {% if flag.severity != "severe" and flag.severity != "moderate" %}
+                                <div class="flag-card severity-normal bg-white rounded-xl border border-rose-100 p-3">
+                                    <div class="flex items-center justify-between text-xs text-stone-400 mb-1">
+                                        <span>{{ flag.source }}{% if flag.week %} &middot; Week {{ flag.week }}{% endif %}</span>
+                                        {% if flag.date %}<span>{{ flag.date }}</span>{% endif %}
+                                    </div>
+                                    <p class="text-sm text-stone-700">{{ flag.message }}</p>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                            <p class="empty-state text-sm text-stone-400 italic px-1 py-2">No normal-range findings logged.</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
-            <div class="border-t bg-gray-50 p-6">
-                <h3 class="text-xl font-semibold mb-5">Visit Timeline</h3>
-                <div class="space-y-5">
+            {% if trimester.recommendations %}
+            <div class="px-6 pb-6">
+                <h3 class="text-lg font-semibold mb-3 text-stone-900">Recommended Next Steps</h3>
+                <ul class="space-y-2">
+                    {% for rec in trimester.recommendations %}
+                    <li class="flex items-start gap-2 text-sm text-stone-700">
+                        <span class="text-rose-500 mt-0.5">&rarr;</span><span>{{ rec }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Visit-by-visit timeline: refined rail + icon-labeled stats -->
+            <div class="border-t bg-rose-50/30 p-6">
+                <h3 class="text-xl font-semibold mb-5 text-stone-900 flex items-center gap-2"><svg class="icon text-rose-500"><use href="#i-calendar"/></svg>Visit Timeline</h3>
+                <div class="timeline-rail space-y-5 pl-2">
                     {% for item in trimester.timeline %}
-                    <div class="flex gap-4">
-                        <div class="w-4 h-4 rounded-full bg-pink-500 mt-2"></div>
-                        <div class="flex-1 bg-white rounded-xl border p-5">
-                            <h4 class="font-semibold">Week {{ item.week }}</h4>
-                            <p class="text-sm text-gray-500">{{ item.date }}</p>
-                            <div class="grid md:grid-cols-4 gap-4 mt-5">
-                                <div><p class="text-xs uppercase text-gray-400">Weight</p><p class="font-semibold">{{ item.visit.maternal_weight_kg|default:"—" }} kg</p></div>
-                                <div><p class="text-xs uppercase text-gray-400">Blood Pressure</p><p class="font-semibold">{{ item.visit.blood_pressure|default:"—" }}</p></div>
-                                <div><p class="text-xs uppercase text-gray-400">Hemoglobin</p><p class="font-semibold">{{ item.visit.hemoglobin_g_dl|default:"—" }}</p></div>
-                                <div><p class="text-xs uppercase text-gray-400">Fetal Heart Rate</p><p class="font-semibold">{{ item.visit.fetal_heart_rate_bpm|default:"—" }}</p></div>
+                    <div class="flex gap-4 relative">
+                        <div class="w-8 h-8 rounded-full bg-white border-2 border-rose-400 flex items-center justify-center shrink-0 z-10">
+                            <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+                        </div>
+                        <div class="flex-1 bg-white rounded-xl border border-rose-100 p-5">
+                            <div class="flex items-baseline justify-between">
+                                <h4 class="font-semibold text-stone-900">Week {{ item.week }}</h4>
+                                <p class="text-xs text-stone-400">{{ item.date }}</p>
                             </div>
+                            <div class="grid md:grid-cols-4 gap-4 mt-5">
+                                <div><p class="text-xs uppercase text-stone-400 flex items-center gap-1"><svg class="icon" style="width:12px;height:12px"><use href="#i-trending-up"/></svg>Weight</p><p class="font-semibold text-stone-800 mt-1">{{ item.visit.maternal_weight_kg|default:"—" }} kg</p></div>
+                                <div><p class="text-xs uppercase text-stone-400 flex items-center gap-1"><svg class="icon" style="width:12px;height:12px"><use href="#i-heart"/></svg>Blood Pressure</p><p class="font-semibold text-stone-800 mt-1">{{ item.visit.blood_pressure|default:"—" }}</p></div>
+                                <div><p class="text-xs uppercase text-stone-400 flex items-center gap-1"><svg class="icon" style="width:12px;height:12px"><use href="#i-droplet"/></svg>Hemoglobin</p><p class="font-semibold text-stone-800 mt-1">{{ item.visit.hemoglobin_g_dl|default:"—" }}</p></div>
+                                <div><p class="text-xs uppercase text-stone-400 flex items-center gap-1"><svg class="icon" style="width:12px;height:12px"><use href="#i-activity"/></svg>Fetal Heart Rate</p><p class="font-semibold text-stone-800 mt-1">{{ item.visit.fetal_heart_rate_bpm|default:"—" }} bpm</p></div>
+                            </div>
+
+                            {% if item.labs %}
+                            <div class="mt-4 pt-4 border-t border-rose-50">
+                                <p class="text-xs uppercase text-stone-400 mb-1.5">Labs</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {% for lr in item.labs %}
+                                    <span class="text-xs px-2.5 py-1 rounded-full inline-flex items-center gap-1 {% if lr.is_flagged %}bg-rose-900 text-white{% else %}bg-rose-50 text-rose-800{% endif %}">
+                                        {% if lr.is_flagged %}<svg class="icon" style="width:10px;height:10px"><use href="#i-alert-circle"/></svg>{% endif %}
+                                        {{ lr.test_name }}: {{ lr.value_numeric|default:lr.value_text }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if item.scans %}
+                            <div class="mt-4 pt-4 border-t border-rose-50">
+                                <p class="text-xs uppercase text-stone-400 mb-1.5">Ultrasound Scans</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {% for ur in item.scans %}
+                                    <span class="text-xs px-2.5 py-1 rounded-full inline-flex items-center gap-1 {% if ur.is_flagged %}bg-rose-900 text-white{% else %}bg-rose-50 text-rose-800{% endif %}">
+                                        {% if ur.is_flagged %}<svg class="icon" style="width:10px;height:10px"><use href="#i-alert-circle"/></svg>{% endif %}
+                                        {{ ur.get_scan_type_display }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                     {% empty %}
-                    <div class="text-center text-gray-500 py-8">No visits recorded.</div>
+                    <div class="text-center text-stone-500 py-8">No visits recorded.</div>
                     {% endfor %}
                 </div>
             </div>
@@ -209,118 +466,342 @@
         {% endfor %}
     </div>
 
-    <div class="bg-white rounded-3xl shadow-sm border p-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Overall Clinical Summary</h2>
+    <!-- ============ OVERALL SUMMARY ============ -->
+    <div class="card p-8">
+        <h2 class="font-display text-2xl font-semibold text-rose-950 mb-6">Overall Clinical Summary</h2>
         <div class="grid lg:grid-cols-2 gap-8">
             <div>
-                <h3 class="text-lg font-semibold text-green-700 mb-4">Positive Findings</h3>
+                <h3 class="text-lg font-semibold text-rose-950 mb-4 flex items-center gap-2"><svg class="icon text-rose-400"><use href="#i-check"/></svg>Positive Findings</h3>
                 {% if overall.highlights %}
                     <div class="space-y-3">
                         {% for item in overall.highlights %}
                         <div class="flex items-start gap-3">
-                            <div class="w-7 h-7 rounded-full bg-green-500 text-white flex items-center justify-center text-sm">✓</div>
-                            <div class="text-gray-700">{{ item.title }}: {{ item.value }}</div>
+                            <div class="badge badge-normal shrink-0"><svg class="icon" style="width:13px;height:13px"><use href="#i-check"/></svg></div>
+                            <div class="text-stone-700">{{ item.title }}: {{ item.value }}</div>
                         </div>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="text-gray-500">No major positive findings available.</p>
+                    <p class="text-stone-500">No major positive findings available.</p>
                 {% endif %}
             </div>
             <div>
-                <h3 class="text-lg font-semibold text-red-600 mb-4">Clinical Concerns</h3>
-                {% if overall.concerns %}
+                <h3 class="text-lg font-semibold text-rose-950 mb-4 flex items-center gap-2"><svg class="icon text-rose-600"><use href="#i-alert-circle"/></svg>Clinical Flags</h3>
+                {% if overall.flags %}
                     <div class="space-y-3">
-                        {% for item in overall.concerns %}
+                        {% for item in overall.flags %}
                         <div class="flex items-start gap-3">
-                            <div class="w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center text-sm">!</div>
-                            <div class="text-gray-700">{{ item }}</div>
+                            <div class="badge shrink-0 {% if item.severity == 'severe' %}badge-severe{% else %}badge-moderate{% endif %}"><svg class="icon" style="width:13px;height:13px"><use href="#i-alert-circle"/></svg></div>
+                            <div class="text-stone-700">
+                                <span class="text-xs uppercase text-stone-400 mr-1">{{ item.source }}</span>{{ item.message }}
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="text-green-600">No significant clinical concerns identified.</p>
+                    <p class="text-rose-700">No significant clinical concerns identified.</p>
                 {% endif %}
             </div>
         </div>
+
+        {% if overall.recommendations %}
+        <div class="mt-8 pt-6 border-t border-rose-100">
+            <h3 class="text-lg font-semibold text-rose-800 mb-4">What Could Improve This</h3>
+            <ul class="space-y-2">
+                {% for rec in overall.recommendations %}
+                <li class="flex items-start gap-2 text-sm text-stone-700">
+                    <span class="text-rose-500 mt-0.5">&rarr;</span><span>{{ rec }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 
-    <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
-        <div class="px-8 py-6 border-b">
-            <h2 class="text-2xl font-bold">Prenatal Visit History</h2>
-            <p class="text-gray-500 mt-1">Complete chronological record of your hospital visits.</p>
+    <!-- ============ VISIT HISTORY TABLE ============ -->
+    <div id="visit-history" class="card overflow-hidden scroll-mt-6">
+        <div class="px-8 py-6 border-b border-rose-100">
+            <h2 class="font-display text-2xl font-semibold text-rose-950">Prenatal Visit History</h2>
+            <p class="text-stone-500 mt-1">Complete chronological record of your hospital visits.</p>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full">
-                <thead class="bg-gray-100">
+                <thead class="bg-rose-50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Date</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Week</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Weight</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">BP</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Hb</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Fundal</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">FHR</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Movement</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">Date</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">Week</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">Weight</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">BP</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">Hb</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">Fundal</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">FHR</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">Movement</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-rose-900">Flags</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+                <tbody class="divide-y divide-rose-50">
                 {% for item in timeline %}
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.visit.visit_date }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.week }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.visit.maternal_weight_kg|default:"—" }} kg</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.visit.blood_pressure|default:"—" }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.visit.hemoglobin_g_dl|default:"—" }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.visit.fundal_height_cm|default:"—" }} cm</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.visit.fetal_heart_rate_bpm|default:"—" }} bpm</td>
-                        <td class="px-6 py-4 text-sm text-gray-900">{{ item.visit.get_fetal_movement_display }}</td>
+                    <tr class="hover:bg-rose-50/60 {% if item.visit.is_flagged %}border-l-4 border-rose-500{% endif %}">
+                        <td class="px-6 py-4 text-sm text-stone-800">{{ item.visit.visit_date }}</td>
+                        <td class="px-6 py-4 text-sm text-stone-800">{{ item.week }}</td>
+                        <td class="px-6 py-4 text-sm text-stone-800">{{ item.visit.maternal_weight_kg|default:"—" }} kg</td>
+                        <td class="px-6 py-4 text-sm text-stone-800">{{ item.visit.blood_pressure|default:"—" }}</td>
+                        <td class="px-6 py-4 text-sm text-stone-800">{{ item.visit.hemoglobin_g_dl|default:"—" }}</td>
+                        <td class="px-6 py-4 text-sm text-stone-800">{{ item.visit.fundal_height_cm|default:"—" }} cm</td>
+                        <td class="px-6 py-4 text-sm text-stone-800">{{ item.visit.fetal_heart_rate_bpm|default:"—" }} bpm</td>
+                        <td class="px-6 py-4 text-sm text-stone-800">{{ item.visit.get_fetal_movement_display }}</td>
+                        <td class="px-6 py-4 text-sm">
+                            {% if item.flags %}
+                                <span class="text-rose-700 font-semibold inline-flex items-center gap-1"><svg class="icon" style="width:12px;height:12px"><use href="#i-flag"/></svg>{{ item.flags|length }}</span>
+                            {% else %}
+                                <span class="text-stone-300">&mdash;</span>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% empty %}
-                    <tr><td colspan="8" class="text-center py-10 text-gray-500 text-sm">No prenatal visits recorded yet.</td></tr>
+                    <tr><td colspan="9" class="text-center py-10 text-stone-500 text-sm">No prenatal visits recorded yet.</td></tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-6">
-        <h3 class="font-semibold text-yellow-700 mb-2">Medical Disclaimer</h3>
-        <p class="text-yellow-800 leading-7 text-sm">This dashboard summarizes your recorded prenatal visit data and highlights observable trends. It is intended to support your understanding of your pregnancy progress and should not replace professional medical advice, diagnosis, or treatment. Always consult your healthcare provider regarding any symptoms or concerns.</p>
+    <div class="rounded-2xl p-6 bg-rose-50 border-l-4 border-rose-400">
+        <h3 class="font-semibold text-rose-900 mb-2 flex items-center gap-2"><svg class="icon"><use href="#i-info"/></svg>Medical Disclaimer</h3>
+        <p class="text-rose-900/80 leading-7 text-sm">This dashboard summarizes your recorded prenatal visit data and highlights observable trends. It is intended to support your understanding of your pregnancy progress and should not replace professional medical advice, diagnosis, or treatment. Always consult your healthcare provider regarding any symptoms or concerns.</p>
     </div>
 </div>
 
 {{ charts|json_script:"charts-data" }}
+
+{# ---------------------------------------------------------------------- #}
+{# Extra chart data, built straight from `timeline`/`trimesters` (already  #}
+{# in this template's context) via manual JSON so no view.py changes are  #}
+{# needed. Numbers are output raw (Decimal -> plain JSON number), strings #}
+{# go through |escapejs so they're always valid inside the JSON string,   #}
+{# and booleans use |yesno:"true,false" for bare JS/JSON literals.        #}
+{# ---------------------------------------------------------------------- #}
+<script id="extra-chart-data" type="application/json">
+{
+  "weeks": [{% for item in timeline %}{{ item.week|default_if_none:"null" }}{% if not forloop.last %},{% endif %}{% endfor %}],
+  "dates": [{% for item in timeline %}"{{ item.visit.visit_date|date:"M j"|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "fundal": [{% for item in timeline %}{{ item.visit.fundal_height_cm|default_if_none:"null" }}{% if not forloop.last %},{% endif %}{% endfor %}],
+  "pulse": [{% for item in timeline %}{{ item.visit.pulse_bpm|default_if_none:"null" }}{% if not forloop.last %},{% endif %}{% endfor %}],
+  "spo2": [{% for item in timeline %}{{ item.visit.spo2_percent|default_if_none:"null" }}{% if not forloop.last %},{% endif %}{% endfor %}],
+  "urine_protein": [{% for item in timeline %}"{{ item.visit.urine_protein|default:""|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "urine_glucose": [{% for item in timeline %}"{{ item.visit.urine_glucose|default:""|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "edema": [{% for item in timeline %}"{{ item.visit.edema|default:""|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "movement": [{% for item in timeline %}"{{ item.visit.fetal_movement|default:""|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "labs": [{% for item in timeline %}[{% for lr in item.labs %}{"name":"{{ lr.test_name|escapejs }}","value":{% if lr.value_numeric != None %}{{ lr.value_numeric }}{% else %}null{% endif %}}{% if not forloop.last %},{% endif %}{% endfor %}]{% if not forloop.last %},{% endif %}{% endfor %}],
+  "trimesterLabels": [{% for t in trimesters %}"T{{ t.trimester }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "trimesterWeightGain": [{% for t in trimesters %}{{ t.weight_gain|default_if_none:"null" }}{% if not forloop.last %},{% endif %}{% endfor %}]
+}
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const charts = JSON.parse(document.getElementById('charts-data').textContent);
+const extra = JSON.parse(document.getElementById('extra-chart-data').textContent);
 const weeks = charts.weeks;
+
+// rose-only ramp used across every chart -- lightness/saturation and line
+// style (solid/dashed) carry the distinction instead of hue
+const ROSE = { 50:'#fff1f2', 100:'#ffe4e9', 200:'#fecdd3', 300:'#fda4af', 400:'#fb7185', 500:'#f43f5e', 600:'#e11d48', 700:'#be123c', 800:'#9f1239', 900:'#881337', 950:'#4c0519' };
+
+function trendChip(elId, values, unit, decimals) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    const known = values.map((v, i) => ({ v, i })).filter(o => o.v !== null && o.v !== undefined);
+    if (known.length < 2) return;
+    const first = known[0].v, last = known[known.length - 1].v;
+    const delta = last - first;
+    if (Math.abs(delta) < Math.pow(10, -decimals) / 2) { el.textContent = '\u2192 steady'; }
+    else {
+        const arrow = delta > 0 ? '\u25B2' : '\u25BC';
+        const sign = delta > 0 ? '+' : '-';
+        el.textContent = `${arrow} ${sign}${Math.abs(delta).toFixed(decimals)}${unit}`;
+    }
+    el.classList.remove('chip-empty');
+}
+
+const commonLine = { responsive: true, maintainAspectRatio: false, spanGaps: true, plugins: { legend: { labels: { color: '#78716c' } } }, scales: { x: { ticks: { color: '#a8a29e' }, grid: { color: '#fff1f2' } }, y: { ticks: { color: '#a8a29e' }, grid: { color: '#fff1f2' } } } };
+
+// ---- Growth & Vitals -----------------------------------------------------
 
 new Chart(document.getElementById("weightChart"), {
     type: "line",
-    data: { labels: weeks, datasets: [{ label: "Weight (kg)", data: charts.weight, borderColor: "#ec4899", backgroundColor: "rgba(236, 72, 153, 0.05)", borderWidth: 3, tension: .35, fill: true }] },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, spanGaps: true }
+    data: { labels: weeks, datasets: [{ label: "Weight (kg)", data: charts.weight, borderColor: ROSE[600], backgroundColor: "rgba(225,29,72,0.07)", borderWidth: 3, tension: .35, fill: true }] },
+    options: { ...commonLine, plugins: { legend: { display: false } } }
 });
+trendChip('chip-weight', charts.weight, 'kg', 1);
+
+new Chart(document.getElementById("fundalChart"), {
+    type: "line",
+    data: { labels: extra.weeks, datasets: [{ label: "Fundal height (cm)", data: extra.fundal, borderColor: ROSE[700], backgroundColor: "rgba(190,18,60,0.07)", borderWidth: 3, tension: .35, fill: true }] },
+    options: { ...commonLine, plugins: { legend: { display: false } } }
+});
+trendChip('chip-fundal', extra.fundal, 'cm', 1);
+
+new Chart(document.getElementById("pulseSpo2Chart"), {
+    type: "line",
+    data: { labels: extra.weeks, datasets: [
+        { label: "Pulse (bpm)", data: extra.pulse, borderColor: ROSE[700], borderWidth: 3, tension: .35, yAxisID: 'y' },
+        { label: "SpO2 (%)", data: extra.spo2, borderColor: ROSE[300], borderWidth: 3, borderDash: [6,4], tension: .35, yAxisID: 'y1' }
+    ]},
+    options: { ...commonLine, scales: {
+        x: commonLine.scales.x,
+        y: { ...commonLine.scales.y, position: 'left', title: { display: true, text: 'bpm', color: '#a8a29e' } },
+        y1: { position: 'right', title: { display: true, text: '%', color: '#a8a29e' }, ticks: { color: '#a8a29e' }, grid: { drawOnChartArea: false } }
+    }}
+});
+trendChip('chip-pulse', extra.pulse, ' bpm', 0);
+trendChip('chip-spo2', extra.spo2, '%', 1);
+
+new Chart(document.getElementById("weightGainChart"), {
+    type: "bar",
+    data: { labels: extra.trimesterLabels, datasets: [{ label: "Weight gain (kg)", data: extra.trimesterWeightGain, backgroundColor: [ROSE[200], ROSE[400], ROSE[700]], borderRadius: 8 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: commonLine.scales }
+});
+
+// ---- Heart & Labs ----------------------------------------------------------
 
 new Chart(document.getElementById("bpChart"), {
     type: "line",
     data: { labels: weeks, datasets: [
-        { label: "Systolic", data: charts.bp_sys, borderColor: "#f43f5e", borderWidth: 3, tension: .35 },
-        { label: "Diastolic", data: charts.bp_dia, borderColor: "#0ea5e9", borderWidth: 3, tension: .35 }
+        { label: "Systolic", data: charts.bp_sys, borderColor: ROSE[700], borderWidth: 3, tension: .35 },
+        { label: "Diastolic", data: charts.bp_dia, borderColor: ROSE[300], borderWidth: 3, borderDash: [6,4], tension: .35 }
     ]},
-    options: { responsive: true, maintainAspectRatio: false, spanGaps: true }
+    options: commonLine
 });
+trendChip('chip-bp', charts.bp_sys, ' sys', 0);
 
 new Chart(document.getElementById("hbChart"), {
     type: "line",
-    data: { labels: weeks, datasets: [{ label: "Hemoglobin", data: charts.hb, borderColor: "#b91c1c", borderWidth: 3, tension: .35 }] },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, spanGaps: true }
+    data: { labels: weeks, datasets: [{ label: "Hemoglobin", data: charts.hb, borderColor: ROSE[800], borderWidth: 3, tension: .35 }] },
+    options: { ...commonLine, plugins: { legend: { display: false } } }
 });
+trendChip('chip-hb', charts.hb, 'g/dL', 1);
 
 new Chart(document.getElementById("fhrChart"), {
     type: "line",
-    data: { labels: weeks, datasets: [{ label: "FHR", data: charts.fhr, borderColor: "#10b981", borderWidth: 3, tension: .35 }] },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, spanGaps: true }
+    data: { labels: weeks, datasets: [{ label: "FHR", data: charts.fhr, borderColor: ROSE[600], borderWidth: 3, tension: .35 }] },
+    options: { ...commonLine, plugins: { legend: { display: false } } }
 });
+trendChip('chip-fhr', charts.fhr, ' bpm', 0);
+
+// Lab results vary visit to visit: one series per test name that has at
+// least one numeric value. Rose-only palette, alternating dash pattern once
+// there are more series than shades so lines stay distinguishable.
+(function buildLabsChart() {
+    const seriesMap = {};
+    extra.labs.forEach((visitLabs, idx) => {
+        visitLabs.forEach(lr => {
+            if (lr.value === null || lr.value === undefined) return;
+            if (!seriesMap[lr.name]) seriesMap[lr.name] = new Array(extra.labs.length).fill(null);
+            seriesMap[lr.name][idx] = lr.value;
+        });
+    });
+    const shades = [ROSE[800], ROSE[500], ROSE[300], ROSE[950], ROSE[600], ROSE[400]];
+    const names = Object.keys(seriesMap);
+    const datasets = names.map((name, i) => ({
+        label: name, data: seriesMap[name], borderColor: shades[i % shades.length],
+        borderDash: i >= shades.length ? [5,3] : [], borderWidth: 2.5, tension: .3, spanGaps: false
+    }));
+    const canvas = document.getElementById("labsChart");
+    if (names.length === 0) {
+        canvas.parentElement.innerHTML = '<p class="text-sm text-stone-400 italic py-10 text-center">No numeric lab results recorded yet.</p>';
+        return;
+    }
+    new Chart(canvas, {
+        type: "line",
+        data: { labels: extra.weeks, datasets },
+        options: { ...commonLine, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 }, color: '#78716c' } } } }
+    });
+})();
+
+// ---- Screening Signs Timeline (signature component) ------------------------
+// Tier is conveyed by icon shape + intensity (darker = more concerning), not
+// by hue, so the whole page stays inside the rose family and stays legible
+// without relying on color alone.
+
+(function buildSignsTimeline() {
+    const container = document.getElementById('signsTimeline');
+    if (!container) return;
+
+    const TIER_STYLE = {
+        good:    { bg: '#ffe4e9', fg: '#9f1239', icon: 'i-check' },
+        caution: { bg: '#e11d48', fg: '#fff',    icon: 'i-alert-circle' },
+        concern: { bg: '#4c0519', fg: '#fff',    icon: 'i-alert-triangle' },
+        none:    { bg: 'rgba(255,255,255,.15)', fg: 'rgba(255,255,255,.55)', icon: 'i-minus' }
+    };
+
+    const urineTier = v => ({ negative: 'good', trace: 'caution', plus1: 'caution', plus2: 'concern', plus3: 'concern' }[v] || 'none');
+    const urineLabel = v => ({ negative: 'Negative', trace: 'Trace', plus1: '+1', plus2: '+2', plus3: '+3' }[v] || 'Not recorded');
+
+    const edemaTier = v => ({ none: 'good', mild_hands_feet: 'caution', mild_face: 'caution', severe: 'concern' }[v] || 'none');
+    const edemaLabel = v => ({ none: 'None', mild_hands_feet: 'Mild — hands/feet', mild_face: 'Mild — face', severe: 'Severe' }[v] || 'Not recorded');
+
+    const moveTier = v => ({ active: 'good', reduced: 'caution', none: 'concern' }[v] || 'none');
+    const moveLabel = v => ({ active: 'Active', reduced: 'Reduced', none: 'None reported' }[v] || 'Not recorded');
+
+    const rows = [
+        { label: 'Urine Protein', values: extra.urine_protein, tier: urineTier, text: urineLabel },
+        { label: 'Urine Glucose', values: extra.urine_glucose, tier: urineTier, text: urineLabel },
+        { label: 'Edema / Swelling', values: extra.edema, tier: edemaTier, text: edemaLabel },
+        { label: 'Fetal Movement', values: extra.movement, tier: moveTier, text: moveLabel },
+    ];
+
+    const n = extra.weeks.length;
+    if (n === 0) { container.innerHTML = '<p class="text-rose-200 text-sm">No visits recorded yet.</p>'; return; }
+
+    let html = '<table class="border-separate" style="border-spacing:0 10px; min-width:100%;">';
+    html += '<tr><td></td>';
+    for (let i = 0; i < n; i++) {
+        html += `<td class="text-center px-2"><div class="text-[11px] text-rose-300 font-medium">Wk ${extra.weeks[i] ?? '—'}</div><div class="text-[10px] text-rose-400">${extra.dates[i] ?? ''}</div></td>`;
+    }
+    html += '</tr>';
+
+    rows.forEach(row => {
+        html += `<tr><td class="pr-4 text-sm font-medium text-rose-100 whitespace-nowrap align-middle">${row.label}</td>`;
+        for (let i = 0; i < n; i++) {
+            const raw = row.values[i] || '';
+            const tier = row.tier(raw);
+            const label = row.text(raw);
+            const s = TIER_STYLE[tier];
+            html += `<td class="text-center px-2"><span class="sign-badge inline-flex" style="background:${s.bg};color:${s.fg}" title="${row.label}: ${label} — Week ${extra.weeks[i] ?? '—'}"><svg><use href="#${s.icon}"/></svg></span></td>`;
+        }
+        html += '</tr>';
+    });
+    html += '</table>';
+    container.innerHTML = html;
+})();
+
+// ---- normal-severity counts + empty states in the per-trimester findings ---
+
+document.querySelectorAll('[data-trimester]').forEach(block => {
+    block.querySelectorAll('.flag-col').forEach(col => {
+        const hasCards = col.querySelectorAll('.flag-card').length > 0;
+        const empty = col.querySelector('.empty-state');
+        if (empty) empty.style.display = hasCards ? 'none' : '';
+    });
+    const normalCount = block.querySelectorAll('.severity-normal').length;
+    const badge = block.querySelector('.normal-count');
+    if (badge) badge.textContent = normalCount;
+});
+
+// ---- stepper: highlight nearest section on scroll ---------------------------
+
+(function stepperHighlight() {
+    const links = Array.from(document.querySelectorAll('.stepper-link'));
+    if (!links.length) return;
+    const targets = links.map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+    const onScroll = () => {
+        let current = targets[0];
+        targets.forEach(t => { if (t.getBoundingClientRect().top < 140) current = t; });
+        links.forEach((l, i) => l.setAttribute('aria-current', targets[i] === current ? 'true' : 'false'));
+    };
+    document.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+})();
 </script>
 {% endblock %}

@@ -17,6 +17,7 @@ Manage your pregnancy information
     <p class="text-sm text-gray-500 mt-1">A few questions about you -- takes about two minutes.</p>
 </div>
 
+
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
         <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Weeks pregnant</p>
@@ -60,6 +61,14 @@ Manage your pregnancy information
         <div data-panel="dates" class="hp-panel space-y-5">
             <p class="text-xs text-gray-400 -mt-1 mb-1">Helps us work out how far along you are.</p>
 
+              <div>
+        <label class="hp-label">{{ form.date_of_birth.label }}</label>
+        {{ form.date_of_birth }}
+        <p class="hp-help">{{ form.date_of_birth.help_text }}</p>
+        {% if form.date_of_birth.errors %}
+            <p class="hp-error">{{ form.date_of_birth.errors|striptags }}</p>
+        {% endif %}
+    </div>
             <div>
                 <label class="hp-label">{{ form.last_menstrual_period.label }}</label>
                 {{ form.last_menstrual_period }}
@@ -160,12 +169,57 @@ Manage your pregnancy information
                     <label class="hp-label">{{ form.dietary_preference.label }}</label>
                     {{ form.dietary_preference }}
                 </div>
-                <div class="space-y-2.5">
-                    <div class="flex items-center gap-2">{{ form.has_gestational_diabetes }}<label for="{{ form.has_gestational_diabetes.id_for_label }}" class="text-sm text-gray-600">{{ form.has_gestational_diabetes.label }}</label></div>
-                    <div class="flex items-center gap-2">{{ form.has_hypertension }}<label for="{{ form.has_hypertension.id_for_label }}" class="text-sm text-gray-600">{{ form.has_hypertension.label }}</label></div>
-                    <div class="flex items-center gap-2">{{ form.smokes }}<label for="{{ form.smokes.id_for_label }}" class="text-sm text-gray-600">{{ form.smokes.label }}</label></div>
-                    <div class="flex items-center gap-2">{{ form.drinks_alcohol }}<label for="{{ form.drinks_alcohol.id_for_label }}" class="text-sm text-gray-600">{{ form.drinks_alcohol.label }}</label></div>
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <label class="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-4 hover:border-rose-300 hover:bg-rose-50 transition cursor-pointer">
+        {{ form.has_gestational_diabetes }}
+        <div>
+            <p class="font-semibold text-gray-800">
+                Gestational Diabetes
+            </p>
+            <p class="text-sm text-gray-500">
+                Diagnosed during this pregnancy
+            </p>
+        </div>
+    </label>
+
+    <label class="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-4 hover:border-rose-300 hover:bg-rose-50 transition cursor-pointer">
+        {{ form.has_hypertension }}
+        <div>
+            <p class="font-semibold text-gray-800">
+                High Blood Pressure
+            </p>
+            <p class="text-sm text-gray-500">
+                Pregnancy-related hypertension
+            </p>
+        </div>
+    </label>
+
+    <label class="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-4 hover:border-rose-300 hover:bg-rose-50 transition cursor-pointer">
+        {{ form.smokes }}
+        <div>
+            <p class="font-semibold text-gray-800">
+                Smoking
+            </p>
+            <p class="text-sm text-gray-500">
+                Currently smokes tobacco products
+            </p>
+        </div>
+    </label>
+
+    <label class="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-4 hover:border-rose-300 hover:bg-rose-50 transition cursor-pointer">
+        {{ form.drinks_alcohol }}
+        <div>
+            <p class="font-semibold text-gray-800">
+                Alcohol Consumption
+            </p>
+            <p class="text-sm text-gray-500">
+                Drinks alcoholic beverages
+            </p>
+        </div>
+    </label>
+
+</div>
             </div>
         </div>
 

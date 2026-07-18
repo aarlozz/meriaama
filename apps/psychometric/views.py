@@ -10,8 +10,10 @@ def select_test_page(request):
     """GET /psychometric/ -- choose which scale to take, plus recent results."""
     history = PsychometricTest.objects.filter(user=request.user).order_by("-taken_at")[:10]
     return render(request, "psychometric/select.html", {
-        "test_types": PsychometricTest.TestType.choices,"header_title": "Psychometric Test",
-"header_subtitle": "Assess your emotional and mental wellbeing",
+        "test_types": PsychometricTest.TestType.choices,
+        "history": history,
+        "header_title": "Psychometric Test",
+        "header_subtitle": "Assess your emotional and mental wellbeing",
     })
 
 

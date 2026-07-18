@@ -1,10 +1,8 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .services import calculate_risk, generate_pregnancy_summary
+from apps.anc_clinical import schedule_rules
 
-# (label, low_week, high_week) -- adjust high bound on trimester 3 if you
-# want to cap it differently for post-term tracking
 TRIMESTER_RANGES = [(1, 1, 13), (2, 14, 27), (3, 28, 45)]
 
 MILESTONES = [
@@ -14,6 +12,9 @@ MILESTONES = [
     (28, "Third trimester begins"),
     (37, "Full term"),
 ]
+
+DIPSTICK_TEXT = {"negative", "trace", "plus1", "plus2", "plus3"}
+REACTIVE_TEXT = {"reactive", "non_reactive"}
 
 
 def _trimester_for_week(week):
@@ -25,20 +26,43 @@ def _trimester_for_week(week):
     return None
 
 
+def _is_hospital_staff(user):
+    return user.is_authenticated and (user.is_hospital_staff() or user.is_hospital_admin())
+
+
 @login_required
 def pregnancy_dashboard(request):
     mother = request.user
     profile = getattr(mother, "health_profile", None)
 
-    visits = list(mother.prenatal_visits.all())  # PrenatalVisit.Meta.ordering = -visit_date
+    visits = list(mother.prenatal_visits.all())
     latest_visit = visits[0] if visits else None
     medications = list(mother.medications.all())
 
     week = profile.current_gestational_week if profile else None
     trimester = _trimester_for_week(week)
 
-    risk = calculate_risk(mother)
-    ai_summary = generate_pregnancy_summary(mother, visits[:5], medications)
+    # ---- Care checklist data (read-only, additive) ----
+    pending_labs = schedule_rules.pending_labs(latest_visit)
+    pending_scans = schedule_rules.pending_ultrasounds(mother, week)
+    risk_alerts = schedule_rules.recent_risk_alerts(mother)
+    trimester_data = schedule_rules.trimester_checklist(mother, week)
+
+    # Calculate progress for each trimester
+    # FIX: this used to sit half-inside/half-outside the loop, so completed/
+    # total/percent only ever got set on the LAST trimester in the list.
+    # Everything now runs once per trimester, inside the loop.
+    for tri in trimester_data:
+        total = len(tri["labs"]) + len(tri["scans"])
+        completed = (
+            sum(1 for item in tri["labs"] if item["recorded"])
+            + sum(1 for item in tri["scans"] if item["recorded"])
+        )
+        tri["completed"] = completed
+        tri["total"] = total
+        tri["percent"] = round((completed / total) * 100) if total else 0
+
+    lmp_missing = profile is None or not profile.last_menstrual_period
 
     # ---- chart series, oldest -> newest ----
     chrono = list(reversed(visits))
@@ -80,9 +104,9 @@ def pregnancy_dashboard(request):
         if not highlights:
             highlights.append("Routine checkup recorded")
         journey.append({"week": v.gestational_week, "date": v.visit_date, "highlights": highlights})
-    journey.reverse()  # show newest first, matches rest of the app's convention
+    journey.reverse()
 
-    # ---- trimester snapshot (counts + weight delta) ----
+    # ---- trimester snapshot ----
     snapshot = {}
     for label, lo, hi in TRIMESTER_RANGES:
         t_visits = [v for v in chrono if v.gestational_week and lo <= v.gestational_week <= hi]
@@ -107,8 +131,6 @@ def pregnancy_dashboard(request):
         "trimester": trimester,
         "latest_visit": latest_visit,
         "next_visit_date": latest_visit.next_visit_date if latest_visit else None,
-        "risk": risk,
-        "ai_summary": ai_summary,
         "medications": active_medications,
         "charts": charts,
         "journey": journey,
@@ -117,5 +139,10 @@ def pregnancy_dashboard(request):
         "doctor_notes": doctor_notes,
         "visit_count": len(visits),
         "active_nav": "pregnancy_dashboard",
+        "pending_labs": pending_labs,
+        "pending_scans": pending_scans,
+        "risk_alerts": risk_alerts,
+        "trimester_data": trimester_data,
+        "lmp_missing": lmp_missing,
     }
     return render(request, "pregnancy_dashboard/dashboard.html", context)

@@ -17,18 +17,18 @@ evidence-based guidance to pregnant mothers using ONLY the retrieved source
 excerpts provided to you.
 
 Respond ONLY as JSON in this exact shape, nothing else:
-{"summary": "1-2 sentence direct answer", "key_points": ["point 1", "point 2", ...], "sources_used": ["source name 1", ...]}
+{"summary": "1-2 sentence direct answer", "key_points": ["point 1", "point 2", ...]}
 
 Rules:
 - Base every claim on the provided sources; do not invent medical facts.
 - If the sources don't cover the question, say so plainly in "summary" and
   leave key_points minimal -- do not fabricate an answer.
-- Keep tone warm, simple, and non-alarming. Keep key_points short and scannable.
+- Keep tone warm, simple, and non-alarming.
+- Keep key_points short and scannable.
+- NEVER include source names in the summary or key points.
 - CRITICAL SAFETY RULE: the mother's known allergies and conditions are
   listed below. NEVER recommend a food, ingredient, or activity that
-  conflicts with a listed allergy. If a source suggests something that
-  would conflict with her allergies or conditions, explicitly say so and
-  suggest a safe alternative instead, or omit it entirely.
+  conflicts with a listed allergy.
 - Never provide an emergency diagnosis; direct urgent symptoms to a doctor
   or emergency services immediately.
 """
@@ -67,14 +67,29 @@ Mother's question: {user_query}
 
 Answer using only the sources above."""
 
-
-def generate_recommendation(user_query, retrieved_chunks, gestational_week=None, mood_score=None,
-                             stress_level=None, allergies=None, has_gestational_diabetes=False,
-                             has_hypertension=False, dietary_preference="none"):
+def generate_recommendation(
+    user_query,
+    retrieved_chunks,
+    gestational_week=None,
+    mood_score=None,
+    stress_level=None,
+    allergies=None,
+    has_gestational_diabetes=False,
+    has_hypertension=False,
+    dietary_preference="none",
+):
     prompt = build_prompt(
-        user_query, retrieved_chunks, gestational_week, mood_score, stress_level,
-        allergies, has_gestational_diabetes, has_hypertension, dietary_preference,
+        user_query,
+        retrieved_chunks,
+        gestational_week,
+        mood_score,
+        stress_level,
+        allergies,
+        has_gestational_diabetes,
+        has_hypertension,
+        dietary_preference,
     )
+
     response = get_client().chat.completions.create(
         model=settings.GROQ_MODEL,
         messages=[
@@ -85,13 +100,35 @@ def generate_recommendation(user_query, retrieved_chunks, gestational_week=None,
         max_tokens=700,
         response_format={"type": "json_object"},
     )
+
     raw = response.choices[0].message.content
+
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
-        return {"summary": raw, "key_points": [], "sources_used": []}
+        data = {
+            "summary": raw,
+            "key_points": [],
+        }
 
     data.setdefault("summary", "")
     data.setdefault("key_points", [])
-    data.setdefault("sources_used", [])
+
+    # Build unique source list from retrieved chunks
+    seen = set()
+    sources = []
+
+    for chunk in retrieved_chunks:
+        name = chunk.get("source_name")
+        url = chunk.get("source_url")
+
+        if name and name not in seen:
+            seen.add(name)
+            sources.append({
+                "name": name,
+                "url": url,
+            })
+
+    data["sources_used"] = sources
+
     return data

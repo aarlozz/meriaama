@@ -14,6 +14,18 @@ class PrenatalVisit(models.Model):
     for the "has this ever been recorded" completeness check across her
     full visit history, and the trend analysis built from whichever fields
     do have data.
+
+    NOTE on bp_systolic / bp_diastolic: these are auto-populated from
+    `blood_pressure` (e.g. "120/80") by a pre_save signal in
+    anc_clinical.signals -- staff still only type into `blood_pressure`,
+    the split fields exist so anc_clinical's flag engine and any future
+    numeric BP graphs don't have to re-parse the string themselves. If
+    parsing fails (blank, malformed), both fields are left null.
+
+    NOTE on is_flagged / flag_reasons: written by anc_clinical.signals
+    after every save, based on this visit's vitals + the mother's
+    HealthProfile (age, blood group) -- see anc_clinical/flag_engine.py.
+    Don't set these directly from hospital_portal code.
     """
 
     class FetalMovement(models.TextChoices):
@@ -58,7 +70,7 @@ class PrenatalVisit(models.Model):
 
     # --- The 10 core checkup data points ---
     maternal_weight_kg = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    blood_pressure = models.CharField(max_length=15, blank=True)  # e.g. "120/80"
+    blood_pressure = models.CharField(max_length=15, blank=True)  # e.g. "120/80" -- primary entry field
     fundal_height_cm = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     fetal_heart_rate_bpm = models.PositiveSmallIntegerField(null=True, blank=True)
     fetal_movement = models.CharField(max_length=10, choices=FetalMovement.choices, blank=True)
@@ -70,6 +82,20 @@ class PrenatalVisit(models.Model):
 
     doctor_notes = models.TextField(blank=True)
     next_visit_date = models.DateField(null=True, blank=True)
+
+    # --- NEW: extra vitals / exam findings (added for anc_clinical flag engine) ---
+    bp_systolic = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Auto-parsed from blood_pressure")
+    bp_diastolic = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Auto-parsed from blood_pressure")
+    pulse_bpm = models.PositiveSmallIntegerField(null=True, blank=True)
+    spo2_percent = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    lungs_abnormal = models.BooleanField(default=False)
+    heart_abnormal = models.BooleanField(default=False)
+    pallor_present = models.BooleanField(default=False)
+    jaundice_present = models.BooleanField(default=False)
+
+    # --- NEW: clinical flag summary, written by anc_clinical.signals ---
+    is_flagged = models.BooleanField(default=False)
+    flag_reasons = models.JSONField(blank=True, default=list)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -106,10 +132,6 @@ TRACKED_FIELDS = [
 
 from datetime import timedelta
 
-from django.conf import settings
-from django.db import models
-from django.utils import timezone
-
 
 class Medication(models.Model):
     """
@@ -121,6 +143,10 @@ class Medication(models.Model):
     This follows the same trust model as PrenatalVisit:
         • Hospital staff -> prescription
         • Mother -> adherence
+
+    NOTE: anc_clinical.signals also auto-creates rows here (prescribed_by=None)
+    for the standard ANC care plan (iron/folic acid, calcium, TT1/TT2,
+    deworming, Anti-D) once a mother's HealthProfile has an LMP set.
     """
 
     # ------------------------------------------------------------------

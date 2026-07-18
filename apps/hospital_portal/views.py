@@ -39,7 +39,9 @@ def staff_dashboard(request):
     """
     GET /hospital/ -- search mothers by username or phone number.
     Doctors are redirected straight to their patient list instead --
-    this view's search/approval tools are for data entry and admin.
+    this view's search/browse tools are for data entry and admin, who
+    (unlike doctors) aren't scoped to an assignment list and can see
+    every mother in the system.
     """
     if request.user.role == User.Role.DOCTOR:
         return redirect("doctor-dashboard")
@@ -49,10 +51,11 @@ def staff_dashboard(request):
         results = User.objects.filter(role=User.Role.MOTHER).filter(
             Q(username__icontains=query) | Q(phone_number__icontains=query)
         )
-    elif request.user.is_hospital_admin():
-        results = User.objects.filter(role=User.Role.MOTHER)
     else:
-        results = []
+        # Data entry and admin both browse the full mother list by default --
+        # only doctors are restricted to an assignment-scoped view (that's
+        # doctor_dashboard, a separate view/template, not this one).
+        results = User.objects.filter(role=User.Role.MOTHER)
 
     pending_count = 0
     if request.user.is_hospital_admin():
@@ -104,6 +107,7 @@ def mother_detail(request, mother_id):
         "medications": medications,
     })
 
+
 @hospital_staff_required
 def edit_health_profile(request, mother_id):
     """GET/POST /hospital/mother/<id>/edit-profile/ -- staff edits shared clinical fields."""
@@ -138,13 +142,38 @@ def add_visit(request, mother_id):
             visit.entered_by = request.user
             visit.save()
             messages.success(request, "Visit recorded.")
-            return redirect("hospital-mother-detail", mother_id=mother.id)
+            # Go straight to the visit detail page (not mother_detail) so
+            # staff can immediately add labs/ultrasound for THIS visit,
+            # and see the flag banner if the vitals just entered tripped one.
+            return redirect("hospital-visit-detail", visit_id=visit.id)
     else:
         profile = getattr(mother, "health_profile", None)
         initial = {"gestational_week": getattr(profile, "current_gestational_week", None)}
         form = PrenatalVisitForm(initial=initial)
 
-    return render(request, "hospital_portal/add_visit.html", {"form": form, "mother": mother})
+    return render(request, "hospital_portal/record_visit.html", {"form": form, "mother": mother})
+
+
+@hospital_staff_required
+def visit_detail(request, visit_id):
+    """
+    GET /hospital/visit/<id>/ -- read-only summary of one recorded visit:
+    flag banner (if anc_clinical's signals flagged it), the vitals that
+    were entered, and links into anc_clinical to record labs/ultrasound
+    for this specific visit. Same doctor-assignment restriction as
+    mother_detail, since a visit belongs to a specific mother.
+    """
+    visit = get_object_or_404(PrenatalVisit, id=visit_id)
+
+    if request.user.role == User.Role.DOCTOR:
+        from apps.doctor_chat.models import DoctorAssignment
+        is_assigned = DoctorAssignment.objects.filter(
+            mother=visit.mother, doctor=request.user, is_active=True
+        ).exists()
+        if not is_assigned:
+            return HttpResponseForbidden("You can only view records for mothers currently assigned to you.")
+
+    return render(request, "hospital_portal/visit_detail.html", {"visit": visit, "mother": visit.mother})
 
 
 @hospital_admin_required

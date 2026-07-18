@@ -172,22 +172,32 @@
             <!-- RIGHT SIDE -->
             <!-- ======================================= -->
 
-            <div class="flex items-center justify-center p-8 lg:p-10">
+           <div class="flex items-center justify-center p-8 lg:p-10">
 
-                <div class="w-full max-w-md">
+    <div class="w-full max-w-md">
 
-                    <span class="inline-flex rounded-full bg-rose-100 px-4 py-2 text-sm font-medium text-rose-600">
+        <!-- Home Button -->
+        <a href="{% url 'landing' %}"
+           class="mb-6 inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600">
 
-                        👋 Welcome Back
+            <i data-lucide="arrow-left" class="h-4 w-4"></i>
 
-                    </span>
+            Back to Home
 
-                    <h2 class="mt-4 text-3xl font-bold text-gray-800">
+        </a>
 
-                        Continue Your Journey
+        <!-- Welcome Badge -->
+        <span class="inline-flex rounded-full bg-rose-100 px-4 py-2 text-sm font-medium text-rose-600">
 
-                    </h2>
+            👋 Welcome Back
 
+        </span>
+
+        <h2 class="mt-4 text-3xl font-bold text-gray-800">
+
+            Continue Your Journey
+
+        </h2>
                     <p class="mt-2 text-sm leading-6 text-gray-500">
 
                         Sign in to continue tracking your pregnancy,
@@ -368,6 +378,9 @@
 </div>
 
 </div>
+<script>
+    lucide.createIcons();
+</script>
 
 <script>
 

@@ -1,0 +1,185 @@
+{% extends "hospital_portal/hospital_base.html" %}
+
+{% block title %}Record Visit · Meri Aama{% endblock %}
+{% block page_title %}Record visit{% endblock %}
+
+{% block content %}
+<div class="-m-8 min-h-[calc(100%+4rem)] p-8" style="background:#FBF5F3;">
+
+    <a href="{% url 'hospital-mother-detail' mother_id=mother.id %}"
+       class="inline-flex items-center gap-1 text-sm hover:underline mb-4" style="color:#E1315B;">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to {{ mother.username }}
+    </a>
+
+    <div class="mb-6">
+        <p class="text-xs uppercase tracking-wide mb-1" style="color:#C79AA6;">Record visit</p>
+        <h2 class="text-2xl font-heading font-bold" style="color:#3B1E2F;">{{ mother.username }}</h2>
+    </div>
+
+    <form method="post" class="rx-form space-y-4 max-w-3xl">
+        {% csrf_token %}
+
+        <fieldset class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+            <legend class="font-heading font-semibold px-1 mb-4" style="color:#3B1E2F;">Visit details</legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.visit_date.label }}</label>
+                    {{ form.visit_date }}
+                    {% if form.visit_date.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.visit_date.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.gestational_week.label }}</label>
+                    {{ form.gestational_week }}
+                    {% if form.gestational_week.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.gestational_week.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.next_visit_date.label }}</label>
+                    {{ form.next_visit_date }}
+                    {% if form.next_visit_date.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.next_visit_date.errors|striptags }}</p>{% endif %}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+            <legend class="font-heading font-semibold px-1 mb-4" style="color:#3B1E2F;">Core vitals</legend>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.maternal_weight_kg.label }}</label>
+                    {{ form.maternal_weight_kg }}
+                    {% if form.maternal_weight_kg.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.maternal_weight_kg.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.blood_pressure.label }}</label>
+                    {{ form.blood_pressure }}
+                    <p class="text-xs mt-1" style="color:#A98A94;">Systolic/diastolic split is calculated automatically</p>
+                    {% if form.blood_pressure.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.blood_pressure.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.pulse_bpm.label }}</label>
+                    {{ form.pulse_bpm }}
+                    {% if form.pulse_bpm.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.pulse_bpm.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.spo2_percent.label }}</label>
+                    {{ form.spo2_percent }}
+                    {% if form.spo2_percent.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.spo2_percent.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.hemoglobin_g_dl.label }}</label>
+                    {{ form.hemoglobin_g_dl }}
+                    {% if form.hemoglobin_g_dl.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.hemoglobin_g_dl.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.edema.label }}</label>
+                    {{ form.edema }}
+                    {% if form.edema.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.edema.errors|striptags }}</p>{% endif %}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+            <legend class="font-heading font-semibold px-1 mb-4" style="color:#3B1E2F;">Fetal assessment</legend>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.fundal_height_cm.label }}</label>
+                    {{ form.fundal_height_cm }}
+                    {% if form.fundal_height_cm.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.fundal_height_cm.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.fetal_heart_rate_bpm.label }}</label>
+                    {{ form.fetal_heart_rate_bpm }}
+                    {% if form.fetal_heart_rate_bpm.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.fetal_heart_rate_bpm.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.fetal_movement.label }}</label>
+                    {{ form.fetal_movement }}
+                    {% if form.fetal_movement.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.fetal_movement.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.fetal_position.label }}</label>
+                    {{ form.fetal_position }}
+                    {% if form.fetal_position.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.fetal_position.errors|striptags }}</p>{% endif %}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+            <legend class="font-heading font-semibold px-1 mb-4" style="color:#3B1E2F;">Urine dipstick</legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.urine_protein.label }}</label>
+                    {{ form.urine_protein }}
+                    {% if form.urine_protein.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.urine_protein.errors|striptags }}</p>{% endif %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5" style="color:#3B1E2F;">{{ form.urine_glucose.label }}</label>
+                    {{ form.urine_glucose }}
+                    {% if form.urine_glucose.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.urine_glucose.errors|striptags }}</p>{% endif %}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+            <legend class="font-heading font-semibold px-1 mb-4" style="color:#3B1E2F;">Systemic exam</legend>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <label class="flex items-center gap-2 text-sm rx-checkbox" style="color:#3B1E2F;">{{ form.lungs_abnormal }} Lungs abnormal</label>
+                <label class="flex items-center gap-2 text-sm rx-checkbox" style="color:#3B1E2F;">{{ form.heart_abnormal }} Heart abnormal</label>
+                <label class="flex items-center gap-2 text-sm rx-checkbox" style="color:#3B1E2F;">{{ form.pallor_present }} Pallor present</label>
+                <label class="flex items-center gap-2 text-sm rx-checkbox" style="color:#3B1E2F;">{{ form.jaundice_present }} Jaundice present</label>
+            </div>
+        </fieldset>
+
+        <fieldset class="bg-white rounded-2xl p-5 shadow-sm" style="border:1px solid #F0DEE2;">
+            <legend class="font-heading font-semibold px-1 mb-4" style="color:#3B1E2F;">Notes</legend>
+            {{ form.doctor_notes }}
+            {% if form.doctor_notes.errors %}<p class="text-xs mt-1" style="color:#C0304F;">{{ form.doctor_notes.errors|striptags }}</p>{% endif %}
+        </fieldset>
+
+        <button type="submit"
+                class="rounded-xl px-5 py-2.5 font-medium text-white text-sm hover:opacity-90 transition-opacity"
+                style="background:#E1315B;">
+            Save visit
+        </button>
+    </form>
+
+</div>
+
+<style>
+    .rx-form input[type="text"],
+    .rx-form input[type="number"],
+    .rx-form input[type="date"],
+    .rx-form input:not([type]),
+    .rx-form textarea,
+    .rx-form select {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border: 1px solid #E3D3D8;
+        border-radius: 0.75rem;
+        font-size: 0.9375rem;
+        color: #3B1E2F;
+        background: #FFFFFF;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .rx-form input:focus,
+    .rx-form textarea:focus,
+    .rx-form select:focus {
+        outline: none;
+        border-color: #E1315B;
+        box-shadow: 0 0 0 3px rgba(225, 49, 91, 0.15);
+    }
+    .rx-form textarea {
+        width: 100%;
+        min-height: 5.5rem;
+        resize: vertical;
+    }
+    .rx-form legend {
+        color: #3B1E2F;
+    }
+    .rx-checkbox input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 0.25rem;
+        accent-color: #E1315B;
+    }
+</style>
+{% endblock %}

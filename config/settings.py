@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "apps.pregnancy_dashboard",
     "apps.insights",
     "apps.doctor_chat",
+    "apps.anc_clinical",
 ]
 
 MIDDLEWARE = [
